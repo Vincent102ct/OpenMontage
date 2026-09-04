@@ -4,6 +4,7 @@ import {
   AbsoluteFill,
   Audio,
   CalculateMetadataFunction,
+  Img,
   OffthreadVideo,
   Sequence,
   interpolate,
@@ -12,7 +13,12 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { CinematicRendererProps, CinematicTone, CinematicVideoScene } from "./cinematic/types";
+import {
+  CinematicImageScene,
+  CinematicRendererProps,
+  CinematicTone,
+  CinematicVideoScene,
+} from "./cinematic/types";
 import { CaptionOverlay } from "./components/CaptionOverlay";
 import { resolveAsset } from "./lib/resolveAsset";
 
@@ -110,6 +116,43 @@ const SceneVideo: React.FC<{ scene: CinematicVideoScene }> = ({ scene }) => {
           opacity: 0.6,
         }}
       />
+    </AbsoluteFill>
+  );
+};
+
+const SceneImage: React.FC<{ scene: CinematicImageScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const fadeInFrames = scene.fadeInFrames ?? 10;
+  const fadeOutFrames = scene.fadeOutFrames ?? 10;
+  const fadeOutStart = Math.max(0, durationInFrames - fadeOutFrames);
+  const fadeInOpacity = fadeInFrames === 0 ? 1 : interpolate(frame, [0, fadeInFrames], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const fadeOutOpacity = fadeOutFrames === 0 ? 1 : interpolate(frame, [fadeOutStart, durationInFrames], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const scale = interpolate(frame, [0, durationInFrames], [1.02, 1.08], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#020407", overflow: "hidden", opacity: Math.min(fadeInOpacity, fadeOutOpacity) }}>
+      <Img
+        src={resolveAsset(scene.src)}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          transform: `scale(${scale})`,
+          filter: scene.filter ?? "contrast(1.04) saturate(0.78) brightness(0.9)",
+        }}
+      />
+      <AbsoluteFill style={{ background: toneGradient(scene.tone ?? "cold"), mixBlendMode: "multiply" }} />
+      <AbsoluteFill style={{ background: "radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.52) 100%)" }} />
     </AbsoluteFill>
   );
 };
@@ -497,6 +540,8 @@ export const CinematicRenderer: React.FC<CinematicRendererProps> = ({
         >
           {scene.kind === "video" ? (
             <SceneVideo scene={scene} />
+          ) : scene.kind === "image" ? (
+            <SceneImage scene={scene} />
           ) : (
             <TitleCard
               text={scene.text}
