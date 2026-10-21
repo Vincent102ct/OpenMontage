@@ -386,6 +386,7 @@ class ActionTimelineCompiler(BaseTool):
             "scene_plan": {"type": "object"},
             "character_ids": {"type": "array", "items": {"type": "string"}},
             "fps": {"type": "number"},
+            "timed_actions": {"type": "object", "description": "Explicit actions keyed by scene ID; bypasses generic draft actions."},
             "output_path": {"type": "string"},
         },
     }
@@ -401,6 +402,29 @@ class ActionTimelineCompiler(BaseTool):
             end_s = scene.get("end_seconds", start_s + 3)
             duration = max(0.1, end_s - start_s)
             actions = []
+            explicit = inputs.get("timed_actions")
+            if explicit is not None:
+                try:
+                    actions = explicit[scene["id"]]
+                    if not actions:
+                        raise ValueError("Explicit scenes require actions")
+                    previous = start_s
+                    for action in actions:
+                        at = float(action["at_seconds"])
+                        end = at + float(action["duration_seconds"])
+                        if not start_s <= at < end <= end_s or at < previous:
+                            raise ValueError("Action timing is unordered or outside scene bounds")
+                        if action["character_id"] not in character_ids:
+                            raise ValueError("Unknown action character")
+                        previous = at
+                    validate_artifact("action_timeline", {"version": "1.0", "scenes": [{
+                        "scene_id": scene["id"], "start_seconds": start_s,
+                        "end_seconds": end_s, "actions": actions}]})
+                except Exception as exc:
+                    return ToolResult(success=False, error=f"Invalid explicit actions: {exc}")
+                scenes.append({"scene_id": scene["id"], "start_seconds": start_s,
+                               "end_seconds": end_s, "actions": actions})
+                continue
             for index, character_id in enumerate(character_ids):
                 offset = min(duration * 0.08 * index, duration * 0.2)
                 is_primary = index == 0
@@ -496,6 +520,9 @@ class CharacterRigRenderer(BaseTool):
             "render_video": {"type": "boolean", "default": False},
             "duration_seconds": {"type": "number", "minimum": 0.1, "default": 3},
             "fps": {"type": "integer", "minimum": 1, "default": 12},
+            "story_motion": {"type": "object", "description": "Authored skeletal motion/prop contact package; renders through Remotion."},
+            "story_episode": {"type": "object", "description": "Multi-shot authored episode (shots, camera, light, items) over one world; renders through Remotion."},
+            "story_video": {"type": "object", "description": "Automatically planned multi-location story (tools/story/story_planner.py); renders through Remotion."},
         },
     }
     output_schema = {
@@ -505,6 +532,8 @@ class CharacterRigRenderer(BaseTool):
             "hyperframes_workspace": {"type": "string"},
             "composition_path": {"type": "string"},
             "video_path": {"type": "string"},
+            "workspace_path": {"type": "string"},
+            "props_path": {"type": "string"},
             "asset_manifest": {"type": "object"},
             "edit_decisions": {"type": "object"},
         },
@@ -512,12 +541,31 @@ class CharacterRigRenderer(BaseTool):
     side_effects = [
         "writes a lightweight HTML preview to output_path",
         "writes a HyperFrames workspace/package",
+        "writes a Remotion workspace/package when story_motion, story_episode or story_video is provided",
         "optionally writes preview MP4",
     ]
     user_visible_verification = ["Open preview and check character visibility and motion"]
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         start = time.time()
+        if "story_video" in inputs:
+            from tools.character.story_video import write_story_video_package
+            try:
+                return write_story_video_package(inputs)
+            except (ValueError, KeyError, TypeError, IndexError, OSError) as exc:
+                return ToolResult(success=False, error=f"Story video package invalid: {exc}")
+        if "story_episode" in inputs:
+            from tools.character.story_motion import write_episode_package
+            try:
+                return write_episode_package(inputs)
+            except (ValueError, KeyError, TypeError, OSError) as exc:
+                return ToolResult(success=False, error=f"Story episode package invalid: {exc}")
+        if "story_motion" in inputs:
+            from tools.character.story_motion import write_remotion_package
+            try:
+                return write_remotion_package(inputs)
+            except (ValueError, KeyError, TypeError, OSError) as exc:
+                return ToolResult(success=False, error=f"Story motion package invalid: {exc}")
         output_path = Path(inputs.get("output_path", "projects/character-preview/preview.html"))
         output_path.parent.mkdir(parents=True, exist_ok=True)
         timeline_json = json.dumps(inputs["action_timeline"])

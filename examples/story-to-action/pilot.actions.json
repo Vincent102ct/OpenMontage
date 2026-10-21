@@ -1,0 +1,34 @@
+[
+  {
+    "at_seconds": 0.6,
+    "duration_seconds": 2.7,
+    "character_id": "minh",
+    "action": "reach_grasp",
+    "target": "white-cup",
+    "pose": "reach_grasp"
+  },
+  {
+    "at_seconds": 3.3,
+    "duration_seconds": 3.7,
+    "character_id": "minh",
+    "action": "wash",
+    "target": "sink",
+    "pose": "wash"
+  },
+  {
+    "at_seconds": 7,
+    "duration_seconds": 3.2,
+    "character_id": "minh",
+    "action": "invert_place",
+    "target": "rack",
+    "pose": "invert_place"
+  },
+  {
+    "at_seconds": 11.5,
+    "duration_seconds": 6.3,
+    "character_id": "minh",
+    "action": "walk_to_bedroom",
+    "target": "bedroom",
+    "pose": "walk_to_bedroom"
+  }
+]

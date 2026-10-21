@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<!-- Morning variant of the v1 night window, same frame and curtains; faded in by light level. -->
+<defs>
+ <linearGradient id="d-sky" x2="0" y2="1"><stop stop-color="#a9bcc6"/><stop offset="1" stop-color="#d9d3c0"/></linearGradient>
+ <linearGradient id="d-shaft" x2="1" y2="1"><stop stop-color="#efe3c6" stop-opacity=".22"/><stop offset="1" stop-color="#efe3c6" stop-opacity="0"/></linearGradient>
+</defs>
+<rect x="75" y="166" width="157" height="215" fill="url(#d-sky)"/>
+<path d="M 75 331 h 29 v -39 h 38 v 28 h 35 v -51 h 34 v 62 h 22 v 51 H 75 Z" fill="#8193a0"/>
+<path d="M 153 166 V 381 M 75 274 H 232" stroke="#4e696d" stroke-width="7"/>
+<path d="M 46 140 Q 70 246 54 400 L 95 392 Q 109 279 88 140 Z" fill="#394d58" stroke="#243a45" stroke-width="3"/>
+<path d="M 220 140 Q 195 284 226 397 L 259 400 Q 241 270 263 140 Z" fill="#394d58" stroke="#243a45" stroke-width="3"/>
+<!-- Soft cold daylight falling across the floor, no hard sun. -->
+<path d="M 100 395 L 230 395 L 470 720 L 150 720 Z" fill="url(#d-shaft)"/>
+</svg>

@@ -1,0 +1,27 @@
+# Story-to-Action roadmap
+
+- [x] Recover checkout context and preserve pre-existing work.
+- [x] Document source map and scoped feature/visual contracts.
+- [x] Original cartoon Minh, detailed fixed apartment and one persistent cup.
+- [x] Explicit four-action timeline, physical grip, wash, inversion/release, walk.
+- [x] Local Vietnamese narration and clause subtitles through native composition.
+- [x] Native MP4, all-frame mathematical checks, decode and actual-frame review.
+- [x] User approved pilot visual style (2026-10-21). Gait, narration pacing and
+      pronunciation not yet stated as approved.
+- [x] Opening episode (~80 s, 11 shots) of the supplied story opening, reusing the
+      pilot wash, with camera moves, expressions, SFX and narration→action links.
+- [ ] User review of the opening: pacing (80 s vs ~60 s target), inverted-cup
+      readability, expressions, SFX balance, pronunciation.
+- [ ] Next: parameterize reach/open/walk clips against named world anchors
+      (walk is parameterized; pickup/fridge reach are still authored keys).
+- [x] Story-to-video M1 (2026-10-21): `scripts/story_to_video.py <story>` — automatic
+      analysis (rules + optional local Ollama), shot/action planning, narration, SFX,
+      Remotion render, QA. Tested on two new stories (vi, en) + an inline test story.
+- [x] M1.1 quality pass (2026-10-21): staging/spacing, child scale, hand-over, boarding,
+      sitting, prop-face occlusion, size-aware close-ups, written-item inserts, depth lane,
+      surface slots; validator rules + 13 regression tests; both stories re-rendered.
+- [ ] **User review of M1.1 results (blocking).** Do not start the next milestone before it.
+- [ ] Candidates after review (not started): richer rig poses (lie down, crouch-walk,
+      two-handed carry), more location kinds/variants, crowd/extra characters, per-character
+      voices, better LLM prompting or a larger local model, word-level alignment, music,
+      Shorts/vertical cut, UI.

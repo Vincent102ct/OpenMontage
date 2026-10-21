@@ -78,6 +78,10 @@ Each tool's `agent_skills[]` field bridges Layer 1 → Layer 3. See `skills/INDE
 | `tools/graphics/fal_3d.py` | fal.ai Hunyuan 3D and SAM 3D routes for image-conditioned and multi-object GLB generation |
 | `tools/graphics/blender_world.py` | Blender 4.5 LTS production world assembly, terrain, lighting, camera, and Eevee Next rendering |
 | `tools/character/character_animation.py` | Local character-animation tools — character specs, SVG rig plans, pose libraries, action timelines, HyperFrames packages, and QA reports |
+| `tools/character/story_motion.py`, `tools/character/remotion/` | Opt-in authored story-action tracks, skeletal/prop contact and native Remotion package handoff (single shot `StoryAction`, multi-shot `StoryEpisode`); see `docs/features/story-to-action-animation.md`, `docs/features/story-to-action-opening-episode.md` |
+| `tools/story/`, `scripts/story_to_video.py` | Automatic story → MP4 (M1): analyzer (rules + optional local Ollama), planner, procedural rooms, QA; generic `StoryVideo` composition; see `docs/features/story-to-video-pipeline.md` |
+| `tools/audio/procedural_sfx.py` | Deterministic local FFmpeg sound-effect recipes (room tone, hum, water, clink, footstep, door, drone) |
+| `tools/audio/macos_say_tts.py` | Offline macOS narration with explicit installed voice/locale and nonempty audio sample validation |
 | `lib/hyperframes_style_bridge.py` | Playbook → CSS custom properties + `DESIGN.md` bridge for HyperFrames workspaces |
 | `remotion-composer/src/components/` | 8 Remotion components (TextCard, StatCard, ProgressBar, CalloutBox, ComparisonCard + charts/) |
 | `.agents/skills/hyperframes*/` | Vendored HyperFrames Layer 3 skills (authoring contract, CLI, registry, website-to-video) |

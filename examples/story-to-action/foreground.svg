@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<!-- Right jamb only: entering the bedroom naturally occludes the character. -->
+<path d="M 1195 149 H 1280 V 623 H 1195 Z" fill="#263c45"/>
+<path d="M 1195 156 H 1215 V 594 H 1195 Z" fill="#182e3b"/>
+<path d="M 851 150 H 1216 V 166 H 851 Z" fill="#6d7770"/>
+<path d="M 1216 577 H 1280 V 590 H 1216" fill="#142e39"/>
+</svg>

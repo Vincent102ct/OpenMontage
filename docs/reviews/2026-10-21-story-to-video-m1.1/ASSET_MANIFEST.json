@@ -1,0 +1,230 @@
+{
+ "version": "1.0",
+ "scope": "story-to-action pilot + story-to-video M1/M1.1",
+ "generated": "2026-10-21",
+ "tracked": {
+  "story_fixtures": [
+   {
+    "path": "examples/story-to-video/stories/chiec-o-mau-vang.vi.md",
+    "sha256": "8dfff522d02a0dd8d97baf50bb4980d112b80f9b3e562264de91d84268a81cac",
+    "bytes": 1225
+   },
+   {
+    "path": "examples/story-to-video/stories/the-last-loaf.en.md",
+    "sha256": "8dbef7da9d9f62efaed7f1d3e99788a50df7ea5425c077ab31c27b30f0dea537",
+    "bytes": 850
+   }
+  ],
+  "pilot_artwork_and_fixtures": [
+   {
+    "path": "examples/story-to-action/README.md",
+    "sha256": "863003e01c9de518181b813e2c14220dc8a69953d5a0d17256b2aaf6c32170e5",
+    "bytes": 2172
+   },
+   {
+    "path": "examples/story-to-action/apartment.svg",
+    "sha256": "ffe8d0777035761efa3e794732fbbf0c1432aed34094e4ac8a299b773db0b770",
+    "bytes": 6903
+   },
+   {
+    "path": "examples/story-to-action/apartment_east.svg",
+    "sha256": "3c082e2a15ef631478220a86a1674e0dc7ba77029aa8284e9acc5ed974ca1b37",
+    "bytes": 2209
+   },
+   {
+    "path": "examples/story-to-action/apartment_west.svg",
+    "sha256": "4acb369155767d4bff081fc5d815b07d62e1a6127babf8eb6a6343658732d4be",
+    "bytes": 4384
+   },
+   {
+    "path": "examples/story-to-action/apartment_west_overlay.svg",
+    "sha256": "f4b5164af8b731bd92b9fe9947e51722722a7796b538cb31dd12cfeff1cf2342",
+    "bytes": 565
+   },
+   {
+    "path": "examples/story-to-action/foreground.svg",
+    "sha256": "c11c42854fa0c65193e1479501edf7f2f7897f9947250262ecbadb549db87873",
+    "bytes": 414
+   },
+   {
+    "path": "examples/story-to-action/insert_fridge_bottle.svg",
+    "sha256": "f60c147c23956aa2e0e94304d3f921765f08f4e26d5c3fffb7bca30a134f8a03",
+    "bytes": 2839
+   },
+   {
+    "path": "examples/story-to-action/insert_sink_cup.svg",
+    "sha256": "b6edeafd6d4f884b463132fd156e9a79190dab28b5a63e6ff9027c8c5e8072a9",
+    "bytes": 2838
+   },
+   {
+    "path": "examples/story-to-action/opening.durations.json",
+    "sha256": "1d7d69ee21bf223d19fdd626075d709173832d688d9da42d0df38c53eff31a21",
+    "bytes": 1373
+   },
+   {
+    "path": "examples/story-to-action/opening.narration.json",
+    "sha256": "ecba7885fd6168aaaa649b8191c4ef828c1b25f3c929288c05d06c6015a5a5a6",
+    "bytes": 1912
+   },
+   {
+    "path": "examples/story-to-action/pilot.actions.json",
+    "sha256": "3ac635e65ce80c7157b126cbdcb39a67671c7740a3ba70cf37d8a98038cfe887",
+    "bytes": 670
+   },
+   {
+    "path": "examples/story-to-action/pilot.motion.json",
+    "sha256": "1a1ca003dd8225dce69b6a499e8126fb2d525b03e3d51efcd135cf340945f34e",
+    "bytes": 13125
+   },
+   {
+    "path": "examples/story-to-action/source_story_opening.md",
+    "sha256": "1045933be121ffdbb63525346155c6fb3e9f4215bbead833eeec93d81a253a99",
+    "bytes": 1323
+   },
+   {
+    "path": "examples/story-to-action/window_day.svg",
+    "sha256": "4fc649105e190e8fdcd7148cc5dac5413be5689477a6da75b9b8be487fbee585",
+    "bytes": 1117
+   }
+  ],
+  "rig_and_renderer_templates": [
+   {
+    "path": "tools/character/remotion/Actor.tsx",
+    "sha256": "041e4c9151e2cfb747c5b5f872963682678ca32135731c29ab744a869923fb78",
+    "bytes": 3927
+   },
+   {
+    "path": "tools/character/remotion/Episode.tsx",
+    "sha256": "61009684e6cf8edfffaf40729f2d1ce57edc2c2998956344596a3d2330bcc64e",
+    "bytes": 9183
+   },
+   {
+    "path": "tools/character/remotion/Scene.tsx",
+    "sha256": "f74a551d65d8c4922f4d7a6245839f5f8b913f49c6481aaec9a9c83b5968dcae",
+    "bytes": 2491
+   },
+   {
+    "path": "tools/character/remotion/StoryVideo.tsx",
+    "sha256": "7dff3dfde47052ded03b0619de3578071f680eefc9b1a39f4736ecc327f9c305",
+    "bytes": 18067
+   },
+   {
+    "path": "tools/character/remotion/index.tsx",
+    "sha256": "00b45d81e1c0124a56ea11330a7e90bb7fae503d46a6df24874b76e0bb00ef8b",
+    "bytes": 1227
+   },
+   {
+    "path": "tools/character/remotion/motion.ts",
+    "sha256": "195e68e5141ec3a69f1aee3a650e5443062234523d145adaf40b27cce261b21d",
+    "bytes": 4189
+   },
+   {
+    "path": "tools/character/remotion/shots.ts",
+    "sha256": "eed5d2824281a4db17d2202cae326910edd43f4d76c93956a540c1198f357baa",
+    "bytes": 3284
+   }
+  ],
+  "review_evidence_m1_1": [
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-board-before-after.jpg",
+    "sha256": "2b48140c9e94f1099db2e338d285c097f17ed5b325cfbafd7073158502505d6a",
+    "bytes": 291957
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-letter-before-after.jpg",
+    "sha256": "b9ad78252800da16834651e73926729b5ad2aa0e31404930f99d3ce41a42c164",
+    "bytes": 148906
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-m1.1-contact-sheet.jpg",
+    "sha256": "3d75d71a3bd21db7b86872558424f3427ffa488cad5d9e2eb425b9096b437ec9",
+    "bytes": 583976
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-m1.1-review-proxy.mp4",
+    "sha256": "5b4dcbf5fbd0170b4efc97edf585f494b51f0467ddc54e2293265f406df315b3",
+    "bytes": 8650257
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-sit-before-after.jpg",
+    "sha256": "bc97c811da652e1bbf1f1e4c15fbe140b9b545568eeb70b89dd659902ad5e44c",
+    "bytes": 116111
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/chiec-o-mau-vang-vi-umbrella-before-after.jpg",
+    "sha256": "9f46dfe3826b2259af4d50177737d090533b8d5c2c6a63f24ebd0332acc3044b",
+    "bytes": 174670
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/the-last-loaf-en-give-before-after.jpg",
+    "sha256": "3b98e60b5a692d0712ce161d2fd9ae24b8c8f32bf0ea9cc2b6b6fe13a63d34a0",
+    "bytes": 283075
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/the-last-loaf-en-m1.1-contact-sheet.jpg",
+    "sha256": "ee0068381aec7fa8cfb72f64d691a0b7d02707eafe7825ddebb11963e986b806",
+    "bytes": 406830
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/the-last-loaf-en-m1.1-review-proxy.mp4",
+    "sha256": "164351d4cc230fe57fc2102e2d3eb3f3f9e953d105844cf4f6a6ba879df97dac",
+    "bytes": 3733067
+   },
+   {
+    "path": "docs/reviews/2026-10-21-story-to-video-m1.1/the-last-loaf-en-overlap-before-after.jpg",
+    "sha256": "c95e89b4226de4f9571607a3e5253e865147f3ec5f799824688621a1e8d79002",
+    "bytes": 339615
+   }
+  ]
+ },
+ "generated_in_code_not_files": {
+  "location_backgrounds": "tools/story/locations.py builds 8 original SVG rooms (office, street/bus_stop, living_room, kitchen, shop/bakery, bedroom, park, room)",
+  "characters_and_props": "tools/character/remotion/Actor.tsx (v1 rig) + StoryVideo.tsx (hair, props, vehicles, doors, inserts)",
+  "sound_effects": "tools/audio/procedural_sfx.py FFmpeg lavfi recipes (no sample files)"
+ },
+ "download_separately": {
+  "python_packages": "pip install -r requirements.txt -r requirements-dev.txt (numpy, Pillow, jsonschema, pytest)",
+  "node_packages": "cd remotion-composer && npm ci (package-lock.json tracked; Remotion 4.0.484)",
+  "remotion_headless_browser": "downloaded by Remotion on first render into remotion-composer/node_modules/.remotion",
+  "ollama_model_optional": {
+   "runtime": "ollama 0.40.7 (Homebrew)",
+   "model": "qwen2.5:7b-instruct",
+   "id": "845dbda0ea48",
+   "manifest_digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+   "weights_digest": "sha256:2bada8a7450677000f678be90653b85d364de7db25eb5ea54136ada5f3933730",
+   "weights_bytes": 4683073952,
+   "command": "ollama pull qwen2.5:7b-instruct"
+  }
+ },
+ "os_provided": {
+  "tts_voices": "macOS `say` voices Linh (vi_VN) and Samantha (en_US); no Windows/Linux equivalent wired for this pipeline",
+  "handwriting_font": "Bradley Hand (macOS); falls back to Chalkboard SE / Snell Roundhand / generic cursive",
+  "ffmpeg": "8.x on PATH"
+ },
+ "regenerable_not_committed": {
+  "renders": "projects/<slug>-auto/renders/final.mp4 via scripts/story_to_video.py (projects/ is gitignored)",
+  "narration_wavs_and_sfx": "projects/<slug>-auto/assets/audio/ (regenerated by the CLI)",
+  "remotion_staging": "remotion-composer/projects/<slug>/ (auto-staged by video_compose)"
+ },
+ "m1_1_renders_original": [
+  {
+   "path": "projects/chiec-o-mau-vang-vi-auto/renders/final.mp4",
+   "sha256": "a5dc4c607ebee94fa48f87b6e3806c20ce7613b9c37d38b3a1f069b5bf7bf315",
+   "seconds": 124.117333,
+   "bytes": 35026049,
+   "copy_in_repo": "review proxy (CRF 30) in review_evidence_m1_1"
+  },
+  {
+   "path": "projects/the-last-loaf-en-auto/renders/final.mp4",
+   "sha256": "6fc7cd3b4f21fead59e7e056474204a061e300beb137571f443fe8ba2939d43a",
+   "seconds": 90.858667,
+   "bytes": 19597526,
+   "copy_in_repo": "review proxy (CRF 30) in review_evidence_m1_1"
+  }
+ ],
+ "local_only_not_committed": {
+  "docs/references/openmontage_style_reference.png": "user-supplied style reference; distribution rights unknown; only used as visual guidance, not needed to run",
+  "en_US-*.onnx": "Piper voices (gitignored, not used by this pipeline)",
+  ".env": "credentials (gitignored, not used by this pipeline)"
+ }
+}

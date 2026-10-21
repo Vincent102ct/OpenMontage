@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<!-- Top-down insert of the v1 sink: the same white cup with a dried brown ring inside. -->
+<defs>
+ <radialGradient id="i-basin" cx=".5" cy=".55" r=".6"><stop stop-color="#304b54"/><stop offset="1" stop-color="#5c7a7e"/></radialGradient>
+ <radialGradient id="i-inside" cx=".45" cy=".4" r=".7"><stop stop-color="#ece8dc"/><stop offset="1" stop-color="#c4c3b6"/></radialGradient>
+ <pattern id="i-tile" width="84" height="80" patternUnits="userSpaceOnUse"><rect width="84" height="80" fill="#70817e"/><path d="M 0 0 H 84 V 80" fill="none" stroke="#526a6c" stroke-width="3"/></pattern>
+</defs>
+<rect width="1280" height="720" fill="#b1b0a0"/>
+<rect width="1280" height="96" fill="url(#i-tile)"/>
+<path d="M 0 96 H 1280" stroke="#344d50" stroke-width="6"/>
+<path d="M 0 610 H 1280" stroke="#9a998a" stroke-width="3" opacity=".6"/>
+<!-- Faucet base at the back of the basin. -->
+<rect x="590" y="96" width="70" height="56" rx="10" fill="#9cb3b0" stroke="#243e47" stroke-width="5"/>
+<path d="M 625 150 V 214" stroke="#243e47" stroke-width="30" stroke-linecap="round"/>
+<path d="M 625 150 V 214" stroke="#9cb3b0" stroke-width="20" stroke-linecap="round"/>
+<rect x="300" y="170" width="680" height="470" rx="70" fill="#afbab1" stroke="#344d50" stroke-width="5"/>
+<rect x="326" y="194" width="628" height="422" rx="58" fill="url(#i-basin)"/>
+<circle cx="760" cy="470" r="30" fill="#24363f" stroke="#7f9796" stroke-width="6"/>
+<path d="M 742 470 H 778 M 760 452 V 488" stroke="#7f9796" stroke-width="4"/>
+<ellipse cx="560" cy="430" rx="132" ry="26" fill="#1b2c33" opacity=".35"/>
+<!-- The cup, seen from above: rim, interior wall, dried coffee ring and handle. -->
+<g stroke="#17242b" stroke-width="4">
+ <path d="M 640 380 C 712 360 724 448 650 444" fill="none" stroke="#17242b" stroke-width="30" stroke-linecap="round"/>
+ <path d="M 640 380 C 712 360 724 448 650 444" fill="none" stroke="#eeeade" stroke-width="22" stroke-linecap="round"/>
+ <circle cx="560" cy="410" r="112" fill="#f2efe5"/>
+ <circle cx="560" cy="410" r="94" fill="url(#i-inside)"/>
+</g>
+<path d="M 560 330 C 610 330 640 362 642 405 C 644 448 612 482 568 486 C 520 490 480 460 476 418 C 472 372 506 332 560 330 Z" fill="none" stroke="#7a5636" stroke-width="9" opacity=".72"/>
+<path d="M 560 342 C 604 342 630 370 632 405 C 634 442 606 472 568 475 C 526 478 492 452 488 418 C 484 378 514 343 560 342 Z" fill="none" stroke="#9b7653" stroke-width="4" opacity=".5"/>
+<path d="M 600 470 l 6 12 M 520 476 l -4 10 M 470 400 l -6 4" stroke="#7a5636" stroke-width="5" opacity=".55" stroke-linecap="round"/>
+<circle cx="560" cy="412" r="42" fill="#d2cebf" opacity=".55"/>
+<path d="M 500 352 Q 530 336 566 338" fill="none" stroke="#fffdf4" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+</svg>

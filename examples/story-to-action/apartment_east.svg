@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="720" viewBox="0 0 640 720">
+<!-- Apartment v1 extension, placed at world x=1280: small bathroom beside the bedroom. -->
+<defs>
+ <linearGradient id="e-wall" x2="0" y2="1"><stop stop-color="#606d86"/><stop offset="1" stop-color="#87909f"/></linearGradient>
+ <linearGradient id="e-floor" x2="0" y2="1"><stop stop-color="#495555"/><stop offset="1" stop-color="#293940"/></linearGradient>
+ <linearGradient id="e-door"><stop stop-color="#4a5d63"/><stop offset="1" stop-color="#3a4c54"/></linearGradient>
+</defs>
+<rect width="640" height="720" fill="url(#e-wall)"/>
+<path d="M 0 89 L 58 106 112 88 170 113 236 96 300 117 362 90 430 108 498 86 560 104 640 92 V 0 H 0 Z" fill="#3d4a63" opacity=".65"/>
+<path d="M 0 0 H 640 V 75 H 0 Z" fill="#263d48"/>
+<path d="M 470 250 l 30 -9 14 26 -7 33 21 18 -26 22 -24 -30 Z M 40 410 l 28 7 6 30 20 12 -10 34 -28 -8 -12 -40 Z" fill="#566681" opacity=".56"/>
+<path d="M 520 140 l 12 18 -5 36 11 20 -8 28 -15 4 2 -76 Z" fill="#a1a7b4" opacity=".38"/>
+<path d="M 0 570 H 640 V 720 H 0" fill="url(#e-floor)"/>
+<g fill="none" stroke="#71807a" stroke-opacity=".18"><path d="M 0 614 H 640 M 0 673 H 640 M 240 570 L 280 720 M 520 570 L 600 720"/></g>
+<path d="M 0 562 H 640" stroke="#22373e" stroke-width="12"/>
+<!-- Narrow closed bathroom door with frame, vent and switch. -->
+<rect x="140" y="236" width="170" height="332" fill="#2c3f48" stroke="#1d303b" stroke-width="4"/>
+<rect x="152" y="248" width="146" height="316" fill="url(#e-door)" stroke="#22363f" stroke-width="3"/>
+<path d="M 170 270 H 280 V 390 H 170 Z M 170 414 H 280 V 540 H 170 Z" fill="none" stroke="#5d7177" stroke-width="2"/>
+<circle cx="282" cy="410" r="7" fill="#b2b7a0" stroke="#1d303b" stroke-width="2"/>
+<rect x="190" y="190" width="70" height="30" rx="3" fill="#7d8a8c" stroke="#2c4248" stroke-width="2"/>
+<path d="M 198 199 H 252 M 198 205 H 252 M 198 211 H 252" stroke="#3f555a" stroke-width="2"/>
+<rect x="340" y="370" width="19" height="31" rx="2" fill="#9aa59a" stroke="#3c565a" stroke-width="2"/>
+<path d="M 346 377 h 7 v 13 h -7 Z" fill="#607c7b"/>
+<path d="M 420 200 l -8 15 5 15 -6 17" fill="none" stroke="#3b545b" stroke-width="2"/>
+</svg>

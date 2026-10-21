@@ -1,0 +1,32 @@
+{
+  "source": "examples/story-to-action/source_story_opening.md",
+  "voice": "Linh",
+  "language_code": "vi_VN",
+  "rate": 145,
+  "segments": [
+    {"id": "n01", "text": "Tôi bắt đầu nghi ngờ có người vào căn hộ của mình vì một chiếc cốc."},
+    {"id": "n02", "text": "Tôi sống một mình."},
+    {"id": "n03a", "text": "Căn hộ chỉ hơn bốn mươi mét vuông,"},
+    {"id": "n03b", "text": "gồm phòng khách nối với bếp,"},
+    {"id": "n03c", "text": "một phòng ngủ"},
+    {"id": "n03d", "text": "và một nhà vệ sinh nhỏ."},
+    {"id": "n04", "text": "Tôi không uống cà phê ở nhà."},
+    {"id": "n05a", "text": "Nhưng sáng thứ Hai hôm đó,"},
+    {"id": "n05b", "text": "trong bồn rửa có một chiếc cốc màu trắng."},
+    {"id": "n06", "text": "Bên trong còn một vệt nâu khô quanh thành."},
+    {"id": "n07", "text": "Tôi đứng nhìn nó một lúc."},
+    {"id": "n08", "text": "Sau đó tự nhủ chắc cuối tuần có bạn qua chơi, tôi quên rửa."},
+    {"id": "n09", "text": "Không có gì đáng để nghĩ thêm."},
+    {"id": "n10a", "text": "Tối hôm đó tôi rửa chiếc cốc,"},
+    {"id": "n10b", "text": "úp lên giá"},
+    {"id": "n10c", "text": "rồi đi ngủ."},
+    {"id": "n11", "text": "Sáng hôm sau, chiếc ghế ở bàn ăn bị kéo ra."},
+    {"id": "n12", "text": "Tôi thường đẩy ghế sát bàn vì căn hộ chật."},
+    {"id": "n13", "text": "Lúc đầu tôi cũng không để ý."},
+    {"id": "n14", "text": "Cho đến khi mở tủ lạnh."},
+    {"id": "n15", "text": "Chai nước hai lít tôi mua tối qua đã vơi gần một phần ba."},
+    {"id": "n16", "text": "Tôi đứng trước tủ lạnh, cố nhớ mình có uống không."},
+    {"id": "n17", "text": "Có thể."},
+    {"id": "n18", "text": "Tôi hay thức khuya."}
+  ]
+}

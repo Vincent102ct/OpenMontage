@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<!-- Dining table drawn over the chair items so tucked seats sit under its top. -->
+<g stroke="#1b2e38" stroke-width="3" stroke-linejoin="round">
+ <path d="M 540 482 L 536 562 M 740 482 L 744 562" stroke="#3a3230" stroke-width="10" fill="none"/>
+ <path d="M 518 466 H 762 L 766 482 H 514 Z" fill="#6d5a4c"/>
+ <path d="M 520 470 H 760" stroke="#8a7462" stroke-width="2"/>
+ <path d="M 612 466 V 452 Q 612 444 620 444 H 652 Q 660 444 660 452 V 466" fill="#7d8f8c"/>
+</g>
+</svg>
