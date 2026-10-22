@@ -201,6 +201,24 @@ async function capture(name) {
   await waitFor(() => document.querySelectorAll('.production-card').length === 4, 'library retry');
   findings.checks.push('Library retry recovers');
 
+  // P2.1: explicit, user-triggered Story Intake from My Productions.
+  const prepareFor = id => `.prepare-draft[data-project-id="${id}"]`;
+  await check(() => document.querySelector('.prepare-draft[data-project-id="fixture-topic"]').disabled
+    && document.querySelector('.prepare-draft[data-project-id="fixture-canonical"]').disabled, 'Prepare Story Draft disabled for topic/canonical');
+  await page.evaluate(sel => document.querySelector(sel).click(), prepareFor('fixture-vietnamese'));
+  await waitFor(() => document.getElementById('intake-panel').textContent.includes('Proposed editorial changes'), 'story draft');
+  await check(() => {
+    const text = document.getElementById('intake-panel').textContent;
+    return text.includes('Review status: Pending human review') && text.includes('Automatic analysis is incomplete')
+      && text.includes('Needs your interpretation') && text.includes('artifacts/story_intake/v1/story_intake_report.json');
+  }, 'Story draft shows pending review, incomplete coverage, questions and files');
+  await capture('p21-story-draft.png');
+  await waitFor(() => document.querySelector('.prepare-draft[data-project-id="fixture-vietnamese"]')
+    && !document.querySelector('.prepare-draft[data-project-id="fixture-vietnamese"]').disabled, 'button re-enabled');
+  await page.evaluate(sel => document.querySelector(sel).click(), prepareFor('fixture-vietnamese'));
+  await waitFor(() => document.getElementById('intake-panel').textContent.includes('Already prepared'), 'repeat draft');
+  findings.checks.push('Repeat Prepare Story Draft returns the existing draft');
+
   await click('new-tab');
   await page.setViewport({width: 390, height: 844, deviceScaleFactor: 1});
   await check(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, 'Mobile layout without horizontal overflow');

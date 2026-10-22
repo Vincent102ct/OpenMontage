@@ -17,11 +17,15 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from backlot.server import create_app as create_backlot_app
 from lib.paths import PROJECTS_DIR, REPO_ROOT
 from studio.catalog import ApprovedPackages
+from studio.intake import FILES as INTAKE_FILES, OUTPUT_DIR as INTAKE_DIR
+from studio.intake import IntakeError, prepare_story_intake, read_story_intake
 from studio.models import NewProduction
 from studio.store import ProductionStore, ProjectExistsError
 
 UI_DIR = Path(__file__).parent / "ui"
 MAX_BODY_BYTES = 2_000_000
+INTAKE_STATUS = {"invalid_project_id": 422, "not_found": 404, "not_prepared": 404, "invalid_request": 422,
+                 "source_mismatch": 409, "unsupported_input_mode": 422, "existing_output_invalid": 409}
 
 
 def workspace_key(root: Path) -> str:
@@ -63,7 +67,12 @@ def create_app(store: ProductionStore | None = None):
 
     @app.get("/studio/api/productions")
     async def productions():
-        return await run_in_threadpool(service.list_productions)
+        rows = await run_in_threadpool(service.list_productions)
+        for row in rows:  # Presence only; GET .../intake verifies hashes before showing a draft.
+            if row["kind"] == "studio":
+                report = service.root / row["project_id"] / INTAKE_DIR / INTAKE_FILES["report"]
+                row["intake_status"] = "prepared" if report.is_file() else "not_prepared"
+        return rows
 
     @app.get("/studio/api/productions/{project_id}")
     async def production(project_id: str):
@@ -76,16 +85,7 @@ def create_app(store: ProductionStore | None = None):
 
     @app.post("/studio/api/productions", status_code=201)
     async def save(request: Request):
-        origin = request.headers.get("origin")
-        expected = urlsplit(str(request.base_url))
-        if origin:
-            supplied = urlsplit(origin)
-            if (supplied.scheme, supplied.netloc) != (expected.scheme, expected.netloc):
-                raise HTTPException(403, "Use Studio from this local origin to save a request.")
-        if request.headers.get("sec-fetch-site") == "cross-site":
-            raise HTTPException(403, "Cross-site saves are not allowed.")
-        if request.headers.get("content-type", "").split(";", 1)[0].strip() != "application/json":
-            raise HTTPException(415, "Send a JSON production request.")
+        require_local_json_post(request)
         length = 0
         chunks = []
         async for chunk in request.stream():
@@ -107,5 +107,38 @@ def create_app(store: ProductionStore | None = None):
         except OSError:
             raise HTTPException(500, "Could not save the request. Check local disk access; no production was started.")
 
+    @app.post("/studio/api/productions/{project_id}/intake")
+    async def prepare_intake(project_id: str, request: Request):
+        # User-triggered only: intake never runs on save, list or page load.
+        require_local_json_post(request)
+        try:
+            result = await run_in_threadpool(prepare_story_intake, service, project_id)
+        except IntakeError as exc:
+            raise HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
+        except OSError:
+            raise HTTPException(500, {"code": "write_failed", "message": "Could not write the story draft. Check "
+                                      "local disk access; the original story is unchanged."})
+        return JSONResponse(status_code=201 if result["status"] == "created" else 200, content=result)
+
+    @app.get("/studio/api/productions/{project_id}/intake")
+    async def intake(project_id: str):
+        try:
+            return {"status": "prepared", **await run_in_threadpool(read_story_intake, service, project_id)}
+        except IntakeError as exc:
+            raise HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
+
     app.mount("/studio/static", StaticFiles(directory=UI_DIR), name="studio-static")
     return app
+
+
+def require_local_json_post(request: Request) -> None:
+    origin = request.headers.get("origin")
+    expected = urlsplit(str(request.base_url))
+    if origin:
+        supplied = urlsplit(origin)
+        if (supplied.scheme, supplied.netloc) != (expected.scheme, expected.netloc):
+            raise HTTPException(403, "Use Studio from this local origin.")
+    if request.headers.get("sec-fetch-site") == "cross-site":
+        raise HTTPException(403, "Cross-site requests are not allowed.")
+    if request.headers.get("content-type", "").split(";", 1)[0].strip() != "application/json":
+        raise HTTPException(415, "Send a JSON request.")

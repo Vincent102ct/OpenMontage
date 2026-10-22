@@ -69,7 +69,11 @@ def test_real_chrome_input_flows(tmp_path):
             (tmp_path / "browser.log").write_text(result.stdout + result.stderr, encoding="utf-8")
             assert result.returncode == 0, result.stdout + result.stderr
             findings = json.loads((screenshots / "browser-results.json").read_text(encoding="utf-8"))
-            assert len(findings["checks"]) >= 17
+            assert len(findings["checks"]) >= 20
+            reports = list(projects.glob("*/artifacts/story_intake/v1/story_intake_report.json"))
+            assert [r.parents[3].name for r in reports] == ["fixture-vietnamese"]
+            report = json.loads(reports[0].read_text(encoding="utf-8"))
+            assert report["review"]["status"] == "pending_human_review" and report["production_started"] is False
             assert findings["externalRequests"] == [] and findings["pageErrors"] == []
             assert package.read_bytes() == original
             assert len(list(projects.glob("*/artifacts/production_request.json"))) == 4

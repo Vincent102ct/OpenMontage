@@ -1,7 +1,8 @@
 # OpenMontage Studio on Windows
 
-Studio saves a story or topic as a new production request. It does **not** start
-research, narration or video rendering, and it never publishes.
+Studio saves a story or topic as a new production request and, on request,
+prepares a story draft for review. It does **not** start research, narration or
+video rendering, and it never publishes.
 
 ## Open Studio
 
@@ -39,6 +40,38 @@ Other modes:
 
 Lists Studio requests and existing project workspaces. **View input** shows the
 saved text; **Open Backlot** opens that project's board.
+
+## Prepare a story draft
+
+For a **Full story** production, **My Productions → Prepare Story Draft** checks
+the saved story against its recorded hash. It then writes draft files for review under
+`projects/<id>/artifacts/story_intake/v1/`:
+- story segments;
+- character, place and object candidates;
+- recurring times and numbers;
+- proposed text clean-ups;
+- questions for you.
+
+It does not run research, narration or rendering, and it never changes your
+original story or the saved request.
+
+The draft panel shows **Review status: Pending human review**. Proposed edits
+(for example a stray `\` or a personal note at the end) are shown as before/after
+and are **not applied** to your story. The automatic analysis covers rules only; plot,
+twists and who-is-who are listed as questions for you.
+
+Clicking the button again shows the same draft; it is never rewritten. If a draft
+file was edited by hand, Studio refuses to overwrite it. Move the `story_intake\v1`
+folder aside to prepare it again. The button is disabled for Topic and Canonical
+productions (not supported yet).
+
+Same action from PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m studio intake <project-id>
+```
+
+Details: [P2.1 feature document](features/p2.1-story-intake-bridge.md).
 
 ## Notes
 

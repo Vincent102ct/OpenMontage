@@ -18,9 +18,11 @@ async function api(path, options) {
   const result = await response.json();
   if (!response.ok) {
     const detail = result.detail;
-    throw new Error(Array.isArray(detail)
+    const error = new Error(Array.isArray(detail)
       ? detail.map((e) => `${e.loc?.join(".") || "Input"}: ${e.msg}`).join("\n")
-      : detail || "Could not reach Studio. Please try again.");
+      : detail?.message || detail || "Could not reach Studio. Please try again.");
+    error.code = detail?.code;
+    throw error;
   }
   return result;
 }
@@ -198,15 +200,109 @@ $("list-tab").addEventListener("click", () => { activate("list"); loadProduction
 $("refresh-list").addEventListener("click", () => loadProductions());
 
 async function showDetail(id) {
+  $("intake-panel").replaceChildren();
   try {
     const { request } = await api(`productions/${encodeURIComponent(id)}`);
     $("detail-content").textContent = request.content ?? JSON.stringify(request.canonical_package, null, 2);
     $("production-detail").hidden = false;
     $("production-detail").scrollIntoView({ behavior: "smooth", block: "center" });
+    if (request.input_mode !== "story") return intakeMessage("Story Intake supports Full story requests only at this stage.");
+    try {
+      renderIntake(await api(`productions/${encodeURIComponent(id)}/intake`), id);
+    } catch (error) {
+      intakeMessage(error.code === "not_prepared"
+        ? "Story draft not prepared yet. Prepare Story Draft runs intake only: no research, narration or rendering."
+        : error.message, error.code !== "not_prepared");
+    }
   } catch (error) {
     $("production-detail").hidden = false;
     $("detail-content").textContent = error.message;
   }
+}
+
+function intakeMessage(text, isError = false) {
+  const note = element("p", text, isError ? "error-panel" : "field-help");
+  if (isError) note.setAttribute("role", "alert");
+  $("intake-panel").replaceChildren(note);
+}
+
+function visibleBreaks(text) { return text.replace(/\r\n/g, "↵\n").replace(/\r/g, "↵\n"); }
+
+function renderIntake(data, id) {
+  const report = data.report;
+  const panel = $("intake-panel");
+  panel.replaceChildren(element("h2", "Story Draft"));
+  panel.append(element("p", data.status === "already_prepared"
+    ? "Already prepared. The verified existing draft is shown; nothing was rewritten." : "", "field-help"));
+  const chips = element("div", undefined, "chip-row");
+  chips.append(element("span", "Review status: Pending human review", "status-chip"),
+    element("span", "Production not started", "status-chip"));
+  panel.append(chips);
+  panel.append(element("p", "Automatic analysis is incomplete: deterministic rules only. Plot, twists, "
+    + "contradictions, who-is-who and speakers were not analyzed. Nothing below is approved.", "coverage-warning"));
+  const counts = element("dl", undefined, "intake-counts");
+  for (const [key, label] of [["segments", "Segments"], ["characters", "Character candidates"],
+    ["locations", "Location candidates"], ["objects", "Object candidates"], ["dialogue_lines", "Dialogue lines"],
+    ["time_expressions", "Time expressions"], ["proposed_changes", "Proposed changes"],
+    ["human_interpretation_items", "Questions for you"]]) {
+    counts.append(element("dt", label), element("dd", String(report.counts[key])));
+  }
+  panel.append(counts);
+
+  panel.append(element("h3", "Proposed editorial changes (not approved)"));
+  if (!data.changes.length) panel.append(element("p", "None proposed.", "field-help"));
+  for (const change of data.changes) {
+    const box = element("article", undefined, "change-card");
+    box.append(element("strong", `${change.id} · ${change.rule.replaceAll("_", " ")} · line ${change.source_span.line}`
+      + ` · confidence ${change.confidence}`));
+    box.append(element("p", change.rationale, "field-help"));
+    box.append(element("small", "Before"), element("pre", visibleBreaks(change.before_excerpt)));
+    box.append(element("small", "After (proposal only)"), element("pre", visibleBreaks(change.after_excerpt)));
+    panel.append(box);
+  }
+
+  panel.append(element("h3", "Needs your interpretation"));
+  const questions = element("ol", undefined, "question-list");
+  for (const item of data.human_interpretation) {
+    const where = item.segment_ids.length ? ` (${item.segment_ids.length} segments)` : "";
+    questions.append(element("li", `${item.question}${where}`));
+  }
+  panel.append(questions);
+
+  panel.append(element("h3", "Extracted candidates (unverified)"));
+  for (const [key, label] of [["characters", "Characters"], ["locations", "Locations"], ["objects", "Objects"]]) {
+    const items = data.candidates[key].map((c) => `${c.label} (${c.mention_count})`).join(", ");
+    panel.append(element("p", `${label}: ${items || "none"}`, "candidate-line"));
+  }
+  panel.append(element("h3", "Saved files"));
+  const files = element("ul", undefined, "file-list");
+  for (const name of data.saved_files) files.append(element("li", `projects/${id}/${name}`));
+  panel.append(files);
+}
+
+async function prepareDraft(id, button) {
+  button.disabled = true;
+  button.textContent = "Preparing story draft…";
+  try {
+    const data = await api(`productions/${encodeURIComponent(id)}/intake`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: "{}",
+    });
+    await showDetail(id);
+    renderIntake(data, id);
+    await loadProductions();
+  } catch (error) {
+    await showDetail(id);
+    intakeMessage(error.message || "Could not prepare the story draft. The original story is unchanged.", true);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Prepare Story Draft";
+  }
+}
+
+function draftStatus(row) {
+  if (row.input_mode !== "story") return "Story draft: not available for this input mode yet";
+  if (row.intake_status === "prepared") return "Story draft: prepared · pending human review";
+  return "Story draft: not prepared";
 }
 
 async function loadProductions() {
@@ -231,7 +327,16 @@ async function loadProductions() {
         const button = element("button", "View input", "secondary-button");
         button.type = "button";
         button.addEventListener("click", () => showDetail(row.project_id));
-        actions.append(button);
+        const prepare = element("button", "Prepare Story Draft", "secondary-button prepare-draft");
+        prepare.type = "button";
+        prepare.dataset.projectId = row.project_id;
+        if (row.input_mode !== "story") {
+          prepare.disabled = true;
+          prepare.title = "Story Intake supports Full story requests only at this stage.";
+        }
+        prepare.addEventListener("click", () => prepareDraft(row.project_id, prepare));
+        actions.append(button, prepare);
+        body.append(element("p", draftStatus(row), "intake-status"));
       }
       const board = element("a", "Open Backlot ↗");
       board.href = row.backlot_url;
