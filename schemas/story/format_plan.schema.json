@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/story/format_plan.schema.json",
+  "title": "Format plan (Short or Long) derived from a Master Story Package",
+  "description": "A format only selects master narrative segments by ID. It cannot carry its own claims, statuses, entities or text, so Short and Long cannot diverge from the canonical package.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "package_id", "package_version", "aspect_ratio", "target_seconds", "segment_ids"],
+  "properties": {
+    "format": {"enum": ["short", "long"]},
+    "package_id": {"type": "string", "pattern": "^STORY_[0-9]{3,}$"},
+    "package_version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+    "aspect_ratio": {"enum": ["9:16", "16:9"]},
+    "target_seconds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": {"type": "number", "exclusiveMinimum": 0},
+        "max": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "segment_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^SEG_[A-Za-z0-9_-]+$"}
+    },
+    "notes": {"type": "string"}
+  }
+}

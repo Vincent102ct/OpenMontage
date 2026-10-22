@@ -1,5 +1,67 @@
 # Decisions — Story-to-Action pilot (2026-10-21)
 
+## M2.1 + M2.2 technical baseline finalization (2026-10-22)
+
+- User approved: Short = SEG_01, SEG_02, SEG_19, SEG_45 (49.496 s, duration gate PASS); no
+  artificial pause extension; victim names not spoken in the Short; Korva speed 1.05;
+  Master Narrative and Long unchanged.
+- Still pending, never auto-passed: CR_006, CR_007, CR_008, CR_010; audio listening,
+  factual and publication approval.
+- Commit only M2 source/tests/docs/schemas and the canonical example JSON. Evidence Canon /
+  source-visual WIP, `projects/` outputs (WAV/SRT/manifests), evaluation helpers, models,
+  venvs and caches stay out of Git.
+
+## M2.2.1 Short duration via canonical selection (2026-10-22)
+
+- STORY 053 Short = **SEG_01, SEG_02, SEG_19, SEG_45** (option B), measured 49.50 s with
+  Korva `hoang_nam` at speed 1.05 and the unchanged 0.3/0.4/0.5 s pauses. Structure: hook +
+  context, discovery (masks, note), mystery (capsule instruction, not confirmed), ending.
+  Same 11 claims / 11 sources as the six-segment M2.2 Short.
+- Chosen over A (48.56 s, repeats the capsule question), C (50.32 s) and F (52.15 s) —
+  both in the preferred 50–55 s band but they ask about or quote a capsule note that was
+  never introduced — and D/E (59.89 s / 59.66 s, < 0.35 s margin). Storytelling coherence
+  was ranked above the preferred band; 0.5 s under 50 s accepted, pauses not stretched.
+- Only `formats.short` (segment IDs, notes) changed; Master Narrative, claims, Long and
+  package version `v1` unchanged (canon untouched).
+- `lib/master_story.py`: estimated-duration check demoted to an advisory warning
+  (`DURATION_ESTIMATE`). Real duration is gated on measured audio; V2 Piper estimates were
+  30–45 % below Korva and made every valid Short fail package validation.
+- Continuity gate reports `human_review` rules as `pending_human_review`; its pass covers
+  automatic checks only.
+
+## M2.2 Canonical Short narration (2026-10-22)
+
+- New driver `scripts/master_story_short.py` + pure `lib/master_story_short.py`; reuse the
+  M1.2 selector, cached `narrate()` (one Korva worker) and `subtitle_gen`. Story Analyzer
+  and Planner are bypassed so segment/claim IDs are never re-derived.
+- Language comes from the package and is cross-checked against the text; the voice locale
+  must match or the run is blocked. No translation, rewriting or cross-language voice.
+- Timeline from PCM samples with an explicit timing policy (0.3 s lead-in, 0.4 s gaps,
+  0.5 s tail); package `estimated_seconds` are never used for timing.
+- One SRT cue per sentence inside the measured segment window (character-share timing,
+  documented as not word-aligned). `subtitle_gen` must run with `max_words_per_cue=1`;
+  a large value merged the whole Short into one cue (caught by the gate).
+- Over-target duration is reported with overage and longest segments, never fixed by
+  cutting, speeding up or rewording. Manifest `approvals` can only be `pending_human_review`.
+
+## M2.1 Canonical Master Story Package (2026-10-22)
+
+- Standalone package (`schemas/story/*`, `lib/master_story.py`), not built on the
+  uncommitted Evidence Canon / source-visual WIP: that WIP edits shared artifact
+  schemas and `lib/checkpoint.py`, and building on it would mean merging it. Same ID
+  prefixes (`SRC_`/`CLM_`/`EVT_`) and six epistemic states keep a later convergence
+  a mapping, not a rename.
+- One JSON file per story is the source of truth. Short/Long plans contain only
+  ordered master segment IDs plus shape/duration targets; they cannot restate claims,
+  statuses, entities or text. Order must follow the master narrative.
+- Consistency rule between formats: every claim the Short uses must also be in the Long.
+- Machine-checkable continuity is limited to "if claim X is used, claim Y must be
+  used" (qualifier preservation); everything else is an explicit `human_review` rule.
+- Pilot data is reused verbatim from `projects/lead-masks-1966-pilot`; M2.1 adds only
+  entities, rules, format selection and a 2026-10-22 source re-check. No invented
+  facts or sources. Package content stays Vietnamese; code and editorial metadata English.
+- No new media, rendering, TTS or pipeline changes; no commit/push before review.
+
 ## M1.2 Korva TTS integration (2026-10-22)
 
 - Integrate the user-preferred M1.2 voice (Korva `hoang_nam`) as local provider

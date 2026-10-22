@@ -1,5 +1,26 @@
 # Source map — story-to-action pilot
 
+M2.2 Canonical Short narration (2026-10-22): `scripts/master_story_short.py` drives
+`lib/master_story_short.py` (beats, measured timeline, SRT, gates) and reuses
+`local_narration.select_local_voice`, `story_to_video.narrate()` and `subtitle_gen`.
+Output contract: `schemas/story/timed_format_manifest.schema.json`. Tests:
+`tests/lib/test_master_story_short.py`. Spec: `docs/features/m2.2-canonical-short-narration.md`.
+
+M2.1 Canonical Master Story Package (2026-10-22, baseline `coding` / `5316fe9`) —
+boundary recorded before implementation. New, standalone files only:
+`schemas/story/master_story_package.schema.json` (package: sources, claims with
+epistemic status, timeline, characters/locations/objects, continuity rules, master
+narrative segments, Short/Long format plans) and `schemas/story/format_plan.schema.json`
+(a format references master segment IDs only); `lib/master_story.py` validates
+structure, the reference graph, continuity rules and Short/Long consistency, and
+resolves a format into one shared view. Pilot package:
+`examples/master-story/lead-masks-1966/master_story.json` (STORY 053). Tests:
+`tests/lib/test_master_story.py`. Spec: `docs/features/m2.1-master-story-package.md`.
+Not touched: story-to-video pipeline, renderer, Korva/TTS, `schemas/artifacts/*`,
+and the uncommitted Evidence Canon / source-visual WIP (`lib/evidence_canon.py`,
+`lib/checkpoint.py`, `docs/SOURCE_MAP.md`). ID prefixes and the six epistemic states
+match that WIP so the two can be converged later without renaming.
+
 M1.2 Korva integration (2026-10-22, baseline `coding` / `5705e821`):
 `tools/audio/korva_tts.py` (`korva_tts`, provider `korva`) discovers a local Korva
 runtime/checkpoint, hashes checkpoint + preset and drives

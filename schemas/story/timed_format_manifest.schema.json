@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/story/timed_format_manifest.schema.json",
+  "title": "Timed format manifest (narrated Short/Long derived from a Master Story Package)",
+  "description": "Measured narration beats with canonical references; input contract for later visual assembly. Timing comes from PCM sample counts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "package_id", "package_version", "format", "language", "aspect_ratio",
+               "tts", "timing_policy", "speech_seconds", "total_seconds", "beats", "narration_track", "subtitles", "approvals"],
+  "$defs": {
+    "ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "package_id": {"type": "string", "pattern": "^STORY_[0-9]{3,}$"},
+    "package_version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+    "format": {"enum": ["short", "long"]},
+    "language": {"type": "string"},
+    "aspect_ratio": {"enum": ["9:16", "16:9"]},
+    "tts": {"type": "object", "required": ["provider", "tool", "settings"]},
+    "timing_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lead_in_seconds", "gap_seconds", "tail_seconds"],
+      "properties": {
+        "lead_in_seconds": {"type": "number", "minimum": 0},
+        "gap_seconds": {"type": "number", "minimum": 0},
+        "tail_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "speech_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "total_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order", "segment_id", "role", "text", "claims", "claim_ids", "source_ids", "cited_source_ids",
+                     "entity_ids", "event_ids", "continuity_rule_ids", "audio", "start_seconds", "end_seconds"],
+        "properties": {
+          "order": {"type": "integer", "minimum": 1},
+          "segment_id": {"type": "string", "pattern": "^SEG_[A-Za-z0-9_-]+$"},
+          "role": {"type": "string"},
+          "text": {"type": "string", "minLength": 1},
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "status", "supporting_source_ids"],
+              "properties": {
+                "id": {"type": "string"},
+                "status": {"enum": ["DOCUMENTED_FACT", "REPORTED_ACCOUNT", "LATER_INTERPRETATION", "HYPOTHESIS", "LEGEND", "UNKNOWN"]},
+                "supporting_source_ids": {"$ref": "#/$defs/ids"},
+                "contradicting_source_ids": {"$ref": "#/$defs/ids"},
+                "qualifier": {"type": "string"}
+              }
+            }
+          },
+          "claim_ids": {"$ref": "#/$defs/ids"},
+          "source_ids": {"$ref": "#/$defs/ids"},
+          "cited_source_ids": {"$ref": "#/$defs/ids"},
+          "entity_ids": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["characters", "locations", "objects"],
+            "properties": {
+              "characters": {"$ref": "#/$defs/ids"},
+              "locations": {"$ref": "#/$defs/ids"},
+              "objects": {"$ref": "#/$defs/ids"}
+            }
+          },
+          "event_ids": {"$ref": "#/$defs/ids"},
+          "continuity_rule_ids": {"$ref": "#/$defs/ids"},
+          "audio": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "samples", "sample_rate", "duration_seconds"],
+            "properties": {
+              "path": {"type": "string"},
+              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "samples": {"type": "integer", "minimum": 1},
+              "sample_rate": {"type": "integer", "minimum": 8000},
+              "duration_seconds": {"type": "number", "exclusiveMinimum": 0}
+            }
+          },
+          "start_seconds": {"type": "number", "minimum": 0},
+          "end_seconds": {"type": "number", "exclusiveMinimum": 0}
+        }
+      }
+    },
+    "narration_track": {"$ref": "#/$defs/file"},
+    "subtitles": {"$ref": "#/$defs/file"},
+    "approvals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["factual", "publication", "listening"],
+      "properties": {
+        "factual": {"const": "pending_human_review"},
+        "publication": {"const": "pending_human_review"},
+        "listening": {"const": "pending_human_review"}
+      }
+    }
+  }
+}

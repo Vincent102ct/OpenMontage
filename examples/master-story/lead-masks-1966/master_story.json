@@ -1,0 +1,2078 @@
+{
+ "schema_version": "1.0",
+ "package_id": "STORY_053",
+ "package_version": "v1",
+ "title": "Mặt nạ chì — lời nhắn còn dang dở",
+ "language": "vi",
+ "case": {
+  "name": "Lead Masks Case",
+  "place": "Niterói, Rio de Janeiro, Brazil",
+  "year": 1966
+ },
+ "provenance": {
+  "derived_from": "projects/lead-masks-1966-pilot (evidence-canon.json, research_brief.json, v2/master-narrative.json)",
+  "canon_version": "v1",
+  "created_on": "2026-10-22",
+  "notes": "Claims, statuses, qualifiers, sources and narrative copied verbatim; entities, continuity rules and format selection are M2.1 editorial additions."
+ },
+ "sources": [
+  {
+   "id": "SRC_001",
+   "title": "Boletim de ocorrência nº 535",
+   "publisher": "Niterói 2nd Police District / reproduced by pmig96",
+   "date": "1966-08-21",
+   "url": "https://pmig96.wordpress.com/2026/08/16/the-initial-police-report/",
+   "reference": "Boletim de ocorrência nº 535; 1966-08-21",
+   "source_type": "primary_record_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "verified",
+    "checked_on": "2026-10-22",
+    "method": "WebFetch",
+    "note": "Fetched URL on 2026-10-22; page content matches the claim details (attributed reproduction/transcription; original archive not accessed)."
+   }
+  },
+  {
+   "id": "SRC_002",
+   "title": "Laudo de exame em local de morte nº 29.375",
+   "publisher": "Departamento de Polícia Técnica / reproduced by pmig96",
+   "date": "1966-08-21",
+   "url": "https://pmig96.wordpress.com/2026/08/21/cena-de-morte/",
+   "reference": "Laudo de exame em local de morte nº 29.375; 1966-08-21",
+   "source_type": "primary_record_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "verified",
+    "checked_on": "2026-10-22",
+    "method": "WebFetch",
+    "note": "Fetched URL on 2026-10-22; page content matches the claim details (attributed reproduction/transcription; original archive not accessed). Transcribes the first name as 'Manuel'; masks 'between the two bodies'."
+   }
+  },
+  {
+   "id": "SRC_003",
+   "title": "Necrópsias 3051/66, 3052/66; exumação e toxicologia 4244/67",
+   "publisher": "IML / reproduced and analyzed by pmig96",
+   "date": "1966-08-21 / 1967-10-18",
+   "url": "https://pmig96.wordpress.com/2026/08/30/forensics/",
+   "reference": "Necrópsias 3051/66, 3052/66; exumação e toxicologia 4244/67; 1966-08-21 / 1967-10-18",
+   "source_type": "primary_record_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "verified",
+    "checked_on": "2026-10-22",
+    "method": "WebFetch",
+    "note": "Fetched URL on 2026-10-22; page content matches the claim details (attributed reproduction/transcription; original archive not accessed)."
+   }
+  },
+  {
+   "id": "SRC_004",
+   "title": "Masked dead men were radio and TV technicians",
+   "publisher": "Diário de Notícias / clipping reproduced by pmig96",
+   "date": "1966-08-24",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-2/",
+   "reference": "Masked dead men were radio and TV technicians; 1966-08-24",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_005",
+   "title": "Deaths of electronics technicians still a mystery",
+   "publisher": "Correio da Manhã / clipping reproduced by pmig96",
+   "date": "1966-08-24",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-1/",
+   "reference": "Deaths of electronics technicians still a mystery; 1966-08-24",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_006",
+   "title": "Mystery deepens; experiments and family testimony",
+   "publisher": "Luta Democrática / clippings reproduced by pmig96",
+   "date": "1966-08-27 / 1966-08-30",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-3/",
+   "reference": "Mystery deepens; experiments and family testimony; 1966-08-27 / 1966-08-30",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_007",
+   "title": "Masks from Niterói crime did not contain radioactivity",
+   "publisher": "Jornal do Brasil; José Machado / reproduced by pmig96",
+   "date": "1966-08-24",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-5/",
+   "reference": "Masks from Niterói crime did not contain radioactivity; 1966-08-24",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_008",
+   "title": "Scientific experiment killed electronics technicians",
+   "publisher": "Jornal do Brasil; José Machado / reproduced by pmig96",
+   "date": "1966-08-25",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-5/",
+   "reference": "Scientific experiment killed electronics technicians; 1966-08-25",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_009",
+   "title": "Linha Direta: Máscaras de Chumbo",
+   "publisher": "Rede Globo",
+   "date": "2004-06-24",
+   "url": "https://redeglobo.globo.com/Linhadireta/0,26665,4625-p-200406,00.html",
+   "reference": "Linha Direta: Máscaras de Chumbo; 2004-06-24",
+   "source_type": "later_reporting",
+   "reliability": "secondary",
+   "notes": "Fonte editorial independente do agregador. Diz que toxicologia nunca foi feita; contradiz laudos reproduzidos. Data de descoberta e posição das máscaras também diferem.",
+   "verification": {
+    "status": "unreachable",
+    "checked_on": "2026-10-22",
+    "method": "WebFetch",
+    "note": "Fetch tool could not access redeglobo.globo.com; retrieved during pilot research on 2026-10-13."
+   }
+  },
+  {
+   "id": "SRC_010",
+   "title": "The Lead Masks Case — sourced chronology",
+   "publisher": "pmig96",
+   "date": "2021-05-10; updated 2026-09-12",
+   "url": "https://pmig96.wordpress.com/2021/05/10/the-lead-masks-case/",
+   "reference": "The Lead Masks Case — sourced chronology; 2021-05-10; updated 2026-09-12",
+   "source_type": "later_research",
+   "reliability": "secondary",
+   "notes": "Discovery/corroboration only, with links to named original publications. Not an independent primary authority.",
+   "verification": {
+    "status": "verified",
+    "checked_on": "2026-10-22",
+    "method": "WebFetch",
+    "note": "Fetched URL on 2026-10-22; page content matches the claim details (attributed reproduction/transcription; original archive not accessed). Later research/aggregator, not a primary authority."
+   }
+  },
+  {
+   "id": "SRC_011",
+   "title": "Not all is Lost — surviving document provenance",
+   "publisher": "pmig96",
+   "date": "2026-08-06",
+   "url": "https://pmig96.wordpress.com/2026/08/06/not-all-is-lost/",
+   "reference": "Not all is Lost — surviving document provenance; 2026-08-06",
+   "source_type": "later_research",
+   "reliability": "secondary",
+   "notes": "Reports chain via Mário Dias / Carlos Alberto Machado and lists surviving copies; chain is attributed, not independently authenticated.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_012",
+   "title": "Death masks archived still in mystery",
+   "publisher": "Correio da Manhã / clipping reproduced by pmig96",
+   "date": "1967-11-29",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-1/",
+   "reference": "Death masks archived still in mystery; 1967-11-29",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_013",
+   "title": "Prisoner wanted to escape: Masks case",
+   "publisher": "Diário de Notícias / clipping reproduced by pmig96",
+   "date": "1969-03-05",
+   "url": "https://pmig96.wordpress.com/lead-masks-case-sources-part-2/",
+   "reference": "Prisoner wanted to escape: Masks case; 1969-03-05",
+   "source_type": "contemporary_press_reproduction",
+   "reliability": "primary",
+   "notes": "Primary status describes original document/publication. Hosting/reproduction and translations are secondary; no official archive authentication claimed.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_014",
+   "title": "Panorama de Niterói, 1892",
+   "publisher": "Museu Antônio Parreiras / Wikimedia Commons",
+   "date": "1892",
+   "url": "https://commons.wikimedia.org/wiki/File:Ant%C3%B4nio_Parreiras_-_Panorama_de_Niter%C3%B3i.jpg",
+   "reference": "Panorama de Niterói, 1892; 1892",
+   "source_type": "visual_context",
+   "reliability": "secondary",
+   "notes": "Public-domain art, regional context only, not a photo of the case or 1966.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  },
+  {
+   "id": "SRC_015",
+   "title": "Niterói geographic context",
+   "publisher": "Wikipedia",
+   "date": "retrieved 2026-10-13",
+   "url": "https://en.wikipedia.org/wiki/Niter%C3%B3i",
+   "reference": "Niterói geographic context; retrieved 2026-10-13",
+   "source_type": "secondary_summary",
+   "reliability": "secondary",
+   "notes": "Municipality in Rio de Janeiro state, on Guanabara Bay. Geographic context, not case evidence.",
+   "verification": {
+    "status": "previously_inspected",
+    "checked_on": "2026-10-13",
+    "method": "pilot research",
+    "note": "Retrieved during pilot research (research_brief retrieved_at); not rechecked in M2.1."
+   }
+  }
+ ],
+ "claims": [
+  {
+   "id": "CLM_001",
+   "text": "Hai người được hồ sơ nhận dạng là Manoel Pereira da Cruz và Miguel José Viana.",
+   "status": "DOCUMENTED_FACT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_002",
+    "SRC_004",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Tên xuất hiện trong bản sao hồ sơ và báo đương thời; tuổi và một số mô tả dân sự không nhất quán."
+  },
+  {
+   "id": "CLM_002",
+   "text": "Báo chí xác định họ là thợ sửa radio, tivi hoặc kỹ thuật viên điện tử ở Campos.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_005",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y."
+  },
+  {
+   "id": "CLM_003",
+   "text": "Họ rời Campos ngày 17/8/1966 và được kể là tới Niterói đầu giờ chiều.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y.",
+   "event_id": "EVT_001"
+  },
+  {
+   "id": "CLM_004",
+   "text": "Gia đình kể mục đích đã nói là mua ô tô và linh kiện ở São Paulo; lý do thực tế tới đồi chưa xác định.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Mục đích nói với gia đình, không chứng minh toàn bộ kế hoạch."
+  },
+  {
+   "id": "CLM_005",
+   "text": "Lộ trình được dựng qua lời kể: cửa hàng Fluscop, mua áo mưa ở Casa Brasília, rồi mua nước gần chân đồi.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y.",
+   "event_id": "EVT_001"
+  },
+  {
+   "id": "CLM_006",
+   "text": "Một số bản kể nói họ giữ biên lai để đổi chai nước lấy lại tiền đặt cọc.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Chi tiết biên lai được báo chí/lời kể thuật lại; không chứng minh họ chắc chắn trở về."
+  },
+  {
+   "id": "CLM_007",
+   "text": "Biên bản 535 ghi hai nhân viên tuần tra báo phát hiện thi thể lúc 18:10 ngày 20/8.",
+   "status": "DOCUMENTED_FACT",
+   "supporting_source_ids": [
+    "SRC_001"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Điều được xác nhận là nội dung/date trên bản sao và bản chép được dẫn nguồn, không phải trực tiếp đọc kho hồ sơ gốc.",
+   "event_id": "EVT_002"
+  },
+  {
+   "id": "CLM_008",
+   "text": "Biên bản 535 ghi đội cảnh sát lên hiện trường lúc 5:15 sáng 21/8; laudo 29.375 ghi chuyên viên đến lúc 7:10.",
+   "status": "DOCUMENTED_FACT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_002"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Hai nhóm khác nhau; không tự coi hai giờ này là mâu thuẫn.",
+   "event_id": "EVT_003"
+  },
+  {
+   "id": "CLM_009",
+   "text": "Các bản kể phân biệt một lần thấy thi thể ngày 18/8 và thông báo ngày 20/8; thời điểm phát hiện thường bị gộp.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [
+    "SRC_009"
+   ],
+   "qualifier": "Không dùng ngày 18 hoặc 20 làm thời điểm chết đã được xác định.",
+   "event_id": "EVT_002"
+  },
+  {
+   "id": "CLM_010",
+   "text": "Hiện trường trên Morro do Vintém ở Niterói; bản khám mô tả nơi cây cối rậm, khó tiếp cận.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_002",
+    "SRC_004"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y.",
+   "event_id": "EVT_003"
+  },
+  {
+   "id": "CLM_011",
+   "text": "Thi thể mặc vest và áo mưa; bản khám mô tả bộ vest khác màu, không chứng minh hai bộ giống hệt.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_002",
+    "SRC_004"
+   ],
+   "contradicting_source_ids": [
+    "SRC_010"
+   ],
+   "qualifier": "Không dựng hai trang phục giống hệt; chỉ thuật các thành phần được nhiều nguồn ghi nhận."
+  },
+  {
+   "id": "CLM_012",
+   "text": "Có hai tấm chì dạng nửa mặt nạ; nguồn khác nhau về đặt trên mắt, trong tay hay gần thi thể.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_002",
+    "SRC_007"
+   ],
+   "contradicting_source_ids": [
+    "SRC_004",
+    "SRC_009"
+   ],
+   "qualifier": "Vị trí chính xác trên mắt ở lúc phát hiện không được chốt; không biến hình minh họa thành ảnh xác thực."
+  },
+  {
+   "id": "CLM_013",
+   "text": "Lời nhắn chứa mốc 16:30 tới nơi định sẵn và 18:30 uống viên nang.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_004",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Đây là nội dung chỉ dẫn, không chứng minh thời điểm uống hoặc thành phần thuốc.",
+   "event_id": "EVT_001"
+  },
+  {
+   "id": "CLM_014",
+   "text": "Đoạn cuối lời nhắn liên quan bảo vệ kim loại, đợi tín hiệu, mặt nạ; các bản chép và dấu câu khác nhau.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_004",
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Diễn ý có hạn định, không công bố một bản dịch duy nhất là chắc chắn."
+  },
+  {
+   "id": "CLM_015",
+   "text": "Hồ sơ hiện trường ghi chai nước Magnesiana còn ít chất lỏng, không ghi chai hoàn toàn rỗng.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_002"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ từ còn ít chất lỏng."
+  },
+  {
+   "id": "CLM_016",
+   "text": "Báo chí/bản tổng hợp nhắc hai khăn; hai biên bản được đối chiếu không liệt kê chúng như nhau.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [
+    "SRC_001",
+    "SRC_002"
+   ],
+   "qualifier": "Không nói mọi vật dụng đều có trong mọi biên bản."
+  },
+  {
+   "id": "CLM_017",
+   "text": "Bản khám ghi quần áo nguyên vẹn, không thấy dấu vật lộn ở thi thể và khu vực; pháp y chưa xác định nguyên nhân.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_002",
+    "SRC_003"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không thấy dấu vật lộn không đồng nghĩa mọi khả năng can thiệp bị loại bỏ."
+  },
+  {
+   "id": "CLM_018",
+   "text": "Một phần tiền được tìm thấy; lượng tiền mang đi và mất đi khác nhau giữa hồ sơ và báo.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_005",
+    "SRC_006",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không quy đổi giá trị hoặc khẳng định toàn bộ tiền bị cướp."
+  },
+  {
+   "id": "CLM_019",
+   "text": "Các bản khám nghiệm được dẫn lại kết luận chưa xác định được nguyên nhân chết trong tình trạng phân hủy.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_003",
+    "SRC_009",
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Kết luận nguyên nhân chưa rõ, không chốt tự sát, giết người, thuốc hay bức xạ."
+  },
+  {
+   "id": "CLM_020",
+   "text": "Bản chép laudo năm 1966 nói có phản ứng độc chất âm tính; bản kể Globo 2004 nói xét nghiệm không được làm.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_003",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Báo cáo hai lời khẳng định mâu thuẫn, không tự xác định lời nào mô tả đúng toàn bộ quy trình."
+  },
+  {
+   "id": "CLM_021",
+   "text": "Các bản sao tài liệu ghi khai quật ngày 25/8/1967 và báo cáo độc chất 4244/67 ngày 18/10/1967.",
+   "status": "DOCUMENTED_FACT",
+   "supporting_source_ids": [
+    "SRC_003",
+    "SRC_011"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Ngày và sự tồn tại của các tài liệu qua bản sao/nguồn chép có xuất xứ; chưa độc lập xác thực hồ sơ gốc.",
+   "event_id": "EVT_004"
+  },
+  {
+   "id": "CLM_022",
+   "text": "Báo cáo 1967 được chép lại nêu nhóm phép thử âm tính và formaldehyde gắn với bảo quản thi thể.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_003"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Chỉ phạm vi mẫu và phép thử trong bản báo cáo; không khẳng định tuyệt đối không có bất kỳ độc chất nào.",
+   "event_id": "EVT_004"
+  },
+  {
+   "id": "CLM_023",
+   "text": "Kết quả âm tính có phạm vi không tự xác định vật chất trong viên nang hoặc nguyên nhân tử vong.",
+   "status": "LATER_INTERPRETATION",
+   "supporting_source_ids": [
+    "SRC_003",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Nhận xét giới hạn suy luận của pilot, không thay thế ý kiến chuyên gia pháp y."
+  },
+  {
+   "id": "CLM_024",
+   "text": "Báo Jornal do Brasil 25/8/1966 đã in lời kể về vật sáng được người phụ nữ nói là thấy tối 17/8.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_008",
+    "SRC_006",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Ngày được thuật là thấy khác ngày lời kể xuất hiện trên báo; chỉ là lời khai nhân chứng.",
+   "event_id": "EVT_005"
+  },
+  {
+   "id": "CLM_025",
+   "text": "Thông tin về sở thích/thử nghiệm và liên hệ tâm linh được quy cho lời người thân hoặc người quen.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_006",
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không dùng lời kể sở thích như bằng chứng thí nghiệm đã gây chết."
+  },
+  {
+   "id": "CLM_026",
+   "text": "Giải thích uống viên nang trong một cuộc thử nghiệm rồi xảy ra tai nạn là một giả thuyết.",
+   "status": "HYPOTHESIS",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_006",
+    "SRC_009",
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không có thành phần viên nang hoặc cơ chế tử vong được xác nhận."
+  },
+  {
+   "id": "CLM_027",
+   "text": "Giải thích cướp tiền hoặc sự tham gia của người thứ ba từng được nêu nhưng không được chốt bởi bằng chứng đã đối chiếu.",
+   "status": "HYPOTHESIS",
+   "supporting_source_ids": [
+    "SRC_005",
+    "SRC_009",
+    "SRC_012",
+    "SRC_013"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không cáo buộc cá nhân; lời đồn hoặc số tiền thiếu không tự chứng minh hung thủ."
+  },
+  {
+   "id": "CLM_028",
+   "text": "Câu chuyện người ngoài hành tinh gây ra cái chết xuất hiện trong văn hóa kể lại vụ án.",
+   "status": "LEGEND",
+   "supporting_source_ids": [
+    "SRC_009",
+    "SRC_010"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Gắn nhãn chuyện được kể, không xác lập tác nhân ngoài Trái Đất."
+  },
+  {
+   "id": "CLM_029",
+   "text": "Jornal do Brasil 24/8/1966 thuật kết quả không tìm thấy phóng xạ trong mặt nạ.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_007"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Chỉ là kết quả được báo về vật đã kiểm tra; không kết luận mọi loại phơi nhiễm hay nguyên nhân chết."
+  },
+  {
+   "id": "CLM_030",
+   "text": "Correio da Manhã 29/11/1967 đưa tin đề nghị lưu hồ sơ vì thiếu bằng chứng phân biệt tội phạm và tai nạn.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [
+    "SRC_009"
+   ],
+   "qualifier": "Globo nói lưu sau ba năm; không chốt một ngày đóng vĩnh viễn. Báo 1967 có lỗi ngày/número máscaras.",
+   "event_id": "EVT_006"
+  },
+  {
+   "id": "CLM_031",
+   "text": "Diário de Notícias 5/3/1969 thuật một lời khai từng được xem như lời giải đã bị mất tín nhiệm.",
+   "status": "REPORTED_ACCOUNT",
+   "supporting_source_ids": [
+    "SRC_013"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không thuật lại cáo buộc trước đó như sự thật đã chứng minh.",
+   "event_id": "EVT_007"
+  },
+  {
+   "id": "CLM_032",
+   "text": "Thành phần viên nang và việc hai người thực sự uống gì ở trên đồi chưa được xác lập trong tập nguồn đối chiếu.",
+   "status": "UNKNOWN",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_003",
+    "SRC_004",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y."
+  },
+  {
+   "id": "CLM_033",
+   "text": "Thời điểm chết chính xác chưa được xác lập; ngày đi, ngày báo phát hiện và giờ trong lời nhắn là ba loại mốc khác nhau.",
+   "status": "UNKNOWN",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_003",
+    "SRC_004",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y."
+  },
+  {
+   "id": "CLM_034",
+   "text": "Nguyên nhân chết dứt khoát chưa được xác lập bởi tập bằng chứng đối chiếu.",
+   "status": "UNKNOWN",
+   "supporting_source_ids": [
+    "SRC_003",
+    "SRC_009",
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y."
+  },
+  {
+   "id": "CLM_035",
+   "text": "Không xác định được liệu một người khác có mặt trên đồi lúc họ còn sống trong tập nguồn dùng cho pilot.",
+   "status": "UNKNOWN",
+   "supporting_source_ids": [
+    "SRC_004",
+    "SRC_009",
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Giữ phạm vi và xuất xứ của nguồn; không nâng lời kể thành kết luận pháp y."
+  },
+  {
+   "id": "CLM_036",
+   "text": "Một ghi chú về tín hiệu không đủ chứng minh đã có tín hiệu hoặc vật thể ngoài Trái Đất.",
+   "status": "LATER_INTERPRETATION",
+   "supporting_source_ids": [
+    "SRC_001",
+    "SRC_008",
+    "SRC_009"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Phân biệt chỉ dẫn, lời kể và quan hệ nhân quả; không phủ nhận một lời kể chỉ bằng thiếu bằng chứng."
+  },
+  {
+   "id": "CLM_037",
+   "text": "Niterói thuộc bang Rio de Janeiro, Brazil; ảnh/tranh địa phương chỉ dùng làm bối cảnh.",
+   "status": "DOCUMENTED_FACT",
+   "supporting_source_ids": [
+    "SRC_014",
+    "SRC_015"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Không gọi hình địa phương ở thời kỳ khác là ảnh hiện trường năm 1966."
+  },
+  {
+   "id": "CLM_038",
+   "text": "Không thấy dấu vết gây chết trong bản khám không tự biến bất kỳ giả thuyết còn lại thành lời giải.",
+   "status": "LATER_INTERPRETATION",
+   "supporting_source_ids": [
+    "SRC_002",
+    "SRC_003",
+    "SRC_012"
+   ],
+   "contradicting_source_ids": [],
+   "qualifier": "Kết luận phương pháp đối chiếu; không kết luận một tác nhân cụ thể."
+  }
+ ],
+ "timeline": [
+  {
+   "id": "EVT_001",
+   "date_start": "1966-08-17",
+   "precision": "day",
+   "date_kind": "reported_event",
+   "description": "Hành trình được thuật lại",
+   "claim_ids": [
+    "CLM_003",
+    "CLM_005",
+    "CLM_013"
+   ],
+   "entity_ids": [
+    "LOC_CAMPOS",
+    "LOC_NITEROI",
+    "LOC_FLUSCOP",
+    "LOC_CASA_BRASILIA",
+    "OBJ_NOTE",
+    "OBJ_CAPSULE",
+    "OBJ_WATER_BOTTLE"
+   ],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_002",
+   "date_start": "1966-08-20T18:10",
+   "precision": "minute",
+   "date_kind": "document",
+   "description": "Báo phát hiện; tách lần nhìn thấy sớm hơn",
+   "claim_ids": [
+    "CLM_007",
+    "CLM_009"
+   ],
+   "entity_ids": [],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_003",
+   "date_start": "1966-08-21",
+   "precision": "day",
+   "date_kind": "document",
+   "description": "Cảnh sát/chuyên viên và thu hồi hiện trường",
+   "claim_ids": [
+    "CLM_008",
+    "CLM_010"
+   ],
+   "entity_ids": [
+    "LOC_MORRO_DO_VINTEM"
+   ],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_005",
+   "date_start": "1966-08-25",
+   "precision": "day",
+   "date_kind": "publication",
+   "description": "Lời kể vật sáng đã xuất hiện trong báo",
+   "claim_ids": [
+    "CLM_024"
+   ],
+   "entity_ids": [
+    "CHR_LIGHT_WITNESS"
+   ],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_004",
+   "date_start": "1967-08-25",
+   "date_end": "1967-10-18",
+   "precision": "range",
+   "date_kind": "document",
+   "description": "Khai quật và xét nghiệm bổ sung",
+   "claim_ids": [
+    "CLM_021",
+    "CLM_022"
+   ],
+   "entity_ids": [],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_006",
+   "date_start": "1967-11-29",
+   "precision": "day",
+   "date_kind": "publication",
+   "description": "Tin đề nghị lưu hồ sơ",
+   "claim_ids": [
+    "CLM_030"
+   ],
+   "entity_ids": [],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  },
+  {
+   "id": "EVT_007",
+   "date_start": "1969-03-05",
+   "precision": "day",
+   "date_kind": "publication",
+   "description": "Tin lời khai bị mất tín nhiệm",
+   "claim_ids": [
+    "CLM_031"
+   ],
+   "entity_ids": [],
+   "notes": "Date is the reported event or publication date stated in the description; never silently converted to time of death."
+  }
+ ],
+ "entities": {
+  "characters": [
+   {
+    "id": "CHR_MANOEL",
+    "name": "Manoel Pereira da Cruz",
+    "aliases": [
+     "Manuel Pereira da Cruz"
+    ],
+    "description": "One of the two men identified in the records; electronics/radio-TV technician per press.",
+    "claim_ids": [
+     "CLM_001",
+     "CLM_002"
+    ]
+   },
+   {
+    "id": "CHR_MIGUEL",
+    "name": "Miguel José Viana",
+    "description": "One of the two men identified in the records; electronics/radio-TV technician per press.",
+    "claim_ids": [
+     "CLM_001",
+     "CLM_002"
+    ]
+   },
+   {
+    "id": "CHR_LIGHT_WITNESS",
+    "name": "Woman who reported a bright object (unnamed in the canon)",
+    "description": "Witness quoted by Jornal do Brasil on 1966-08-25; account only.",
+    "claim_ids": [
+     "CLM_024"
+    ]
+   }
+  ],
+  "locations": [
+   {
+    "id": "LOC_CAMPOS",
+    "name": "Campos",
+    "description": "Home town and point of departure as reported.",
+    "claim_ids": [
+     "CLM_002",
+     "CLM_003"
+    ]
+   },
+   {
+    "id": "LOC_NITEROI",
+    "name": "Niterói, Rio de Janeiro, Brazil",
+    "description": "City where the route and scene are reported.",
+    "claim_ids": [
+     "CLM_003",
+     "CLM_037"
+    ]
+   },
+   {
+    "id": "LOC_MORRO_DO_VINTEM",
+    "name": "Morro do Vintém",
+    "description": "Hill where the bodies were found; dense vegetation, difficult access.",
+    "claim_ids": [
+     "CLM_010"
+    ]
+   },
+   {
+    "id": "LOC_SAO_PAULO",
+    "name": "São Paulo",
+    "description": "Stated destination told to the family; not where they went.",
+    "claim_ids": [
+     "CLM_004"
+    ]
+   },
+   {
+    "id": "LOC_FLUSCOP",
+    "name": "Fluscop (shop)",
+    "description": "Stop on the reconstructed route.",
+    "claim_ids": [
+     "CLM_005"
+    ]
+   },
+   {
+    "id": "LOC_CASA_BRASILIA",
+    "name": "Casa Brasília (shop)",
+    "description": "Where the raincoats were bought, per accounts.",
+    "claim_ids": [
+     "CLM_005"
+    ]
+   }
+  ],
+  "objects": [
+   {
+    "id": "OBJ_LEAD_MASKS",
+    "name": "Two lead half-masks",
+    "description": "Position at discovery differs across sources.",
+    "claim_ids": [
+     "CLM_012",
+     "CLM_029"
+    ]
+   },
+   {
+    "id": "OBJ_NOTE",
+    "name": "Handwritten note with instructions",
+    "description": "Mentions 16:30, 18:30 capsule, metal protection, signal, masks; transcriptions differ.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_014",
+     "CLM_036"
+    ]
+   },
+   {
+    "id": "OBJ_CAPSULE",
+    "name": "Capsule mentioned in the note",
+    "description": "Contents and ingestion not established.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_032"
+    ]
+   },
+   {
+    "id": "OBJ_WATER_BOTTLE",
+    "name": "Magnesiana mineral-water bottle",
+    "description": "Recorded with a small amount of liquid left.",
+    "claim_ids": [
+     "CLM_005",
+     "CLM_015"
+    ]
+   },
+   {
+    "id": "OBJ_RECEIPT",
+    "name": "Bottle-deposit receipt",
+    "description": "Reported in some accounts only.",
+    "claim_ids": [
+     "CLM_006"
+    ]
+   },
+   {
+    "id": "OBJ_CLOTHING",
+    "name": "Suits and raincoats",
+    "description": "Suits described in different colours; not identical outfits.",
+    "claim_ids": [
+     "CLM_011",
+     "CLM_017"
+    ]
+   },
+   {
+    "id": "OBJ_TOWELS",
+    "name": "Two towels",
+    "description": "In press/summaries; not listed the same way in both records.",
+    "claim_ids": [
+     "CLM_016"
+    ]
+   },
+   {
+    "id": "OBJ_MONEY",
+    "name": "Money",
+    "description": "Part found; amounts carried and missing differ between records and press.",
+    "claim_ids": [
+     "CLM_018"
+    ]
+   }
+  ]
+ },
+ "continuity_rules": [
+  {
+   "id": "CR_001",
+   "check": "requires_claims",
+   "when_claim_ids": [
+    "CLM_013"
+   ],
+   "require_claim_ids": [
+    "CLM_032"
+   ],
+   "description": "Any use of the capsule instruction must also state that capsule contents and ingestion are not established."
+  },
+  {
+   "id": "CR_002",
+   "check": "requires_claims",
+   "when_claim_ids": [
+    "CLM_026"
+   ],
+   "require_claim_ids": [
+    "CLM_032"
+   ],
+   "description": "The experiment/accident hypothesis must be paired with the unknown capsule contents."
+  },
+  {
+   "id": "CR_003",
+   "check": "requires_claims",
+   "when_claim_ids": [
+    "CLM_028"
+   ],
+   "require_claim_ids": [
+    "CLM_036"
+   ],
+   "description": "The extraterrestrial legend must be paired with the note-is-not-proof interpretation."
+  },
+  {
+   "id": "CR_004",
+   "check": "requires_claims",
+   "when_claim_ids": [
+    "CLM_027"
+   ],
+   "require_claim_ids": [
+    "CLM_035"
+   ],
+   "description": "The robbery/third-party hypothesis must be paired with the unknown presence of another person."
+  },
+  {
+   "id": "CR_005",
+   "check": "requires_claims",
+   "when_claim_ids": [
+    "CLM_009"
+   ],
+   "require_claim_ids": [
+    "CLM_033"
+   ],
+   "description": "Sighting/report dates must not be presented as the time of death."
+  },
+  {
+   "id": "CR_006",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_012"
+   ],
+   "entity_ids": [
+    "OBJ_LEAD_MASKS"
+   ],
+   "description": "Do not narrate or depict the masks as worn over the eyes at discovery; sources differ on position."
+  },
+  {
+   "id": "CR_007",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_001"
+   ],
+   "entity_ids": [
+    "CHR_MANOEL"
+   ],
+   "description": "Use the spelling 'Manoel Pereira da Cruz'; SRC_002 transcribes 'Manuel'. Same person, one canonical ID."
+  },
+  {
+   "id": "CR_008",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_011"
+   ],
+   "entity_ids": [
+    "OBJ_CLOTHING"
+   ],
+   "description": "Do not depict the two men in identical outfits."
+  },
+  {
+   "id": "CR_009",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_020"
+   ],
+   "description": "Present both toxicology accounts (negative reactions vs. tests not done); do not pick one."
+  },
+  {
+   "id": "CR_010",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_037"
+   ],
+   "entity_ids": [
+    "LOC_NITEROI"
+   ],
+   "description": "Local images from other periods are context only, never labelled as the 1966 scene."
+  },
+  {
+   "id": "CR_011",
+   "check": "human_review",
+   "claim_ids": [
+    "CLM_027",
+    "CLM_031"
+   ],
+   "description": "Name no suspect; a discredited 1969 statement is not a solution."
+  }
+ ],
+ "master_narrative": {
+  "duration_basis": "estimated_seconds = measured V2 Piper narration per segment; real duration is remeasured from synthesized audio at render.",
+  "segments": [
+   {
+    "id": "SEG_01",
+    "role": "hook",
+    "text": "Brazil, năm một nghìn chín trăm sáu mươi sáu. Hai người làm nghề điện tử được tìm thấy đã chết trên một ngọn đồi ở Niterói. Họ mặc vest. Bên ngoài là áo mưa.",
+    "claim_ids": [
+     "CLM_001",
+     "CLM_002",
+     "CLM_010",
+     "CLM_011",
+     "CLM_037"
+    ],
+    "entity_ids": [
+     "CHR_MANOEL",
+     "CHR_MIGUEL",
+     "LOC_CAMPOS",
+     "LOC_NITEROI",
+     "LOC_MORRO_DO_VINTEM",
+     "OBJ_CLOTHING"
+    ],
+    "event_ids": [
+     "EVT_003"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 8.32,
+    "origin": "master-narrative V2 BEAT_01"
+   },
+   {
+    "id": "SEG_02",
+    "role": "hook",
+    "text": "Ở hiện trường còn có hai tấm chì, tạo hình như nửa mặt nạ. Và một mẩu giấy ghi những việc phải làm, vào những giờ rất cụ thể.",
+    "claim_ids": [
+     "CLM_012",
+     "CLM_013"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS",
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 6.75,
+    "origin": "master-narrative V2 BEAT_02"
+   },
+   {
+    "id": "SEG_03",
+    "role": "hook",
+    "text": "Trong đó có chỉ dẫn uống viên nang. Nhưng viên nang chứa gì? Hai người đã làm theo hay chưa? Chính ở chỗ tưởng như sắp có lời giải, dấu vết lại đứt.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_032",
+     "CLM_034"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 7.67,
+    "origin": "master-narrative V2 BEAT_03"
+   },
+   {
+    "id": "SEG_04",
+    "role": "discovery",
+    "text": "Bản sao biên bản cảnh sát ghi thông báo phát hiện thi thể vào chiều hai mươi tháng tám, lúc sáu giờ mười. Sáng hôm sau, cảnh sát rồi các chuyên viên lên hiện trường.",
+    "claim_ids": [
+     "CLM_007",
+     "CLM_008"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_002",
+     "EVT_003"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 8.37,
+    "origin": "master-narrative V2 BEAT_04"
+   },
+   {
+    "id": "SEG_05",
+    "role": "discovery",
+    "text": "Nơi ấy là Morro do Vintém. Bản khám mô tả cây cối rậm và đường tiếp cận khó. Có lời kể rằng thi thể đã được nhìn thấy từ ngày mười tám. Đó không phải ngày chết được xác định.",
+    "claim_ids": [
+     "CLM_009",
+     "CLM_010",
+     "CLM_033"
+    ],
+    "entity_ids": [
+     "LOC_MORRO_DO_VINTEM"
+    ],
+    "event_ids": [
+     "EVT_002",
+     "EVT_003"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.3,
+    "origin": "master-narrative V2 BEAT_05"
+   },
+   {
+    "id": "SEG_06",
+    "role": "discovery",
+    "text": "Hai bộ vest không được mô tả là giống hệt nhau. Quần áo còn nguyên vẹn. Người khám không ghi nhận dấu vật lộn ở thi thể và khu vực chung quanh. Nguyên nhân chết thì chưa rõ.",
+    "claim_ids": [
+     "CLM_011",
+     "CLM_017",
+     "CLM_019"
+    ],
+    "entity_ids": [
+     "OBJ_CLOTHING"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_002"
+    ],
+    "estimated_seconds": 8.72,
+    "origin": "master-narrative V2 BEAT_06"
+   },
+   {
+    "id": "SEG_07",
+    "role": "people",
+    "text": "Họ có tên: Manoel Pereira da Cruz và Miguel José Viana. Báo chí khi ấy gọi họ là những người sửa radio, tivi, làm nghề điện tử tại Campos.",
+    "claim_ids": [
+     "CLM_001",
+     "CLM_002"
+    ],
+    "entity_ids": [
+     "CHR_MANOEL",
+     "CHR_MIGUEL",
+     "LOC_CAMPOS"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 7.57,
+    "origin": "master-narrative V2 BEAT_07"
+   },
+   {
+    "id": "SEG_08",
+    "role": "people",
+    "text": "Những lời kể của người thân và người quen còn nhắc tới các thử nghiệm, cùng sự quan tâm đến những chuyện tâm linh. Chi tiết này về sau trở thành một đầu mối để người ta giải thích chuyến đi.",
+    "claim_ids": [
+     "CLM_002",
+     "CLM_025"
+    ],
+    "entity_ids": [
+     "CHR_MANOEL",
+     "CHR_MIGUEL",
+     "LOC_CAMPOS"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 9.05,
+    "origin": "master-narrative V2 BEAT_08"
+   },
+   {
+    "id": "SEG_09",
+    "role": "people",
+    "text": "Nhưng biết một người thích thử nghiệm không có nghĩa là biết điều gì đã giết họ. Muốn hiểu vì sao hai người xuất hiện trên đồi, phải quay lại lúc họ còn sống.",
+    "claim_ids": [
+     "CLM_025",
+     "CLM_026",
+     "CLM_034"
+    ],
+    "entity_ids": [],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 7.55,
+    "origin": "master-narrative V2 BEAT_09"
+   },
+   {
+    "id": "SEG_10",
+    "role": "journey",
+    "text": "Theo những lời kể được báo chí dẫn lại, Manoel và Miguel rời Campos ngày mười bảy tháng tám. Với gia đình, họ đã nói về việc mua một chiếc ô tô và linh kiện điện tử ở São Paulo.",
+    "claim_ids": [
+     "CLM_003",
+     "CLM_004"
+    ],
+    "entity_ids": [
+     "LOC_CAMPOS",
+     "LOC_NITEROI",
+     "LOC_SAO_PAULO"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 9.28,
+    "origin": "master-narrative V2 BEAT_10"
+   },
+   {
+    "id": "SEG_11",
+    "role": "journey",
+    "text": "Địa điểm xuất hiện trong các lời kể về buổi chiều hôm ấy lại là Niterói, thuộc bang Rio de Janeiro. Chúng ta biết nơi câu chuyện dẫn tới. Lý do đổi hướng, hay toàn bộ kế hoạch, thì chưa biết.",
+    "claim_ids": [
+     "CLM_003",
+     "CLM_004",
+     "CLM_037"
+    ],
+    "entity_ids": [
+     "LOC_CAMPOS",
+     "LOC_NITEROI",
+     "LOC_SAO_PAULO"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 10.01,
+    "origin": "master-narrative V2 BEAT_11"
+   },
+   {
+    "id": "SEG_12",
+    "role": "journey",
+    "text": "Lộ trình được thuật lại có cửa hàng Fluscop. Sau đó là Casa Brasília, nơi họ mua áo mưa. Rồi một lần mua nước gần chân đồi. Những điểm dừng này được ghép từ lời kể, không phải một hành trình được theo dõi liên tục.",
+    "claim_ids": [
+     "CLM_005"
+    ],
+    "entity_ids": [
+     "LOC_FLUSCOP",
+     "LOC_CASA_BRASILIA",
+     "OBJ_WATER_BOTTLE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 10.89,
+    "origin": "master-narrative V2 BEAT_12"
+   },
+   {
+    "id": "SEG_13",
+    "role": "journey",
+    "text": "Có bản kể nói họ giữ biên lai của chai nước để lấy lại tiền đặt cọc. Một việc nhỏ, rất đời thường. Nó gợi cảm giác chuyến đi còn có đường về, nhưng không đủ để chứng minh họ đã dự tính trở lại.",
+    "claim_ids": [
+     "CLM_006"
+    ],
+    "entity_ids": [
+     "OBJ_RECEIPT"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 10.27,
+    "origin": "master-narrative V2 BEAT_13"
+   },
+   {
+    "id": "SEG_14",
+    "role": "journey",
+    "text": "Từ những cửa hàng tới ngọn đồi, phần khó nhất vẫn còn trống. Họ tới đó để làm gì? Có ai chờ họ không? Những câu hỏi ấy chưa có lời đáp trong các tài liệu được đối chiếu.",
+    "claim_ids": [
+     "CLM_004",
+     "CLM_032",
+     "CLM_035"
+    ],
+    "entity_ids": [
+     "LOC_SAO_PAULO",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.11,
+    "origin": "master-narrative V2 BEAT_14"
+   },
+   {
+    "id": "SEG_15",
+    "role": "objects",
+    "text": "Những vật được ghi ở hiện trường cũng không cho một câu trả lời đơn giản. Chai nước mang nhãn Magnesiana vẫn còn ít chất lỏng. Nói đó là một chiếc chai hoàn toàn rỗng sẽ làm mất một chi tiết.",
+    "claim_ids": [
+     "CLM_015"
+    ],
+    "entity_ids": [
+     "OBJ_WATER_BOTTLE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.02,
+    "origin": "master-narrative V2 BEAT_15"
+   },
+   {
+    "id": "SEG_16",
+    "role": "objects",
+    "text": "Hai chiếc khăn xuất hiện trong báo chí và những bản tổng hợp, nhưng không được liệt kê giống nhau ở các biên bản. Một phần tiền cũng còn lại. Các con số về tiền mang theo và tiền thiếu lại khác nhau.",
+    "claim_ids": [
+     "CLM_016",
+     "CLM_018"
+    ],
+    "entity_ids": [
+     "OBJ_TOWELS",
+     "OBJ_MONEY"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.77,
+    "origin": "master-narrative V2 BEAT_16"
+   },
+   {
+    "id": "SEG_17",
+    "role": "objects",
+    "text": "Vì thế, chuyện toàn bộ tiền đã bị cướp không thể được kể như một việc đã chắc chắn. Cũng như quần áo nguyên vẹn không đủ loại bỏ mọi khả năng có người can thiệp. Hiện trường để lại dấu vết, nhưng chưa chỉ ra thủ phạm hay tai nạn.",
+    "claim_ids": [
+     "CLM_017",
+     "CLM_018",
+     "CLM_027",
+     "CLM_038"
+    ],
+    "entity_ids": [
+     "OBJ_CLOTHING",
+     "OBJ_MONEY"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 11.45,
+    "origin": "master-narrative V2 BEAT_17"
+   },
+   {
+    "id": "SEG_18",
+    "role": "note",
+    "text": "Mẩu giấy khác những vật còn lại ở một điểm: nó có chỉ dẫn. Các bản chép nhắc tới hai mốc giờ. Mười sáu giờ ba mươi: có mặt tại nơi đã định.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_014"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 7.55,
+    "origin": "master-narrative V2 BEAT_18"
+   },
+   {
+    "id": "SEG_19",
+    "role": "note",
+    "text": "Mười tám giờ ba mươi: uống viên nang. Đó là điều được viết, không phải xác nhận rằng hai người thực sự đã uống. Càng không phải tên của chất nằm trong viên nang.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_032"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 8.09,
+    "origin": "master-narrative V2 BEAT_19"
+   },
+   {
+    "id": "SEG_20",
+    "role": "note",
+    "text": "Phần cuối nhắc đến bảo vệ kim loại, chờ tín hiệu, và mặt nạ. Cách chép, dấu câu và cách nối những từ này không thống nhất. Chỉ đổi một chỗ ngắt, ý của câu đã có thể khác.",
+    "claim_ids": [
+     "CLM_014"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 8.94,
+    "origin": "master-narrative V2 BEAT_20"
+   },
+   {
+    "id": "SEG_21",
+    "role": "note",
+    "text": "Ta có một lời nhắn về việc phải làm. Ta chưa có lời giải thích vì sao phải làm như vậy. Một nơi đã định là nơi nào? Tín hiệu của ai? Chỉ dẫn ấy được viết cho tình huống gì?",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_014",
+     "CLM_036"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.33,
+    "origin": "master-narrative V2 BEAT_21"
+   },
+   {
+    "id": "SEG_22",
+    "role": "note",
+    "text": "Giờ trên giấy cũng không phải giờ tử vong. Và câu dặn chờ tín hiệu không chứng minh đã có tín hiệu xuất hiện. Mẩu giấy làm câu chuyện cụ thể hơn, đồng thời cho thấy nó còn thiếu bao nhiêu phần.",
+    "claim_ids": [
+     "CLM_033",
+     "CLM_036"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.29,
+    "origin": "master-narrative V2 BEAT_22"
+   },
+   {
+    "id": "SEG_23",
+    "role": "masks",
+    "text": "Rồi đến hai tấm chì. Chúng được mô tả như những nửa mặt nạ. Hình dạng ấy đủ lạ để trở thành tên gọi của cả vụ việc. Vị trí của chúng khi phát hiện lại không được các nguồn kể giống nhau.",
+    "claim_ids": [
+     "CLM_012"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.7,
+    "origin": "master-narrative V2 BEAT_23"
+   },
+   {
+    "id": "SEG_24",
+    "role": "masks",
+    "text": "Có nguồn đặt chúng gần thi thể, có nguồn nhắc tới tay, có bản kể đặt trên mắt. Một hình ảnh hai người nằm đó, cùng đeo mặt nạ, rất dễ nhớ. Nhưng nó không phải chi tiết có thể chốt từ những mô tả đang có.",
+    "claim_ids": [
+     "CLM_012"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.56,
+    "origin": "master-narrative V2 BEAT_24"
+   },
+   {
+    "id": "SEG_25",
+    "role": "masks",
+    "text": "Tờ Jornal do Brasil ngày hai mươi bốn tháng tám thuật rằng không tìm thấy phóng xạ trong các mặt nạ được kiểm tra. Kết quả ấy nói về những vật đã được kiểm tra, không trả lời thay cho nguyên nhân chết.",
+    "claim_ids": [
+     "CLM_029"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_007"
+    ],
+    "estimated_seconds": 9.65,
+    "origin": "master-narrative V2 BEAT_25"
+   },
+   {
+    "id": "SEG_26",
+    "role": "masks",
+    "text": "Hai tấm chì và lời nhắn nằm trong cùng một câu chuyện. Nhưng chúng được dùng như thế nào, để bảo vệ khỏi điều gì, hay có liên quan trực tiếp tới cái chết hay không, vẫn chưa được xác lập.",
+    "claim_ids": [
+     "CLM_012",
+     "CLM_014",
+     "CLM_034"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS",
+     "OBJ_NOTE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.07,
+    "origin": "master-narrative V2 BEAT_26"
+   },
+   {
+    "id": "SEG_27",
+    "role": "investigation",
+    "text": "Lẽ ra khám nghiệm có thể giúp thu hẹp khoảng trống ấy. Những báo cáo được dẫn lại nói thi thể đã phân hủy, và nguyên nhân chết chưa xác định được. Từ đây, chuyện xét nghiệm độc chất cũng trở nên khó theo dõi.",
+    "claim_ids": [
+     "CLM_019"
+    ],
+    "entity_ids": [],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 10.26,
+    "origin": "master-narrative V2 BEAT_27"
+   },
+   {
+    "id": "SEG_28",
+    "role": "investigation",
+    "text": "Các báo cáo năm sáu mươi sáu được chép lại có nhắc tới những phản ứng độc chất âm tính. Nhưng bản kể của Globo năm hai nghìn không trăm linh bốn lại nói xét nghiệm đã không được làm.",
+    "claim_ids": [
+     "CLM_020"
+    ],
+    "entity_ids": [],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 8.83,
+    "origin": "master-narrative V2 BEAT_28"
+   },
+   {
+    "id": "SEG_29",
+    "role": "investigation",
+    "text": "Hai lời khẳng định ấy không khớp nhau. Nếu kể gọn thành một câu chắc chắn, ta sẽ phải bỏ đi một bên. Với những nguồn hiện có, không thể tự chọn một bản rồi xem bất đồng đã được giải quyết.",
+    "claim_ids": [
+     "CLM_020"
+    ],
+    "entity_ids": [],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 9.96,
+    "origin": "master-narrative V2 BEAT_29"
+   },
+   {
+    "id": "SEG_30",
+    "role": "investigation",
+    "text": "Còn có một lần kiểm tra sau đó. Tài liệu được dẫn lại ghi ngày khai quật là hai mươi lăm tháng tám năm sáu mươi bảy. Báo cáo độc chất mang ngày mười tám tháng mười cùng năm.",
+    "claim_ids": [
+     "CLM_021"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_004"
+    ],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 8.93,
+    "origin": "master-narrative V2 BEAT_30"
+   },
+   {
+    "id": "SEG_31",
+    "role": "investigation",
+    "text": "Bản báo cáo được chép lại nêu một số phép thử âm tính, cùng formaldehyde gắn với việc bảo quản thi thể. Âm tính ở những phép thử ấy không có nghĩa mọi chất gây hại đều đã bị loại trừ.",
+    "claim_ids": [
+     "CLM_022",
+     "CLM_023"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_004"
+    ],
+    "source_ids": [
+     "SRC_003"
+    ],
+    "estimated_seconds": 9.6,
+    "origin": "master-narrative V2 BEAT_31"
+   },
+   {
+    "id": "SEG_32",
+    "role": "investigation",
+    "text": "Nó cũng không cho biết viên nang chứa gì. Chúng ta vẫn chưa nối được chỉ dẫn trên giấy với một cơ chế tử vong. Đó là khoảng trống quan trọng nhất, dù phần còn lại của câu chuyện kỳ lạ đến đâu.",
+    "claim_ids": [
+     "CLM_023",
+     "CLM_032",
+     "CLM_034"
+    ],
+    "entity_ids": [
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.65,
+    "origin": "master-narrative V2 BEAT_32"
+   },
+   {
+    "id": "SEG_33",
+    "role": "lights",
+    "text": "Những ánh sáng lạ thường được nhắc đến như đoạn huyền bí được thêm về sau. Thực ra, lời kể đã xuất hiện khá sớm. Tờ Jornal do Brasil ngày hai mươi lăm tháng tám năm ấy đã nhắc tới một người phụ nữ.",
+    "claim_ids": [
+     "CLM_024"
+    ],
+    "entity_ids": [
+     "CHR_LIGHT_WITNESS"
+    ],
+    "event_ids": [
+     "EVT_005"
+    ],
+    "source_ids": [
+     "SRC_006"
+    ],
+    "estimated_seconds": 10.27,
+    "origin": "master-narrative V2 BEAT_33"
+   },
+   {
+    "id": "SEG_34",
+    "role": "lights",
+    "text": "Theo bài báo, bà nói mình thấy một vật sáng vào tối mười bảy tháng tám. Ngày bà kể đã nhìn thấy, và ngày báo đăng, là hai mốc khác nhau. Đây là lời kể của nhân chứng, chưa phải một vật thể được xác định.",
+    "claim_ids": [
+     "CLM_024"
+    ],
+    "entity_ids": [
+     "CHR_LIGHT_WITNESS"
+    ],
+    "event_ids": [
+     "EVT_005"
+    ],
+    "source_ids": [
+     "SRC_006"
+    ],
+    "estimated_seconds": 10.73,
+    "origin": "master-narrative V2 BEAT_34"
+   },
+   {
+    "id": "SEG_35",
+    "role": "lights",
+    "text": "Khi đặt ánh sáng ấy bên cạnh lời dặn chờ tín hiệu và những tấm chì, câu chuyện về người ngoài hành tinh rất dễ hình thành. Nhưng sự nối ghép hấp dẫn đó chưa chứng minh rằng ba chi tiết có chung một nguyên nhân.",
+    "claim_ids": [
+     "CLM_024",
+     "CLM_028",
+     "CLM_036"
+    ],
+    "entity_ids": [
+     "CHR_LIGHT_WITNESS",
+     "OBJ_NOTE"
+    ],
+    "event_ids": [
+     "EVT_005"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.18,
+    "origin": "master-narrative V2 BEAT_35"
+   },
+   {
+    "id": "SEG_36",
+    "role": "lights",
+    "text": "Nói đến lời kể về ánh sáng là đúng với lịch sử câu chuyện. Nói một vật thể ngoài Trái Đất đã gây ra cái chết thì vượt quá điều được biết. Chúng ta có thể giữ sự bí ẩn mà không biến một lời kể thành kết luận.",
+    "claim_ids": [
+     "CLM_028",
+     "CLM_036",
+     "CLM_034"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.78,
+    "origin": "master-narrative V2 BEAT_36"
+   },
+   {
+    "id": "SEG_37",
+    "role": "explanations",
+    "text": "Một hướng giải thích khác gần với hai người hơn: họ tham gia một cuộc thử nghiệm, uống thứ gì đó, rồi gặp tai nạn. Chỉ dẫn về viên nang và những lời kể về sở thích thử nghiệm khiến hướng này được nhắc tới.",
+    "claim_ids": [
+     "CLM_025",
+     "CLM_026"
+    ],
+    "entity_ids": [],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_004"
+    ],
+    "estimated_seconds": 10.26,
+    "origin": "master-narrative V2 BEAT_37"
+   },
+   {
+    "id": "SEG_38",
+    "role": "explanations",
+    "text": "Nó có thể sắp xếp vài chi tiết thành một chuỗi dễ hiểu. Nhưng chất gì, có thực sự được uống không, và gây chết bằng cách nào? Thiếu những mắt xích ấy, chuỗi này vẫn chỉ là một giả thuyết.",
+    "claim_ids": [
+     "CLM_026",
+     "CLM_032",
+     "CLM_034"
+    ],
+    "entity_ids": [
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.39,
+    "origin": "master-narrative V2 BEAT_38"
+   },
+   {
+    "id": "SEG_39",
+    "role": "explanations",
+    "text": "Cướp tiền, hoặc sự tham gia của người thứ ba, cũng từng được đặt ra. Các khoản tiền được kể không thống nhất; chuyện ai khác có mặt trên đồi chưa được xác định. Những khoảng trống ấy không đủ để chỉ tên một hung thủ.",
+    "claim_ids": [
+     "CLM_018",
+     "CLM_027",
+     "CLM_035"
+    ],
+    "entity_ids": [
+     "OBJ_MONEY"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.12,
+    "origin": "master-narrative V2 BEAT_39"
+   },
+   {
+    "id": "SEG_40",
+    "role": "explanations",
+    "text": "Đã có lúc người ta tưởng một lời khai sẽ giải quyết vụ việc. Nhưng tờ Diário de Notícias tháng ba năm sáu mươi chín thuật rằng lời khai ấy đã mất tín nhiệm. Một lời giải được công bố chưa chắc là lời giải đứng vững.",
+    "claim_ids": [
+     "CLM_031"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_007"
+    ],
+    "source_ids": [
+     "SRC_013"
+    ],
+    "estimated_seconds": 10.76,
+    "origin": "master-narrative V2 BEAT_40"
+   },
+   {
+    "id": "SEG_41",
+    "role": "explanations",
+    "text": "Đề nghị lưu hồ sơ được báo Correio da Manhã nhắc tới cuối năm sáu mươi bảy. Trong bản kể của Globo, mốc ấy lại là sau ba năm. Ngay cả thời điểm khép vụ việc cũng có hai cách kể, chưa thể gộp thành một ngày chắc chắn.",
+    "claim_ids": [
+     "CLM_030"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_006"
+    ],
+    "source_ids": [
+     "SRC_012"
+    ],
+    "estimated_seconds": 11.36,
+    "origin": "master-narrative V2 BEAT_41"
+   },
+   {
+    "id": "SEG_42",
+    "role": "limits",
+    "text": "Lý do được báo cũ nhắc tới là thiếu bằng chứng để phân biệt tội phạm với tai nạn. Sự thiếu hụt ấy không tự trao phần thắng cho một cách giải thích khác. Nó chỉ có nghĩa rằng câu hỏi chính vẫn còn đó.",
+    "claim_ids": [
+     "CLM_030",
+     "CLM_034",
+     "CLM_038"
+    ],
+    "entity_ids": [],
+    "event_ids": [
+     "EVT_006"
+    ],
+    "source_ids": [
+     "SRC_002"
+    ],
+    "estimated_seconds": 9.95,
+    "origin": "master-narrative V2 BEAT_42"
+   },
+   {
+    "id": "SEG_43",
+    "role": "ending",
+    "text": "Manoel và Miguel đã chết. Hiện trường được ghi trên đồi ở Niterói. Vest, áo mưa, hai tấm chì và một lời nhắn là những chi tiết được thuật lại. Đó là phần câu chuyện ta có thể lần theo.",
+    "claim_ids": [
+     "CLM_001",
+     "CLM_010",
+     "CLM_011",
+     "CLM_012",
+     "CLM_013"
+    ],
+    "entity_ids": [
+     "CHR_MANOEL",
+     "CHR_MIGUEL",
+     "LOC_MORRO_DO_VINTEM",
+     "OBJ_LEAD_MASKS",
+     "OBJ_NOTE",
+     "OBJ_CAPSULE",
+     "OBJ_CLOTHING"
+    ],
+    "event_ids": [
+     "EVT_001",
+     "EVT_003"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 9.54,
+    "origin": "master-narrative V2 BEAT_43"
+   },
+   {
+    "id": "SEG_44",
+    "role": "ending",
+    "text": "Vị trí các mặt nạ, cách đọc đoạn cuối mẩu giấy, và chuyện xét nghiệm độc chất vẫn có những mô tả không khớp. Những bất đồng ấy không biến mất chỉ vì một phiên bản được kể nhiều hơn.",
+    "claim_ids": [
+     "CLM_012",
+     "CLM_014",
+     "CLM_020"
+    ],
+    "entity_ids": [
+     "OBJ_LEAD_MASKS",
+     "OBJ_NOTE"
+    ],
+    "event_ids": [],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 8.94,
+    "origin": "master-narrative V2 BEAT_44"
+   },
+   {
+    "id": "SEG_45",
+    "role": "ending",
+    "text": "Còn viên nang chứa gì, họ thực sự làm gì trên đồi, có ai khác ở đó, và vì sao cả hai chết: chưa có câu trả lời được xác lập. Ta có một chỉ dẫn. Nhưng chưa nối được nó với cái chết của hai người.",
+    "claim_ids": [
+     "CLM_013",
+     "CLM_032",
+     "CLM_033",
+     "CLM_034",
+     "CLM_035"
+    ],
+    "entity_ids": [
+     "OBJ_NOTE",
+     "OBJ_CAPSULE"
+    ],
+    "event_ids": [
+     "EVT_001"
+    ],
+    "source_ids": [
+     "SRC_001"
+    ],
+    "estimated_seconds": 10.76,
+    "origin": "master-narrative V2 BEAT_45"
+   }
+  ]
+ },
+ "formats": {
+  "short": {
+   "format": "short",
+   "package_id": "STORY_053",
+   "package_version": "v1",
+   "aspect_ratio": "9:16",
+   "target_seconds": {
+    "min": 45,
+    "max": 60
+   },
+   "segment_ids": [
+    "SEG_01",
+    "SEG_02",
+    "SEG_19",
+    "SEG_45"
+   ],
+   "notes": "M2.2.1 selection B (measured Korva 49.5 s): hook/context SEG_01, discovery SEG_02, mystery SEG_19 (capsule instruction + not confirmed), ending SEG_45 (open questions). M2.2 six-segment selection measured 72.68 s and was replaced."
+  },
+  "long": {
+   "format": "long",
+   "package_id": "STORY_053",
+   "package_version": "v1",
+   "aspect_ratio": "16:9",
+   "target_seconds": {
+    "min": 360,
+    "max": 900
+   },
+   "segment_ids": [
+    "SEG_01",
+    "SEG_02",
+    "SEG_03",
+    "SEG_04",
+    "SEG_05",
+    "SEG_06",
+    "SEG_07",
+    "SEG_08",
+    "SEG_09",
+    "SEG_10",
+    "SEG_11",
+    "SEG_12",
+    "SEG_13",
+    "SEG_14",
+    "SEG_15",
+    "SEG_16",
+    "SEG_17",
+    "SEG_18",
+    "SEG_19",
+    "SEG_20",
+    "SEG_21",
+    "SEG_22",
+    "SEG_23",
+    "SEG_24",
+    "SEG_25",
+    "SEG_26",
+    "SEG_27",
+    "SEG_28",
+    "SEG_29",
+    "SEG_30",
+    "SEG_31",
+    "SEG_32",
+    "SEG_33",
+    "SEG_34",
+    "SEG_35",
+    "SEG_36",
+    "SEG_37",
+    "SEG_38",
+    "SEG_39",
+    "SEG_40",
+    "SEG_41",
+    "SEG_42",
+    "SEG_43",
+    "SEG_44",
+    "SEG_45"
+   ]
+  }
+ }
+}

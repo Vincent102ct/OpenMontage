@@ -541,3 +541,66 @@ Pinned revision, file checksums, settings and reproduction commands are in
 `docs/features/m1.2-korva-tts-integration.md`. Commit includes only M1.2 code/tests/docs;
 other WIP left uncommitted, no weights/venvs/caches/audio/MP4. Verified from a clean
 worktree of the commit before a normal push to `origin/coding`.
+
+## M2.1 Canonical Master Story Package — 2026-10-22
+
+Baseline `coding` / `5316fe9`. Read source map, roadmap, decisions, worklog, feature
+specs, the uncommitted Evidence Canon / source-visual WIP and the local Lead Masks
+pilot (`projects/lead-masks-1966-pilot`). SOURCE_MAP updated before implementation.
+Added standalone `schemas/story/{master_story_package,format_plan}.schema.json`,
+`lib/master_story.py` (validate + resolve CLI) and `tests/lib/test_master_story.py`.
+WIP files, pipeline, renderer, Korva and `schemas/artifacts/*` untouched.
+
+Pilot `examples/master-story/lead-masks-1966/master_story.json` (STORY_053@v1): 15
+sources, 38 claims across all six statuses, 7 events, 17 entities, 11 continuity
+rules, 45 segments; Short 6 segments ≈50.8 s (9:16), Long 45 ≈426.6 s (16:9). Claims
+and narration copied verbatim (script-checked). Re-fetched 2026-10-22: SRC_001/002/003/010
+consistent with claims; SRC_009 (Globo) unreachable by the tool; the rest keep the
+2026-10-13 pilot inspection. SRC_002 spells "Manuel" → rule CR_007.
+Tests: 25 passed; one validator crash on an incomplete rule found by a test and fixed.
+Not committed; pending user review.
+
+## M2.2 Canonical Short narration proof — 2026-10-22
+
+Confirmed M2.1 uncommitted; hashed and archived all 28 uncommitted files before work
+(`projects/m22-short-proof/logs/`). Added `lib/master_story_short.py`,
+`scripts/master_story_short.py`, `schemas/story/timed_format_manifest.schema.json`,
+`tests/lib/test_master_story_short.py` (18). Reused the M1.2 voice selector, cached
+`narrate()` and `subtitle_gen`; no analyzer/planner/renderer/media changes.
+
+STORY 053 Short (language vi → Korva `hoang_nam`, auto): 6 segments in order, text
+verbatim, 11 claims / 11 sources unchanged, continuity intact, 21 sentence SRT cues
+aligned, real WAVs measured by samples. Speech 69.88 s, total 72.68 s: **duration gate
+FAIL, 12.68 s over 60 s** (SEG_45 13.50 s, SEG_23 12.62 s, SEG_01 12.23 s); not cut or
+sped up. Korva is 30–45 % longer than the V2 Piper estimates. First run also exposed a
+subtitle merge (one cue for the whole Short) — caught by the gate, fixed with
+`max_words_per_cue=1`. ASR warnings only; SEG_07 "missing names" was an ASR miss (the
+sentence is audible; confirmed with a second model and a clipped pass).
+Research brief 17 sources vs package 15: SRC_016/017 visual-context files, no claims.
+Not committed; approvals pending.
+
+## M2.2.1 Short duration fix through canonical selection — 2026-10-22
+
+Hashed/archived all 31 uncommitted files first (`projects/m221-short-selection/logs/`).
+Synthesized all 45 master segments once with Korva `hoang_nam` (production selector and
+cache) to compare candidates on measured audio (10.0–14.3 s each). Evaluated six options
+(A–F) for coherence, qualifier/continuity risk and measured duration. Chose B: SEG_01,
+SEG_02, SEG_19, SEG_45 → speech 47.496 s, total **49.496 s; all 7 gates PASS** (4 beats,
+verbatim, same 11 claims/11 sources, CR_001 satisfied, audio measured, 14 SRT cues).
+Rejected the in-band options C/F (capsule note never introduced) and the 59.7–59.9 s
+options (fragile margin). Only `formats.short` changed (JSON diff: Long and narrative
+identical); package stays `v1`. Validator: estimated duration is now an advisory warning.
+Continuity gate lists human-review rules as pending. A first draft of the search note
+over-claimed ("no in-band combination keeps capsule and masks"); recomputed and corrected
+to "every in-band combination omits SEG_02". ASR warnings only (digits for 1966/18h30;
+"Niterói" heard as "nito ở"). No speed change, media, commit, push or M2.3.
+
+### M2.1 + M2.2 finalization — 2026-10-22
+
+User approved the M2.2.1 editorial decisions (SEG_01/02/19/45, 49.496 s, no pause
+extension, Korva 1.05, victim names unspoken). Rechecked package validation, timed
+manifest schema, all 7 gates recomputed from artifacts, WAV/track hashes and resolved
+Short (11 claims / 11 sources). Full suite 2094 passed, 12 skipped, 3 xfailed. Committed
+only M2 source, schemas, tests, docs and the canonical example JSON; WIP, `projects/`
+outputs, evaluation helpers, models, venvs and caches excluded. CR_006/007/008/010 and
+listening/factual/publication approvals remain pending. M2.3 not started.

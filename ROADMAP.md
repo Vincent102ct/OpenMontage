@@ -42,7 +42,21 @@
       b09 tail burst. Not publication quality-approved.
 - [ ] Korva commercial-use clarification: publisher declares Apache-2.0; PhoAudiobook
       dataset provenance / preset consent uncertain — not a technical blocker.
-- [ ] M2: **not started**.
+- [ ] M2 Short + Long from one researched story (in progress, step by step):
+  - [x] M2.1 Canonical Master Story Package (2026-10-22): schema + validator +
+        Short/Long consistency checks; pilot STORY 053 (Lead Masks, 1966) validates.
+        See `docs/features/m2.1-master-story-package.md`.
+  - [x] M2.2 Canonical Short narration proof (2026-10-22): `scripts/master_story_short.py`;
+        STORY 053 Short narrated with Korva, measured, SRT, gates. First selection measured
+        72.68 s (duration gate FAIL), resolved in M2.2.1.
+  - [x] M2.2.1 Short duration fixed by canonical selection (2026-10-22): SEG_01, 02, 19, 45,
+        measured 49.496 s; all 7 gates PASS. Selection, no pause extension, Korva speed 1.05 and
+        unspoken victim names **editorially approved by the user**.
+  - [x] M2.1 + M2.2 committed and pushed as technical baseline to `origin/coding` (2026-10-22).
+  - [ ] **Pending human review:** audio listening, factual wording, publication; continuity
+        rules CR_006, CR_007, CR_008, CR_010. None is marked PASS.
+  - [ ] M2.3: not started.
+  - [ ] Later: Long assembly, visuals/rights layer, convergence with the Evidence Canon WIP.
 - [ ] Candidates after review (not started): richer rig poses (lie down, crouch-walk,
       two-handed carry), more location kinds/variants, crowd/extra characters, per-character
       voices, better LLM prompting or a larger local model, word-level alignment, music,
