@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>OpenMontage Studio</title>
+  <link rel="icon" href="/studio/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/studio/static/studio.css">
+  <script type="module" src="/studio/static/studio.js"></script>
+</head>
+<body>
+  <aside class="sidebar" aria-label="Studio sidebar">
+    <a class="brand" href="/studio"><span class="brand-icon" aria-hidden="true">O<span>↗</span></span><span>OpenMontage<small>STUDIO</small></span></a>
+    <div class="workspace-label">YOUR WORKSPACE <span>LOCAL</span></div>
+    <nav aria-label="Studio navigation">
+      <button id="new-tab" class="nav-item active" type="button" aria-current="page"><span aria-hidden="true">＋</span> New Production</button>
+      <button id="list-tab" class="nav-item" type="button"><span aria-hidden="true">▤</span> My Productions <span id="production-count" class="nav-count">0</span></button>
+    </nav>
+    <a class="nav-item board-nav" href="/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Open Backlot</a>
+    <div class="sidebar-bottom"><span class="local-dot"></span> Runs on this computer only<p>Ideas are saved locally.<br>You decide the next step.</p></div>
+  </aside>
+  <main>
+    <header class="topbar"><span>WORKSPACE <span class="breadcrumb">/</span> <span id="page-name">New Production</span></span><span class="local-label"><span class="local-dot"></span> 127.0.0.1</span></header>
+    <section id="new-view" class="page">
+      <div class="page-heading"><div><div class="eyebrow">A STORY STARTS HERE</div><h1>New Production<span class="heading-dot">.</span></h1><p>Save an idea. Keep your story exactly as written.</p></div><span class="status-chip">Production not started</span></div>
+      <div id="save-success" class="success-panel" role="status" tabindex="-1" hidden></div>
+      <div class="creation-layout">
+        <form id="production-form" novalidate>
+          <section class="panel">
+            <div class="section-title"><span class="step">01</span><div><h2>Input content</h2><p>Where do you want to start?</p></div></div>
+            <fieldset class="mode-grid"><legend class="sr-only">Input mode</legend>
+              <label class="mode-card"><input type="radio" name="input_mode" value="topic"><span class="mode-symbol" aria-hidden="true">✳</span><strong>Topic</strong><small>An idea that needs research</small></label>
+              <label class="mode-card"><input type="radio" name="input_mode" value="story" checked><span class="mode-symbol" aria-hidden="true">≋</span><strong>Full story</strong><small>A story you have written</small></label>
+              <label class="mode-card"><input type="radio" name="input_mode" value="canonical"><span class="mode-symbol" aria-hidden="true">◇</span><strong>Canonical package</strong><small>An approved content package</small></label>
+            </fieldset>
+            <label class="field-label" for="title">Production title <span>optional</span></label>
+            <input id="title" name="title" class="text-input" maxlength="120" placeholder="Example: The Last Bus">
+            <div id="text-input-group">
+              <div class="label-row"><label id="content-label" class="field-label" for="content">Your story</label><label class="upload-label" for="markdown-file">↥ Import Markdown <input id="markdown-file" type="file" accept=".md,.markdown" class="sr-only"></label></div>
+              <textarea id="content" name="content" maxlength="200000" rows="10" aria-describedby="input-help character-count" placeholder="Paste your story here (Vietnamese supported)…"></textarea>
+              <div class="input-footer"><span id="upload-name">The original text is saved unchanged.</span><span id="character-count">0 / 200,000</span></div>
+            </div>
+            <div id="canonical-input-group" hidden>
+              <label class="field-label" for="canonical-package">Approved canonical package</label>
+              <select id="canonical-package" class="text-input"><option value="">Loading catalog…</option></select>
+              <p id="canonical-state" class="field-help" role="status"></p>
+            </div>
+            <p id="input-help" class="field-help">The full story is saved for review; it is not treated as a researched Master Story.</p>
+            <details class="advanced"><summary>Optional project ID</summary><label for="project-id" class="field-label">Leave empty to generate a new ID</label><input id="project-id" class="text-input" maxlength="64" placeholder="chuyen-xe-cuoi-cung"><p class="field-help">Lowercase letters, digits and hyphens. Existing IDs are never overwritten.</p></details>
+          </section>
+          <section class="panel format-panel">
+            <div class="section-title"><span class="step">02</span><div><h2>Output formats</h2><p>Choose one or both formats.</p></div><button id="select-both" class="text-button" type="button">Select both</button></div>
+            <fieldset class="format-grid"><legend class="sr-only">Output formats</legend>
+              <label class="format-card"><input id="format-short" type="checkbox" name="formats" value="short" checked><span class="frame-icon portrait" aria-hidden="true"></span><span><strong>Short</strong><small>9:16 · Vertical</small></span><span class="checkmark" aria-hidden="true">✓</span></label>
+              <label class="format-card"><input id="format-long" type="checkbox" name="formats" value="long"><span class="frame-icon landscape" aria-hidden="true"></span><span><strong>Long</strong><small>16:9 · Horizontal</small></span><span class="checkmark" aria-hidden="true">✓</span></label>
+            </fieldset>
+          </section>
+          <div id="form-error" class="error-panel" role="alert" tabindex="-1" hidden></div>
+          <div class="save-row"><span>Saves input and settings only. <br>Production is not started.</span><button id="save-button" class="primary-button" type="submit">Save / Create Project <span aria-hidden="true">↗</span></button></div>
+        </form>
+        <aside class="summary-rail" aria-label="Production settings">
+          <section class="style-panel"><div class="eyebrow">YOUR VISUAL IDENTITY</div><div class="stickman-scene" aria-hidden="true"><svg viewBox="0 0 230 125"><path d="M0 111Q60 91 120 108T230 104" class="ground"/><path d="M22 111V28m0 27-12-12m12 30 16-17M204 108V16m0 32-15-13m15 33 14-13" class="tree"/><circle cx="104" cy="37" r="12"/><path d="M104 49v32m0-22-19 18m19-18 20 14m-20 8-14 28m14-28 16 27"/><path d="M144 48v29m0-20-13 17m13-17 13 12m-13 8-8 25m8-25 12 24" class="second-actor"/><circle cx="144" cy="38" r="9" class="second-actor"/></svg></div><h3>Stickman Horror <span>2D</span></h3><p>Consistent characters.<br>Action tells the story.</p><div class="locked-label">▣ Fixed style</div></section>
+          <section class="review-panel"><div class="eyebrow">Review status</div><h3>You review first.</h3><div class="review-line"><span>Human review</span><strong>Required</strong></div><div class="review-line"><span>Publishing</span><strong class="muted">Disabled</strong></div><p>Saving does not start research, narration or video rendering.</p></section>
+          <a class="board-card" href="/" target="_blank" rel="noopener"><span><strong>Open Backlot</strong><small>Monitor your productions</small></span><span aria-hidden="true">↗</span></a>
+        </aside>
+      </div>
+    </section>
+    <section id="list-view" class="page" hidden>
+      <div class="page-heading"><div><div class="eyebrow">YOUR LOCAL LIBRARY</div><h1>My Productions<span class="heading-dot">.</span></h1><p>Saved inputs and existing workspaces.</p></div><button id="refresh-list" class="secondary-button" type="button">Refresh</button></div>
+      <div id="list-status" class="empty-state" role="status">Loading productions…</div><div id="production-list" class="production-list"></div>
+      <section id="production-detail" class="panel" hidden><h2>Input content</h2><pre id="detail-content"></pre></section>
+    </section>
+    <footer>OPENMONTAGE STUDIO <span>LOCAL INPUT MVP · HUMAN IN CONTROL</span></footer>
+  </main>
+</body>
+</html>

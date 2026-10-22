@@ -125,6 +125,10 @@ human review gates are never automatically approved by this product decision.
 - [Source map](SOURCE_MAP.md): existing implementation inventory; older visual
   directions and M2.4 handoff descriptions are historical where they conflict.
 - [Worklog](WORKLOG.md): inspection, preservation and verification evidence.
+- [P1 Studio Input MVP](docs/features/p1-studio-input-mvp.md): local input-only
+  creation entry point (`python -m studio open`, [Windows guide](docs/STUDIO_WINDOWS.md)).
+  Saves a production request with the fixed Stickman Horror 2D style; it starts no
+  production and does not change the renderer-mapping milestone above.
 - [Architecture](docs/ARCHITECTURE.md): contains pre-existing uncommitted WIP and
   remains untouched. Add the product-contract reference there only after that WIP
   is reconciled separately; this dependency does not delay this contract's effect.

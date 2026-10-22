@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "Empty state",
+    "Missing story validation",
+    "Format validation",
+    "Unsafe ID rejected in UI",
+    "Loading/disabled save",
+    "Success, both formats and saved files",
+    "Vietnamese content persisted exactly; style/review/publication locked",
+    "Open Backlot: real board tab, all stages pending",
+    "Duplicate request cannot overwrite",
+    "XSS text stays literal in saved input",
+    "Real Markdown File API: Vietnamese + original CRLF preserved",
+    "Topic saved as unresearched input",
+    "Canonical fixture mode stores a reference only",
+    "Library error state",
+    "Library loading state",
+    "Library retry recovers",
+    "Mobile layout without horizontal overflow"
+  ],
+  "externalRequests": [],
+  "pageErrors": []
+}

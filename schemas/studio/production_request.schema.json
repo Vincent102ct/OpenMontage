@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "CanonicalReference": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_id": {
+          "title": "Catalog Id",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "package_version": {
+          "title": "Package Version",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "approved_by": {
+          "minLength": 1,
+          "title": "Approved By",
+          "type": "string"
+        },
+        "approved_at": {
+          "format": "date-time",
+          "title": "Approved At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "catalog_id",
+        "package_id",
+        "package_version",
+        "path",
+        "sha256",
+        "approved_by",
+        "approved_at"
+      ],
+      "title": "CanonicalReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "project_id": {
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "input_mode": {
+      "enum": [
+        "topic",
+        "story",
+        "canonical"
+      ],
+      "title": "Input Mode",
+      "type": "string"
+    },
+    "content": {
+      "anyOf": [
+        {
+          "maxLength": 200000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Content"
+    },
+    "content_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "input_file": {
+      "enum": [
+        "input/topic.txt",
+        "input/story.md",
+        "input/canonical-reference.json"
+      ],
+      "title": "Input File",
+      "type": "string"
+    },
+    "source_filename": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Filename"
+    },
+    "formats": {
+      "items": {
+        "enum": [
+          "short",
+          "long"
+        ],
+        "type": "string"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "title": "Formats",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "style": {
+      "const": "stickman_horror_2d",
+      "default": "stickman_horror_2d",
+      "title": "Style",
+      "type": "string"
+    },
+    "review_mode": {
+      "const": "human_required",
+      "default": "human_required",
+      "title": "Review Mode",
+      "type": "string"
+    },
+    "review_status": {
+      "const": "pending_human_review",
+      "default": "pending_human_review",
+      "title": "Review Status",
+      "type": "string"
+    },
+    "publishing_enabled": {
+      "const": false,
+      "default": false,
+      "title": "Publishing Enabled",
+      "type": "boolean"
+    },
+    "status": {
+      "const": "production_not_started",
+      "default": "production_not_started",
+      "title": "Status",
+      "type": "string"
+    },
+    "input_readiness": {
+      "enum": [
+        "unresearched_topic",
+        "unreviewed_story",
+        "canonical_reference"
+      ],
+      "title": "Input Readiness",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "canonical_package": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CanonicalReference"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "input_mode",
+    "content",
+    "content_sha256",
+    "input_file",
+    "formats",
+    "input_readiness",
+    "created_at"
+  ],
+  "title": "ProductionRequest",
+  "type": "object"
+}
