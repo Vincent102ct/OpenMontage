@@ -17,7 +17,7 @@ artifacts listed below. No paid API, no cloud, no UI, no Shorts (out of M1 scope
 | Stage | Tool / code | Output artifact |
 | --- | --- | --- |
 | Analyze | `story_analyzer` (`tools/story/story_analyzer.py`, `lexicon.py`) | `artifacts/story_analysis.json`, `llm_labels_raw.json` |
-| Narrate | Installed offline provider selected by OS + actual voice language (`windows_sapi_tts`, `macos_say_tts`, explicitly configured `piper_tts`); measured PCM WAV, provider/settings/content-aware cache | `assets/audio/bNN.wav`, `narration_manifest.json`, `artifacts/tts_selection.json` |
+| Narrate | Installed offline provider: for Vietnamese a discovered local Korva (`korva_tts`, preset `hoang_nam`, separate Python worker, one model load per story), else selected by OS + actual voice language (`windows_sapi_tts`, `macos_say_tts`, explicitly configured `piper_tts`); measured PCM WAV, provider/model/settings/content-aware cache | `assets/audio/bNN.wav`, `narration_manifest.json`, `artifacts/tts_selection.json` |
 | Plan | `story_planner` (`tools/story/story_planner.py`, `locations.py`) | `artifacts/story_video.json`, `action_timeline.json` |
 | Sound | `procedural_sfx` (8 new generic recipes, existing ones unchanged) | `assets/audio/sfx/*.wav` |
 | Validate + package | `character_rig_renderer` `story_video` route → `tools/character/story_video.py` | `composition/`, `edit_decisions.json`, `asset_manifest.json` |
@@ -32,7 +32,10 @@ Windows setup and speed units: [Windows guide](../WINDOWS_STORY_TO_VIDEO.md).
 `--no-render` generates real narration/SFX and a validated package, skipping only
 browser rendering. Missing matching offline speech blocks package/render, never
 falls back across languages or to a paid service. macOS Linh/Samantha defaults
-and native normalization are preserved.
+and native normalization are preserved. M1.2: `--tts-provider korva` (or `auto` for a
+Vietnamese story when Korva is installed) narrates offline with Korva `hoang_nam`;
+explicit Korva fails closed. Contract, metrics and limits:
+[m1.2-korva-tts-integration.md](m1.2-korva-tts-integration.md).
 
 - **Narration text is never generated.** Deterministic segmentation (quote-aware sentence
   split, long sentences split at the comma nearest the middle) must reproduce the source

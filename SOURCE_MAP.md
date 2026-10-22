@@ -1,5 +1,15 @@
 # Source map — story-to-action pilot
 
+M1.2 Korva integration (2026-10-22, baseline `coding` / `5705e821`):
+`tools/audio/korva_tts.py` (`korva_tts`, provider `korva`) discovers a local Korva
+runtime/checkpoint, hashes checkpoint + preset and drives
+`tools/audio/korva_worker.py`, which runs only inside the separate Korva Python
+(korvatts 0.1.3) over JSON lines. `local_narration.py` adds the Korva candidate
+(Vietnamese only; first in `auto` when installed); `scripts/story_to_video.py` adds
+`--tts-provider korva`, `--korva-python`, `--korva-assets` and one worker session per
+story. Tests: `tests/tools/test_korva_tts.py`. Spec:
+`docs/features/m1.2-korva-tts-integration.md`. Planner/renderer/Remotion unchanged.
+
 Windows compatibility extension (2026-10-22, baseline `coding` / `877a12b`):
 `scripts/story_to_video.py` selects installed offline speech through
 `tools/audio/local_narration.py`; `local_wav.py` defines measured mono 24 kHz PCM16.

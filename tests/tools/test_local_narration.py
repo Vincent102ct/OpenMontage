@@ -9,11 +9,21 @@ from unittest.mock import Mock
 import pytest
 
 from scripts import story_to_video as cli
+from tools.audio import korva_tts
 from tools.audio import local_narration as local
 from tools.audio.local_wav import wav_duration
 from tools.audio.piper_tts import PiperTTS
 from tools.audio.windows_sapi_tts import WindowsSapiTTS
 from tools.base_tool import ToolStatus, ToolResult
+
+
+@pytest.fixture(autouse=True)
+def no_installed_korva(monkeypatch):
+    """These native/Piper regressions must not depend on a Korva install on the test machine."""
+    for name in ("OPENMONTAGE_KORVA_PYTHON", "OPENMONTAGE_KORVA_ASSETS", "KORVATTS_ASSETS_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(korva_tts, "_python_candidates", lambda: [])
+    monkeypatch.setattr(korva_tts, "_hub_dirs", lambda: [])
 
 
 def _wav(path, frames=2400):

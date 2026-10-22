@@ -11,6 +11,7 @@ Ollama endpoint. Narration uses an installed, language-matched offline voice.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -62,31 +63,53 @@ def narrate(analysis: dict, audio_dir: Path, selection: dict) -> dict:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
     tts = tool(selection["tool"])
     out = {}
-    for beat in analysis["beats"]:
-        key = narration_key(selection, beat["text"])
-        wav = audio_dir / f"{beat['id']}.wav"
-        entry = manifest.get(beat["id"])
-        cached = False
-        if entry and entry.get("key") == key and wav.exists():
+    # Providers with a model process (Korva) keep one worker for the whole story.
+    session = getattr(tts, "session", None)
+    with session() if session else contextlib.nullcontext():
+        for beat in analysis["beats"]:
+            key = narration_key(selection, beat["text"])
+            wav = audio_dir / f"{beat['id']}.wav"
+            entry = manifest.get(beat["id"])
+            cached = False
+            if entry and entry.get("key") == key and wav.exists():
+                try:
+                    cached = file_hash(wav) == entry.get("sha256")
+                    if cached:
+                        wav_duration(wav)
+                except (OSError, ValueError, EOFError, wave.Error):
+                    cached = False
+            generation = entry.get("generation") if cached else None
+            if not cached:
+                res = tts.execute({**selection["settings"], "text": beat["text"], "output_path": str(wav)})
+                if not res.success:
+                    raise SystemExit(f"Narration failed for {beat['id']}: {res.error}")
+                generation = res.data.get("generation")
             try:
-                cached = file_hash(wav) == entry.get("sha256")
-                if cached:
-                    wav_duration(wav)
-            except (OSError, ValueError, EOFError, wave.Error):
-                cached = False
-        if not cached:
-            res = tts.execute({**selection["settings"], "text": beat["text"], "output_path": str(wav)})
-            if not res.success:
-                raise SystemExit(f"Narration failed for {beat['id']}: {res.error}")
-        try:
-            duration = wav_duration(wav)
-        except (OSError, ValueError, EOFError, wave.Error) as exc:
-            raise SystemExit(f"Invalid narration WAV for {beat['id']}: {exc}") from exc
-        entry = {"key": key, "duration_seconds": duration, "sha256": file_hash(wav), **selection}
-        manifest[beat["id"]] = entry
-        write(manifest_path, manifest)
-        out[beat["id"]] = {"path": str(wav), "duration_seconds": duration}
+                duration = wav_duration(wav)
+            except (OSError, ValueError, EOFError, wave.Error) as exc:
+                raise SystemExit(f"Invalid narration WAV for {beat['id']}: {exc}") from exc
+            entry = {"key": key, "duration_seconds": duration, "sha256": file_hash(wav), **selection}
+            if generation:
+                entry["generation"] = generation
+            manifest[beat["id"]] = entry
+            write(manifest_path, manifest)
+            out[beat["id"]] = {"path": str(wav), "duration_seconds": duration}
     return out
+
+
+def narration_summary(audio_dir: Path, beats: list[dict]) -> dict:
+    """Measured narration totals for the render report; synthesis time covers generated beats only."""
+    manifest = json.loads((audio_dir / "narration_manifest.json").read_text(encoding="utf-8"))
+    entries = [manifest[b["id"]] for b in beats]
+    generated = [e["generation"] for e in entries if "synthesis_seconds" in e.get("generation", {})]
+    summary = {"beats": len(entries), "audio_seconds": round(sum(e["duration_seconds"] for e in entries), 3)}
+    if generated:
+        summary.update(beats_with_synthesis_metrics=len(generated),
+                       synthesis_seconds=round(sum(g["synthesis_seconds"] for g in generated), 3),
+                       worker=generated[-1].get("worker"),
+                       max_float_peak=max(g.get("float_peak", 0.0) for g in generated),
+                       export_gains=sorted({round(g["export_gain"], 4) for g in generated if "export_gain" in g}))
+    return summary
 
 
 def render_sfx(video: dict, sfx_dir: Path) -> None:
@@ -125,10 +148,16 @@ def main() -> None:
     parser.add_argument("--analyzer", choices=["auto", "rules", "ollama"], default="auto")
     parser.add_argument("--ollama-endpoint", default=DEFAULT_OLLAMA)
     parser.add_argument("--ollama-model", default=DEFAULT_MODEL)
-    parser.add_argument("--tts-provider", choices=["auto", "windows_sapi", "macos_say", "piper"], default="auto")
-    parser.add_argument("--voice", help="exact installed native voice; must match story language")
-    parser.add_argument("--rate", type=float, help="provider units: SAPI -10..10; macOS 80..300 WPM; Piper length_scale 0.25..4")
+    parser.add_argument("--tts-provider", choices=["auto", "korva", "windows_sapi", "macos_say", "piper"],
+                        default="auto", help="auto prefers an installed Korva for Vietnamese, else the native voice")
+    parser.add_argument("--voice", help="exact installed native voice or Korva preset (default hoang_nam); "
+                                        "must match story language")
+    parser.add_argument("--rate", type=float, help="provider units: SAPI -10..10; macOS 80..300 WPM; "
+                                                   "Piper length_scale 0.25..4; Korva speed 0.5..2.0")
     parser.add_argument("--piper-model", default=os.environ.get("OPENMONTAGE_PIPER_MODEL"), help="local .onnx + adjacent .onnx.json")
+    parser.add_argument("--korva-python", help="Korva runtime interpreter (or OPENMONTAGE_KORVA_PYTHON)")
+    parser.add_argument("--korva-assets", help="local Korva snapshot with onnx/ + voice_styles/ "
+                                               "(or OPENMONTAGE_KORVA_ASSETS)")
     parser.add_argument("--draft", action="store_true", help="render at half resolution for a quick look")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--no-render", action="store_true", help="synthesize real narration and validate package; skip browser/MP4")
@@ -175,13 +204,16 @@ def main() -> None:
         return
     try:
         selection = select_local_voice(tool, analysis["language"], provider=args.tts_provider,
-                                       voice=args.voice, rate=args.rate, piper_model=args.piper_model)
+                                       voice=args.voice, rate=args.rate, piper_model=args.piper_model,
+                                       korva_python=args.korva_python, korva_assets=args.korva_assets)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
     write(artifacts / "tts_selection.json", selection)
     log("narrate", json.dumps(selection, ensure_ascii=False))
     narration = narrate(analysis, audio, selection)
     t = lap("narrate", t)
+    narration_stats = narration_summary(audio, analysis["beats"])
+    log("narrated", json.dumps(narration_stats, ensure_ascii=False))
 
     log("plan")
     res = tool("story_planner").execute({"story_analysis": analysis, "narration": narration})
@@ -233,7 +265,7 @@ def main() -> None:
     tts_settings = selection["settings"]
     voice_label = (f"{tts_settings.get('voice', tts_settings.get('model'))} "
                    f"{tts_settings['language_code']} rate "
-                   f"{tts_settings.get('rate', tts_settings.get('length_scale'))}")
+                   f"{tts_settings.get('rate', tts_settings.get('length_scale', tts_settings.get('speed')))}")
     report = {"version": "1.0",
               "outputs": [{"path": str(output), "format": "mp4", "codec": facts["video_codec"],
                            "audio_codec": facts["audio_codec"], "resolution": f"{facts['width']}x{facts['height']}",
@@ -244,7 +276,8 @@ def main() -> None:
               "verification_notes": [f"pre-render validator: {validation}; QA status {qa['status']}",
                                      "Technical QA only; pronunciation and listening review pending."],
               "metadata": {"pipeline": "story-to-video M1", "analyzer": analysis["analyzer"],
-                           "voice": voice_label, "tts": selection, "stage_seconds": timings,
+                           "voice": voice_label, "tts": selection, "narration": narration_stats,
+                           "stage_seconds": timings,
                            "total_seconds": round(time.monotonic() - started, 1), "API_cost_usd": 0,
                            "human_visual_approved": False, "human_listening_approved": False}}
     validate_artifact("render_report", report)

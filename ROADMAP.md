@@ -29,6 +29,20 @@
 - Windows VI image/technical review was accepted for compatibility only. Broader
   M1.1 creative approval is not inferred, and M2 remains unstarted. See
   `docs/WINDOWS_M11_HANDOFF_2026-10-22.md`.
+- [x] M1.2 TTS evaluation (2026-10-22): user preferred Korva `hoang_nam`.
+- [x] M1.2 Korva integration (2026-10-22): local offline provider `korva_tts` in the
+      generic CLI (`--tts-provider korva`, auto for Vietnamese when installed); real
+      MP4s `projects/m12-korva-chiec-o` and `projects/m12-korva-second-story`:
+      **technical PASS**. See `docs/features/m1.2-korva-tts-integration.md`.
+- [x] M1.2 finalized as technical baseline and pushed to `origin/coding` (2026-10-22).
+      Korva `hoang_nam` is the preferred Vietnamese provider; SAPI/macOS Say/Piper
+      remain selectable.
+- [ ] **Human review of Korva pronunciation/content fidelity (blocking publication)**,
+      incl. ASR-flagged *suspected, unconfirmed* omissions in short sentences and the
+      b09 tail burst. Not publication quality-approved.
+- [ ] Korva commercial-use clarification: publisher declares Apache-2.0; PhoAudiobook
+      dataset provenance / preset consent uncertain — not a technical blocker.
+- [ ] M2: **not started**.
 - [ ] Candidates after review (not started): richer rig poses (lie down, crouch-walk,
       two-handed carry), more location kinds/variants, crowd/extra characters, per-character
       voices, better LLM prompting or a larger local model, word-level alignment, music,

@@ -75,11 +75,15 @@ under Windows PowerShell 5.1. Actual synthesis must succeed as well as enumerati
 
 ## Provider selection and timing
 
-`--tts-provider auto` (default) tries the native provider for the OS, then Piper
-only when a local model was explicitly configured. No cloud provider participates.
+`--tts-provider auto` (default) tries a locally installed Korva first for
+Vietnamese stories only (see "Korva narration" below), then the native provider for
+the OS, then Piper only when a local model was explicitly configured. English
+selection is unchanged. No cloud provider participates. On a machine with Korva
+installed, reproduce the earlier Microsoft An videos with `--tts-provider windows_sapi`.
 
 | OS/provider | Voice selection | Default speed / `--rate` units |
 | --- | --- | --- |
+| Korva (any OS, Vietnamese only) | Bundled preset; default `hoang_nam` (`--voice`) | 1.05 speed; 0.5..2.0, larger is faster |
 | Windows / windows_sapi | Installed matching language; prefer Zira Desktop for EN | -1; integer -10..10, 0 is preserved |
 | macOS / macos_say | Prefer Linh vi_VN and Samantha en_US; otherwise a matching installed voice | VI 145, EN 165 words/minute; integer 80..300 |
 | Piper | Existing `.onnx` + adjacent `.onnx.json` declaring matching `language.code` | 1.0 length_scale; 0.25..4, larger is slower |
@@ -136,6 +140,62 @@ directories may be created. Existing production outputs are not evidence of a dr
 `--no-render` intentionally needs a real matching voice. It synthesizes real audio
 because the action timeline needs measured durations. The two flags are mutually
 exclusive. Neither mode estimates narration durations to fabricate a valid timeline.
+
+### Korva narration (Vietnamese, offline, M1.2)
+
+KorvaTTS needs its own Python (pinned and verified: CPython 3.11.16 + `korvatts`
+0.1.3 + onnxruntime 1.31.0, CPU only); the production `.venv` stays on Python 3.14.
+OpenMontage starts `tools/audio/korva_worker.py` in that interpreter and keeps one
+worker (one model load) for the whole story. Synthesis never downloads a model and
+runs with Hugging Face offline flags and a socket guard.
+
+One-time setup on a new machine (the only step that uses the network; this exact
+snippet has not yet been run on a second machine — the M1.2 machine reuses the
+benchmark install described below):
+
+```powershell
+# User-local Python 3.11, no administrator rights needed.
+py -3.11 -m venv C:\Korva\venv
+C:\Korva\venv\Scripts\python.exe -m pip install --only-binary=:all: korvatts==0.1.3
+# Fetch the pinned checkpoint and bundled presets once (about 379 MiB):
+C:\Korva\venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download; print(snapshot_download('dogenthq/KorvaTTS', revision='e5c8c218e93c1d8daa53bfe0e62b8fbc5a5e991d', allow_patterns=['onnx/*', 'voice_styles/*', 'README.md', '*LICENSE*', 'NOTICE*'], local_dir='C:/Korva/assets'))"
+$env:OPENMONTAGE_KORVA_PYTHON = 'C:\Korva\venv\Scripts\python.exe'
+$env:OPENMONTAGE_KORVA_ASSETS = 'C:\Korva\assets'
+```
+
+The exact dependency freeze used by the M1.2 benchmark is in the local evaluation
+backup (`review/metadata/korva-freeze.txt`); install from it for an identical
+environment. On the M1.2 machine nothing needs configuring: the provider finds
+`projects/m12-vietnamese-tts-review/envs/korva` and the pinned snapshot in that
+directory's Hugging Face cache. Discovery order: `--korva-python` / `--korva-assets`
+→ the environment variables above (or the SDK's `KORVATTS_ASSETS_DIR`) → that M1.2
+install → Hugging Face caches, preferring revision `e5c8c218`. An explicit path that
+is invalid is an error; it never falls through to another location.
+
+```powershell
+# Explicit Korva; fails closed (no Microsoft An substitution) if Korva is unusable:
+.\.venv\Scripts\python.exe scripts/story_to_video.py examples/story-to-video/stories/chiec-o-mau-vang.vi.md --analyzer rules --tts-provider korva --voice hoang_nam --project-id m12-korva-chiec-o
+# Same, with explicit runtime/model paths:
+.\.venv\Scripts\python.exe scripts/story_to_video.py path/to/story.vi.md --analyzer rules --tts-provider korva --korva-python 'C:\Korva\venv\Scripts\python.exe' --korva-assets 'C:\Korva\assets'
+# Package without MP4 (real Korva audio, measured timeline, validated Remotion package):
+.\.venv\Scripts\python.exe scripts/story_to_video.py path/to/story.vi.md --analyzer rules --tts-provider korva --no-render
+```
+
+Check `artifacts/tts_selection.json` (`provider: korva`, checkpoint/preset SHA256,
+revision, SDK version, PCM export policy) and `metadata.narration` in
+`artifacts/render_report.json` (synthesis seconds, model load, export gains).
+Each beat is normalized to mono 24 kHz PCM16 and measured by sample count. A
+different machine may produce slightly different floating-point audio; its own
+cache and durations are always remeasured.
+
+Measured on the M1.2 machine (i5-12400, CPU, 6 threads): model load ≈2.3–2.6 s
+per story; synthesis RTF ≈0.74–0.77 for 18–21 short beats. Expect about 50 s of
+synthesis per minute of narration, on top of the Remotion render.
+
+License note: the publisher states Apache-2.0 for code, weights and presets. Its
+model license names PhoAudiobook training data, whose own terms restrict use to
+research/education; commercial use of generated audio is therefore not
+independently verified. Only bundled presets are used; no voice cloning.
 
 ### Optional Piper (not required for the verified EN/VI runs)
 

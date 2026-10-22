@@ -1,5 +1,55 @@
 # Decisions — Story-to-Action pilot (2026-10-21)
 
+## M1.2 Korva TTS integration (2026-10-22)
+
+- Integrate the user-preferred M1.2 voice (Korva `hoang_nam`) as local provider
+  `korva_tts`; no other TTS model added. Baseline `coding` / `5705e821`; existing
+  WIP, Story Planner, renderer, Remotion and stories unchanged.
+- KorvaTTS runs in its own interpreter (benchmark: CPython 3.11.16, korvatts 0.1.3,
+  onnxruntime 1.31.0); OpenMontage stays on Python 3.14. Never import `korvatts` in
+  the pipeline process: `korva_worker.py` runs in the Korva runtime and speaks JSON
+  lines over stdin/stdout. Native-library stdout is redirected to stderr so it
+  cannot corrupt the protocol. One worker (one model load) per story via
+  `KorvaTTS.session()`; single `execute()` calls start and stop their own worker.
+- Inference call is the benchmarked one: `TTS(assets_dir, device="cpu",
+  auto_download=False, num_threads)`, `synthesize(text, voice, lang="vi",
+  total_steps=32, speed=1.05, silence_between_chunks=0.3, seed=20261022)`. The SDK's
+  own sentence chunker keeps chunk order; canonical text and subtitles are untouched.
+- Discovery never downloads: CLI flag → `OPENMONTAGE_KORVA_PYTHON` /
+  `OPENMONTAGE_KORVA_ASSETS` (or SDK `KORVATTS_ASSETS_DIR`) → M1.2 benchmark install
+  location / Hugging Face caches, preferring pinned revision `e5c8c218`. Explicit
+  paths never fall through. Worker uses HF offline flags and a socket guard.
+- Only bundled presets (`voice_styles/<name>.json`) are accepted; no reference audio
+  or voice cloning. Default `hoang_nam`; other bundled presets were not evaluated.
+- Vietnamese only. `auto` puts Korva first for `vi` only when a Korva install is
+  found, then the native voice, then Piper; English selection is unchanged.
+  Explicit `--tts-provider korva` fails closed — no switch to Microsoft An.
+- Cache key adds checkpoint SHA256 (all ONNX/config files), preset SHA256, SDK
+  version, synthesis settings, runtime paths and the worker's PCM export policy.
+  `auto_skipped` diagnostics are excluded so they cannot invalidate audio.
+- PCM export: Korva float output peaks above 1.0. One static gain 0.6 for every
+  beat (consistent level), lowered only for a beat whose peak would exceed -1 dBFS.
+  No limiter/compressor/tempo/pitch change. Edge silence below -45 dBFS is trimmed
+  to a 0.1 s pad because leading silence skews the planner's verb-to-time mapping.
+- Rejected after real-run evidence: dropping a "detached trailing burst" after a
+  pause. On the second story it removed real final words ("một mình"). Short loud
+  tail segments are now always kept; a residual vocoder click is a listening item.
+- Measured, not estimated: duration = PCM16 sample count after FFmpeg mono 24 kHz
+  normalization. Render report records model, preset, hashes and synthesis metrics.
+- Licensing is recorded, not a technical blocker: publisher states Apache-2.0 for
+  code/weights/styles; PhoAudiobook training-data commercial rights and preset
+  speaker consent are not independently verified. No maintainer message sent.
+
+### Finalization (2026-10-22)
+
+- User asked to finalize M1.2 integration as the technical baseline and push to
+  `origin/coding` (normal push, no force). Status: technical PASS; Korva `hoang_nam`
+  preferred for Vietnamese; pronunciation/content fidelity pending human review;
+  ASR missing-word findings suspected, not confirmed; licensing as above; M2 not started.
+- Commit only M1.2 code/tests/docs (incl. the M1.2 evaluation report and worklog
+  entries). Footage-led/evidence-canon/FFmpeg/schema/ARCHITECTURE WIP stays
+  uncommitted. No weights, runtimes, caches, audio or MP4 in Git.
+
 ## Windows compatibility extension (2026-10-22)
 
 - User explicitly authorized local M1.1 fixture narration/render/test runs; human

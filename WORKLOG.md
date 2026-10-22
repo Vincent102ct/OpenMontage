@@ -407,3 +407,137 @@ TypeScript passed on that candidate. The previous 1967-test result included WIP;
 this release verification excludes it. Both original MP4 hashes, full decode,
 measured narration/subtitle and waveform-sync checks passed again. All 16 WIP
 checksums remain unchanged; the commit allowlist is only Python and Markdown.
+
+## M1.2 Vietnamese narrative TTS listening evaluation — 2026-10-22
+
+Verified `coding` / `5705e821c6914f1caef120bb1e756df87768251c`; read M1/M1.1
+source/docs and Windows handoff. Ran an isolated CPU benchmark on Windows 11,
+i5-12400 (6C/12T), 31.70 GiB RAM, Intel UHD 730, no NVIDIA/CUDA. Production
+Python 3.14.5 unchanged; new SDKs use separate Python 3.11.16 venvs, wheel-only
+installs without administrator/security changes. Public models fetched once;
+inference used offline flags/socket guard, no hosted or paid API and no external
+reference-audio cloning. Full source/model revisions, SHA256 and dependency
+freezes are recorded in the ignored evaluation directory.
+
+Same three original passages of “Chiếc ô màu vàng”, in original order and with
+normalized_text identical to canonical, generated real WAVs with all providers:
+- Microsoft An / SAPI via PowerShell 7, rate -1: 46.018 s speech, 3.715 s inference,
+  RTF .081, sampled peak process-tree RSS 191 MiB.
+- KorvaTTS 0.1.3 / hoang_nam / CPU ONNX / 32 steps / speed 1.05: 48.174 s speech,
+  26.136 s inference, RTF .543, 563 MiB RSS.
+- VieNeu 3.8.3 / v3 Turbo FP32 ONNX / Thanh Bình: 33.950 s speech,
+  12.933 s inference, RTF .381, 1467 MiB RSS.
+
+Model initialization is excluded from inference; An includes adapter/native host
+and normalization costs. RSS is sampled, not a dedicated physical-memory/VRAM
+measurement. Korva FLOAT values exceeded 1.0; benchmark export preserves FLOAT
+and applies static headroom before PCM16, avoiding saturation without modifying
+the SDK or production adapters. Final A/B/C clips are -20.2 LUFS, maximum .01 LUFS
+error / highest -2.24 dBTP, no tempo/pitch/dynamics processing.
+
+Listening bundle: `projects/m12-vietnamese-tts-review/review/INDEX.html`, A/B/C full
+WAVs, per-passage ABC WAVs, original transcript, normalized_text, metadata, licenses,
+technical CSV, score sheet and hash manifest. User replied **“Ưu tiên B”**;
+B is Korva / hoang_nam. Recommend Korva for the next narrative listening round,
+with commercial provenance still unresolved: publisher Apache-2.0 weights/styles
+permission references PhoAudiobook, whose dataset terms restrict research/education.
+VieNeu's pinned model FAQ explicitly allows monetized preset output and states
+speaker consent; these are publisher statements, not independently audited contracts.
+No detailed human pronunciation scores or full word-fidelity PASS claimed.
+Optional local Whisper-small ASR differences are listening prompts, including
+number-format artifacts, not confirmed TTS errors or an emotion ranking.
+
+Final verification: 30 final WAVs full-decode clean; 24 PCM16 files have no extreme
+samples; all transcript/source bytes and raw hashes match; listening links valid;
+three isolated pip checks clean. Focused native/local/macOS-command regression
+suite **21 passed in .81 s**. All 16 preexisting WIP hashes/status and 29 production/
+story hashes unchanged; HEAD unchanged and index empty. Full renderer/typecheck
+suites not rerun for this isolated evaluation. M1.1 runtime gates remain unchanged.
+No production integration, staging, commit, push or M2. Only this worklog and
+`docs/features/m1.2-vietnamese-narrative-tts-evaluation.md` are new visible docs;
+benchmark scripts/models/audio stay Git ignored and require a separate local backup.
+
+## M1.2 TTS acceptance-gate evidence — 2026-10-22
+
+Reverified `coding` / `5705e821`; existing M1.2 WAVs and original transcript
+retained. Rechecked current native/Piper narration contracts without changing
+production code. Used offline, unprompted Whisper-small and Whisper-medium
+(medium revision `08e178d48790749d25932bbc082711ddcfdfbc4f`) for full 3-passage
+alignment: 141 original whitespace-separated Vietnamese tokens per provider,
+846 alignment rows across A/B/C and both recognizers. Comparison-only expansion
+of ASR 4/6/4h/6h removes previous number-format false deletion flags; canonical
+and TTS normalized_text unchanged. Word timestamps/punctuation gaps and measured
+pace are evidence for listening, not subjective pronunciation/emotion verdicts.
+
+Saved 47 timestamped review candidates (A15/B5/C27), exact PCM snippets and a
+local review/export page. No agent direct listening or confirmed error list is
+claimed from ASR alone; related Whisper sizes can share biases. User replied
+**“Đã nghe cả 5, chấp nhận được”** for the five specifically requested B/Korva
+locations; these are ACCEPTABLE_TO_REVIEWER, with exact reply/scope recorded.
+This supplements the earlier “Ưu tiên B” preference. Full-transcript/punctuation/
+pace human acceptance and detailed A/C listening remain pending, not inferred.
+
+Re-fetched exact-checkpoint/model/source licenses and pinned PhoAudiobook terms.
+Verified Korva hoang_nam style hash and VieNeu Thanh Bình preset provenance:
+the latter is bundled in SDK 3.8.3, byte-identical to pinned Apache source,
+rather than a voice file loaded from the HF ONNX download. Korva's model grant
+does not resolve upstream research/education restrictions or independently prove
+speaker/output commercial permission. Drafted maintainer questions naming exact
+checkpoint/preset and separate output/distribution obligations; **not sent**.
+VieNeu remains the backup shortlist: explicit publisher monetized-output/consent
+statement documented, no independent legal clearance. Source roadmap “personal
+use” wording is logged for optional clarification, not treated as an NC license.
+
+Acceptance report, timestamp CSV, licenses/draft and restore guide:
+`projects/m12-vietnamese-tts-review/review/acceptance/`. Feature report updated.
+Portable evidence backup is outside repository under workspace `backups/`:
+`OpenMontage-M12-TTS-Acceptance-2026-10-22-v1.zip` with checksum/verification
+sidecars. Payload includes WAVs, model/preset settings and hashes, reports,
+source licenses, human feedback and replay scripts; excludes weights, venvs,
+cache, secrets and unrelated WIP. Local verified archive only, not a claim of
+off-machine backup or second-machine inference. Existing Windows baseline,
+Story Planner and renderer remain unchanged. No commit/push, CLI integration
+or M2. Final verification evidence is in acceptance-qa.json and backup sidecar.
+Acceptance regression rerun: **21 passed in .74 s** (native/local narration and
+macOS-command suites); no production code changed. No full renderer/typecheck
+rerun claimed for this evidence-only follow-up.
+
+## M1.2 Korva TTS provider integration — 2026-10-22
+
+Verified `coding` / `5705e821`, WIP preserved (37 story/An-MP4/WIP hashes rechecked
+unchanged). Added offline provider `korva_tts` (`tools/audio/korva_tts.py`) and the
+Korva-side `tools/audio/korva_worker.py`, reusing the benchmarked
+`korvatts.TTS(..., auto_download=False)` / `synthesize(...)` call inside the separate
+Python 3.11.16 runtime over JSON lines; one model load per story. CLI:
+`--tts-provider korva|auto`, `--korva-python`, `--korva-assets`; `--voice` = preset,
+`--rate` = speed. Explicit Korva fails closed; auto prefers Korva only for Vietnamese
+when installed. Cache key includes checkpoint/preset SHA256, SDK version, settings and
+PCM export policy. Render report now carries `metadata.narration` (synthesis/load/gains).
+
+Real-run iterations (evidence in ignored `projects/m12-korva-integration/`):
+run 1 per-beat peak gain gave uneven levels → one static gain 0.6 (-1 dBFS ceiling);
+leading silence (0.72 s) skewed verb timing → edge trim to 0.1 s pad; a trailing-burst
+remover was added, then **reverted** after it cut real final words ("một mình") in the
+second story (native-SDK ASR comparison). Final MP4s were rendered after the last change.
+
+Results: `projects/m12-korva-chiec-o/renders/final.mp4` (21 beats, 64.53 s narration,
+synthesis 49.31 s, load 2.32 s, RTF .76, MP4 118.42 s, total 175.6 s) and second story
+(verbatim `source_story_opening.md` body, auto → Korva) `projects/m12-korva-second-story`
+(18 beats, 52.84 s, RTF .79, MP4 73.69 s). Pipeline QA + independent QA PASS: text and
+SRT equal source, 0 full-scale samples, full decode clean, beat waveform lag 30–57 ms
+(same as An baseline 28–57 ms). Whisper-medium: story 1 0 omissions/insertions; story 2
+flags 4 possibly omitted tokens in short sentences, also present in unmodified SDK output.
+Tests: 23 new Korva tests; full suite rerun after final change (see log). No commit,
+push, M2, or claim of publication-quality voice; human listening pending.
+
+### M1.2 finalization — 2026-10-22
+
+Finalized M1.2 Korva integration as technical baseline at the user's request: technical
+PASS; Korva `hoang_nam` preferred Vietnamese provider; Windows SAPI / macOS Say / Piper
+still selectable. Pronunciation and content fidelity pending human review; ASR
+missing-word findings suspected, not confirmed; publisher declares Apache-2.0 while
+dataset provenance stays uncertain; not publication quality-approved; M2 not started.
+Pinned revision, file checksums, settings and reproduction commands are in
+`docs/features/m1.2-korva-tts-integration.md`. Commit includes only M1.2 code/tests/docs;
+other WIP left uncommitted, no weights/venvs/caches/audio/MP4. Verified from a clean
+worktree of the commit before a normal push to `origin/coding`.
