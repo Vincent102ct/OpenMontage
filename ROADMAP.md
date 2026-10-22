@@ -1,5 +1,40 @@
 # Story-to-Action roadmap
 
+## Current product direction — 2026-10-22
+
+[PROJECT.md](PROJECT.md) is authoritative: **Automated Stickman Horror Video
+Production System**, with 2D Stickman Horror Animation as the primary output.
+The [identity-lock decision](DECISIONS.md#product-identity-lock-stickman-horror-2026-10-22-current-authority)
+supersedes conflicting visual directions and earlier M2.4 progression entries.
+
+- [x] M2.1 Master Story Package: completed; canonical content remains valid.
+- [x] M2.2 narration (including M2.2.1 selection): completed technical baseline;
+      original narration and measured timing remain valid.
+- [x] M2.3 canonical scene planning: technically completed, with 11 scenes and
+      reusable timings/canonical references; visual style requires correction.
+- [ ] Correct M2.3 visual treatments to Stickman Horror **before M2.4**; existing
+      documentary graphics/storyboard directions are not the approved product look.
+- [ ] M2.4 documentary asset resolver: **NOT AUTHORIZED for implementation or
+      continuation**; previous documentary-oriented prompt cancelled. Preserve
+      existing M2.4 WIP and historical records without adopting their direction.
+- [ ] **Next milestone: inspect and map the existing Stickman Animation renderer
+      against STORY 053's 11 scenes (SC_001–SC_011).** Deliver a per-scene reuse/gap
+      map for character design/acting, environment, props/contact, continuity,
+      camera/light, narration timing, vertical framing and reconstruction labels.
+      Assess the current filled-cartoon rig and fixed 1280×720 compositions;
+      this documentation task does not implement the map or change scene data.
+- [ ] Human listening, continuity CR_006/007/008/010, factual, licensing and
+      publication reviews remain pending; technical completion is not approval.
+- [ ] Architecture documentation dependency: reference the product contract in
+      `docs/ARCHITECTURE.md` after its unrelated uncommitted WIP is reconciled.
+      Architecture is untouched in this task.
+
+## Historical roadmap (preserved; current status above takes precedence)
+
+The following entries record earlier work and approvals. Their visual choices,
+M2.4 authorization and completed documentary asset work do not authorize current
+implementation or override [PROJECT.md](PROJECT.md).
+
 - [x] Recover checkout context and preserve pre-existing work.
 - [x] Document source map and scoped feature/visual contracts.
 - [x] Original cartoon Minh, detailed fixed apartment and one persistent cup.

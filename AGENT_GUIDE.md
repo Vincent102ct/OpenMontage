@@ -2,6 +2,16 @@
 
 Start here. This is the complete operating guide and agent contract for OpenMontage.
 
+**Project-specific entry requirement:** Read [PROJECT.md](PROJECT.md) before any
+visual-production decision. This repository's selected product is an Automated
+Stickman Horror Video Production System; primary output must be 2D Stickman
+Horror Animation. That contract supersedes conflicting historical visual
+directions, documentary-oriented M2.4 prompts and generic style defaults for this
+project. The documentary asset resolver is not authorized for implementation or
+continuation. The next task is to inspect/map the existing animation renderer
+against STORY 053's 11 scenes, not to start M2.4. Generic architecture, pipeline
+and human-approval protocols below remain in force.
+
 For architecture, key files, and conventions see [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md).
 
 ## First Interaction — Onboarding

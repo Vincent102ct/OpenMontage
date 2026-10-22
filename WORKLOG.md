@@ -741,3 +741,56 @@ Commit scope: exactly twelve M2.3/M2.3.1 files. All sixteen unrelated WIP files,
 51 protected sources and 53 existing Short artifacts retain original hashes;
 generated outputs/models/media/environments/caches excluded. No M2.4 work,
 media acquisition/generation or renderer/Story Planner/TTS change.
+
+## Product identity locked: Stickman Horror — 2026-10-22
+
+User explicitly selected an Automated Stickman Horror Video Production System.
+Previous M2.3 Documentary Motion Graphics direction was an unauthorized design
+deviation; the previous documentary-oriented M2.4 prompt is cancelled, and that
+resolver is not authorized for implementation/continuation. Earlier entries are
+preserved as history, not current product authorization. No historical facts or
+publication rights are automatically approved by this decision.
+
+Verified branch `coding`, HEAD `be736a47dcdcbb7bcfcff8052cf7692741f789af` and 27
+pre-existing changed paths before editing. Read AGENTS/AGENT_GUIDE, shared
+context, decisions, roadmap, source map, this worklog and architecture; PROJECT.md
+did not exist. Saved exact before-copies of the five edited existing documents,
+all initial WIP files, Git status/index/HEAD and 9,272 file hashes (repository
+sources and existing M2 project artifacts) under
+`projects/product-identity-lock-2026-10-22/` (Git ignored).
+
+Inspected M1/M1.1 source: motion.ts IK/tracks, shared Actor artwork, story planner,
+procedural locations, StoryVideo composition/validator and character renderer
+package route. Mechanics support reuse; the existing filled-cartoon artwork,
+fixed 1280×720 compositions and M1 action-driven timeline extension require
+assessment for the fixed-timing vertical STORY 053 Short. No new renderer
+capability or runtime render is claimed.
+
+Created [PROJECT.md](PROJECT.md) with identity, visual requirements/exclusions,
+content, full product flow, shared Short/Long canon, zero mandatory paid credits,
+source-first priorities, inspected reuse boundaries and the next task. Updated
+PROJECT_CONTEXT.md and AGENT_GUIDE.md entry guidance; added the explicit decision
+and a current roadmap section above the untouched historical roadmap. M2.1 and
+M2.2 remain completed/valid; M2.3 is technically complete with reusable canonical
+refs/timings, but needs Stickman Horror visual correction before M2.4.
+
+Next milestone is inspect/map the existing Stickman Animation renderer against
+STORY 053's eleven scenes, producing a capability/gap map without implementing
+it here. Architecture contains unrelated uncommitted WIP and is unchanged; its
+future product-contract reference is an explicit dependency after reconciliation.
+
+Affected documentation only: PROJECT.md, PROJECT_CONTEXT.md, AGENT_GUIDE.md,
+DECISIONS.md, ROADMAP.md and this WORKLOG.md. No media generation, renderer/code,
+narration/claims, Master Story Package, storyboard JSON/timestamps, M2.4 execution,
+staging, commit or push. Validation checks local Markdown links/anchors, entry
+discovery, exact before-to-after diff, whitespace, preserved WIP and input hashes.
+Application tests/renders are not run for this documentation-only change.
+
+Verification PASS: 26 local Markdown links/anchors resolve; the agent entry route
+reaches PROJECT.md; existing-document edits contain additions only. All 9,267
+protected files outside the five edited existing documents retain their hashes,
+including all 24 pre-existing WIP files outside this edit scope and architecture.
+All 27 initial WIP status entries, branch, HEAD and Git index are unchanged.
+STORY 053 references match SC_001–SC_011. Whitespace checks pass. Exact scoped
+before-to-after diff: `projects/product-identity-lock-2026-10-22/product-identity-lock.diff`;
+machine-readable verification: `projects/product-identity-lock-2026-10-22/validation.json`.

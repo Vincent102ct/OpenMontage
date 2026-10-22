@@ -6,6 +6,13 @@ This is the single source of truth for project architecture and conventions. All
 
 OpenMontage is an open-source, AI-orchestrated video production platform.
 
+For this repository, **OpenMontage is an Automated Stickman Horror Video
+Production System**. [PROJECT.md](PROJECT.md) is the authoritative
+project-specific product contract. Read it before visual-production decisions;
+its mandatory 2D Stickman Horror direction supersedes conflicting historical
+Documentary Motion Graphics assumptions. Generic upstream capabilities and the
+architecture/conventions below remain applicable within that product contract.
+
 ## Architecture: Instruction-Driven (Agent-First)
 
 The AI agent IS the intelligence. Python exists only for tools and persistence. Everything else — orchestration, creative decisions, review, stage transitions — lives in instructions (YAML manifests + markdown skills) the agent follows.
@@ -20,6 +27,8 @@ Agent reads pipeline manifest (YAML) → reads stage director skill (MD)
 
 ## Source of Truth
 
+- **Project-specific product contract:** [PROJECT.md](PROJECT.md) (identity,
+  mandatory visual output, exclusions and next engineering milestone)
 - **Agent guide & contract:** `AGENT_GUIDE.md` (tool inventory, pipeline selection, stage agents, protocols)
 - **Skill index:** `skills/INDEX.md`
 - **Tool registry:** `tools/tool_registry.py`

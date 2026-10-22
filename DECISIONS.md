@@ -1,5 +1,31 @@
 # Decisions — Story-to-Action pilot (2026-10-21)
 
+## Product identity lock: Stickman Horror (2026-10-22; current authority)
+
+- The user explicitly confirmed **Stickman Horror** as the required visual
+  identity. [PROJECT.md](PROJECT.md) is the authoritative project-specific product
+  contract: OpenMontage here is an Automated Stickman Horror Video Production
+  System, with character-driven 2D animation as its primary output.
+- Previous Documentary Motion Graphics direction for M2.3 was an **unauthorized
+  design deviation**. Earlier cartoon-style approvals and documentary/editorial
+  progression entries remain history; they cannot override this explicit decision.
+- M2.1 Master Story Package and M2.2 narration remain valid completed technical
+  baselines. M2.3 timings and canonical references are reusable; its visual
+  treatments must be revised for Stickman Horror before M2.4.
+- The previous documentary-oriented M2.4 prompt is **cancelled**. M2.4 documentary
+  asset resolver implementation/continuation is **not authorized**. Existing
+  uncommitted M2.4 files, outputs and records below are preserved as prior work,
+  not current authorization or acceptance of the documentary product direction.
+- Next milestone: inspect and map the existing Stickman Animation renderer
+  against STORY 053's 11 scenes; reuse M1/M1.1/Remotion where feasible, identifying
+  artwork, capability, timing and vertical-framing gaps before implementation.
+- No automatic approval of historical facts or publication rights is implied.
+  Listening, factual, licensing, continuity and human-review gates remain pending
+  where previously pending. This documentation task authorizes no generation,
+  storyboard/canon/timestamp changes, renderer implementation, M2.4, commit or push.
+- `docs/ARCHITECTURE.md` contains pre-existing uncommitted WIP; leave it unchanged.
+  Defer its product-contract reference until that WIP is separately reconciled.
+
 ## M2.3 editorial baseline finalization (2026-10-22)
 
 - User approved the storyboard for progression to M2.4 subject to four corrections:
