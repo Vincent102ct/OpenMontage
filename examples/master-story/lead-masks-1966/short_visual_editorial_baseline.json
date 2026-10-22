@@ -1,0 +1,226 @@
+{
+  "baseline": "M2.3 editorial baseline on c103533d; M2.3.1 plus four authorized finalization corrections",
+  "approved_scenes": {
+    "SC_001": {
+      "direction_content_sha256": "5deff6ae653672f792e61ee39c2f5b418091c786c19857369f4337313f71a931",
+      "scene_content_sha256": "dcf7623a0083a10676e3d38cc405c555d7cb8c3bb99bb5b08d69b11f31f2fd90"
+    },
+    "SC_003": {
+      "direction_content_sha256": "99b2c2428a920522b04c7465c7dc3dce7b77e1854779e64f9b95b422b98fd488",
+      "scene_content_sha256": "1a440168cf4496c41e2785f9087028c2c1b65dffb8d7d7e8ee8cb1a29aa43af8"
+    },
+    "SC_006": {
+      "direction_content_sha256": "b33ba5f09937b34209a960b5538a52d08074d9829e3ec1840eda3d0d866ef430",
+      "scene_content_sha256": "a85a596604c79f262d0ee401db2efa6a13b76388c8a492db65e47ec9bec178c0"
+    },
+    "SC_007": {
+      "direction_content_sha256": "155e51a78ad0dfea0c97e84fb1b7a90e178f9730759b8ea2727fd9e9991321cd",
+      "scene_content_sha256": "3e3d1bf6fe1bcbf4c3706c558fb740f855109a727fe702be0d4e3eb03c74b542"
+    },
+    "SC_011": {
+      "direction_content_sha256": "24b8af5ba2555cc8f537c9aecf70959cb1b66b36577c302fbe4c7d0fa8ee3112",
+      "scene_content_sha256": "be595c0708f3df61ddda40e88da56774cfa0b49f101fac19eb349e441cb1fba9"
+    }
+  },
+  "timeline": [
+    {
+      "id": "SC_001",
+      "segment_id": "SEG_01",
+      "start_seconds": 0.0,
+      "end_seconds": 3.873,
+      "narration": {
+        "char_start": 0,
+        "char_end": 46,
+        "text": "Brazil, năm một nghìn chín trăm sáu mươi sáu. ",
+        "subtitle_cue_numbers": [
+          1
+        ],
+        "start_seconds": 0.3,
+        "end_seconds": 3.873,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_002",
+      "segment_id": "SEG_01",
+      "start_seconds": 3.873,
+      "end_seconds": 9.986,
+      "narration": {
+        "char_start": 46,
+        "char_end": 124,
+        "text": "Hai người làm nghề điện tử được tìm thấy đã chết trên một ngọn đồi ở Niterói. ",
+        "subtitle_cue_numbers": [
+          2
+        ],
+        "start_seconds": 3.873,
+        "end_seconds": 9.986,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_003",
+      "segment_id": "SEG_01",
+      "start_seconds": 9.986,
+      "end_seconds": 12.927,
+      "narration": {
+        "char_start": 124,
+        "char_end": 157,
+        "text": "Họ mặc vest. Bên ngoài là áo mưa.",
+        "subtitle_cue_numbers": [
+          3,
+          4
+        ],
+        "start_seconds": 9.986,
+        "end_seconds": 12.527,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_004",
+      "segment_id": "SEG_02",
+      "start_seconds": 12.927,
+      "end_seconds": 17.591,
+      "narration": {
+        "char_start": 0,
+        "char_end": 59,
+        "text": "Ở hiện trường còn có hai tấm chì, tạo hình như nửa mặt nạ. ",
+        "subtitle_cue_numbers": [
+          5
+        ],
+        "start_seconds": 12.927,
+        "end_seconds": 17.591,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_005",
+      "segment_id": "SEG_02",
+      "start_seconds": 17.591,
+      "end_seconds": 23.297625,
+      "narration": {
+        "char_start": 59,
+        "char_end": 125,
+        "text": "Và một mẩu giấy ghi những việc phải làm, vào những giờ rất cụ thể.",
+        "subtitle_cue_numbers": [
+          6
+        ],
+        "start_seconds": 17.591,
+        "end_seconds": 22.897625,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_006",
+      "segment_id": "SEG_19",
+      "start_seconds": 23.297625,
+      "end_seconds": 25.986,
+      "narration": {
+        "char_start": 0,
+        "char_end": 38,
+        "text": "Mười tám giờ ba mươi: uống viên nang. ",
+        "subtitle_cue_numbers": [
+          7,
+          8
+        ],
+        "start_seconds": 23.297625,
+        "end_seconds": 25.986,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_007",
+      "segment_id": "SEG_19",
+      "start_seconds": 25.986,
+      "end_seconds": 31.439,
+      "narration": {
+        "char_start": 38,
+        "char_end": 112,
+        "text": "Đó là điều được viết, không phải xác nhận rằng hai người thực sự đã uống. ",
+        "subtitle_cue_numbers": [
+          9
+        ],
+        "start_seconds": 25.986,
+        "end_seconds": 31.439,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_008",
+      "segment_id": "SEG_19",
+      "start_seconds": 31.439,
+      "end_seconds": 35.498417,
+      "narration": {
+        "char_start": 112,
+        "char_end": 161,
+        "text": "Càng không phải tên của chất nằm trong viên nang.",
+        "subtitle_cue_numbers": [
+          10
+        ],
+        "start_seconds": 31.439,
+        "end_seconds": 35.098417,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_009",
+      "segment_id": "SEG_45",
+      "start_seconds": 35.498417,
+      "end_seconds": 41.859,
+      "narration": {
+        "char_start": 0,
+        "char_end": 91,
+        "text": "Còn viên nang chứa gì, họ thực sự làm gì trên đồi, có ai khác ở đó, và vì sao cả hai chết: ",
+        "subtitle_cue_numbers": [
+          11
+        ],
+        "start_seconds": 35.498417,
+        "end_seconds": 41.859,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_010",
+      "segment_id": "SEG_45",
+      "start_seconds": 41.859,
+      "end_seconds": 44.191,
+      "narration": {
+        "char_start": 91,
+        "char_end": 125,
+        "text": "chưa có câu trả lời được xác lập. ",
+        "subtitle_cue_numbers": [
+          12
+        ],
+        "start_seconds": 41.859,
+        "end_seconds": 44.191,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    },
+    {
+      "id": "SC_011",
+      "segment_id": "SEG_45",
+      "start_seconds": 44.191,
+      "end_seconds": 49.496375,
+      "narration": {
+        "char_start": 125,
+        "char_end": 194,
+        "text": "Ta có một chỉ dẫn. Nhưng chưa nối được nó với cái chết của hai người.",
+        "subtitle_cue_numbers": [
+          13,
+          14
+        ],
+        "start_seconds": 44.191,
+        "end_seconds": 48.996375,
+        "timing_basis": "measured_segment_character_distributed_cues_not_word_alignment"
+      }
+    }
+  ],
+  "authorized_finalization_corrections": {
+    "SC_001": {
+      "reason": "User-approved distinction of 1892 painting from photography and 1966; no asset or license acquired. Timeline/narration/canon unchanged.",
+      "prior_approved_hashes": {
+        "direction_content_sha256": "d5085b72d45c362c5bf0a026841283292566e77c4d6cb1af7034e67be3ad4770",
+        "scene_content_sha256": "ef73984074862717fed9e6bbddd1b4180b3cd931ad6270569df8ac25d9d7814a"
+      }
+    }
+  }
+}

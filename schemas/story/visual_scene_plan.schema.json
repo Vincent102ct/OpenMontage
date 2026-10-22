@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/story/visual_scene_plan.schema.json",
+  "title": "Canonical Visual Scene Plan (M2.3, unresolved assets)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "package_id", "package_version", "language", "format", "aspect_ratio", "total_seconds", "inputs", "timing", "source_priority", "canon", "scenes", "approvals", "continuity_review"],
+  "$defs": {
+    "text": {"type": "string", "pattern": "\\S"},
+    "ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pending": {"const": "pending_human_review"},
+    "category": {"enum": ["authentic_historical_evidence", "public_domain_institutional", "wikimedia_commons_verified_license", "freely_licensed_media", "local_media_library", "ai_reconstruction_future_fallback"]},
+    "representation": {"description": "Intended visual treatment, not proof an asset has been located. All M2.3 assets remain unresolved.", "enum": ["authentic_evidence", "contextual_material", "illustration", "reconstruction"]},
+    "element": {
+      "type": "object", "additionalProperties": false,
+      "required": ["entity_id", "visual_constraint"],
+      "properties": {"entity_id": {"type": "string", "pattern": "^(CHR|LOC|OBJ)_[A-Za-z0-9_-]+$"}, "visual_constraint": {"$ref": "#/$defs/text"}}
+    },
+    "shot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "subject", "setting", "framing", "camera_motion", "visual_action", "transition_in", "transition_out"],
+      "properties": {
+        "type": {"enum": ["establishing", "document_insert", "object_detail", "diagram", "comparison", "closing", "visual_pause"]},
+        "subject": {"$ref": "#/$defs/text"}, "setting": {"$ref": "#/$defs/text"},
+        "framing": {"$ref": "#/$defs/text"},
+        "camera_motion": {"enum": ["static", "slow_push", "slow_pull"]},
+        "visual_action": {"$ref": "#/$defs/text"},
+        "transition_in": {"enum": ["cut", "fade_from_black"]},
+        "transition_out": {"enum": ["cut", "fade_to_black"]}
+      }
+    },
+    "overlay": {
+      "type": "object", "additionalProperties": false,
+      "required": ["text", "role", "placement"],
+      "properties": {
+        "text": {"$ref": "#/$defs/text"},
+        "role": {"enum": ["caption", "evidence_label", "context_label", "qualification", "question"]},
+        "placement": {"enum": ["top", "middle", "bottom"]}
+      }
+    },
+    "production": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "role", "recipe_status"],
+      "properties": {
+        "kind": {"enum": ["external_media", "local_graphic", "reconstruction"]},
+        "role": {"enum": ["primary", "conditional_fallback"]},
+        "recipe_status": {"enum": ["not_implemented", "not_applicable"]},
+        "fallback_for": {"$ref": "#/$defs/text"},
+        "separate_approval_required": {"const": true}
+      }
+    },
+    "alternative": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "representation", "description", "media_type", "preferred_category", "activation_condition", "status", "review_status", "separate_approval_required"],
+      "properties": {
+        "id": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["external_media", "reconstruction"]},
+        "representation": {"$ref": "#/$defs/representation"},
+        "description": {"$ref": "#/$defs/text"},
+        "media_type": {"enum": ["historical_photo", "document_image", "context_photo"]},
+        "preferred_category": {"$ref": "#/$defs/category"},
+        "activation_condition": {"$ref": "#/$defs/text"},
+        "status": {"const": "unresolved"}, "review_status": {"$ref": "#/$defs/pending"},
+        "separate_approval_required": {"const": true}
+      }
+    },
+    "rect": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {"x": {"type": "number", "minimum": 0}, "y": {"type": "number", "minimum": 0},
+                     "width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}}
+    },
+    "presentation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canvas", "safe_area", "subtitle_reserved", "composition_key", "timing_basis", "text_color", "background_color", "text_blocks"],
+      "properties": {
+        "canvas": {"const": {"width": 1080, "height": 1920}},
+        "safe_area": {"$ref": "#/$defs/rect"}, "subtitle_reserved": {"$ref": "#/$defs/rect"},
+        "composition_key": {"$ref": "#/$defs/text"},
+        "timing_basis": {"const": "editorial_estimate_not_word_alignment"},
+        "text_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "background_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "text_blocks": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["overlay_index", "box", "font_size_px", "line_height_px", "max_lines", "start_offset", "end_offset"],
+          "properties": {
+            "overlay_index": {"type": "integer", "minimum": 0}, "box": {"$ref": "#/$defs/rect"},
+            "font_size_px": {"type": "integer", "minimum": 32}, "line_height_px": {"type": "integer", "minimum": 32},
+            "max_lines": {"type": "integer", "minimum": 1, "maximum": 4},
+            "start_offset": {"type": "number", "minimum": 0}, "end_offset": {"type": "number", "exclusiveMinimum": 0}
+          }
+        }}
+      }
+    },
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["description", "media_type", "preferred_category", "fallback_policy"],
+      "properties": {
+        "description": {"$ref": "#/$defs/text"},
+        "media_type": {"enum": ["historical_photo", "document_image", "context_photo", "context_art", "diagram", "typography"]},
+        "preferred_category": {"$ref": "#/$defs/category"},
+        "fallback_policy": {"$ref": "#/$defs/text"},
+        "production": {"$ref": "#/$defs/production"},
+        "alternatives": {"type": "array", "items": {"$ref": "#/$defs/alternative"}}
+      }
+    },
+    "direction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "segment_id", "cue_start", "cue_end", "claim_ids", "event_ids", "purpose", "representation", "required_elements", "shot", "asset_requests", "on_screen_text", "risk_flags"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SC_[0-9]{3,}$"},
+        "segment_id": {"type": "string", "pattern": "^SEG_[A-Za-z0-9_-]+$"},
+        "cue_start": {"type": "integer", "minimum": 1}, "cue_end": {"type": "integer", "minimum": 1},
+        "claim_ids": {"$ref": "#/$defs/ids"}, "event_ids": {"$ref": "#/$defs/ids"},
+        "purpose": {"$ref": "#/$defs/text"}, "representation": {"$ref": "#/$defs/representation"},
+        "required_elements": {"type": "array", "items": {"$ref": "#/$defs/element"}},
+        "shot": {"$ref": "#/$defs/shot"},
+        "asset_requests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/request"}},
+        "on_screen_text": {"type": "array", "items": {"$ref": "#/$defs/overlay"}},
+        "risk_flags": {"$ref": "#/$defs/ids"},
+        "presentation": {"$ref": "#/$defs/presentation"}
+      }
+    },
+    "brief": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "package_id", "package_version", "format", "directions"],
+      "properties": {
+        "schema_version": {"const": "1.0"}, "package_id": {"$ref": "#/$defs/text"},
+        "package_version": {"$ref": "#/$defs/text"}, "format": {"enum": ["short", "long"]},
+        "directions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/direction"}}
+      }
+    },
+    "asset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requirement_id", "scene_id", "description", "media_type", "preferred_category", "fallback_policy", "representation", "entity_ids", "evidence_source_ids", "status", "resolved_asset", "review_status"],
+      "properties": {
+        "requirement_id": {"$ref": "#/$defs/text"}, "scene_id": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "media_type": {"enum": ["historical_photo", "document_image", "context_photo", "context_art", "diagram", "typography"]},
+        "preferred_category": {"$ref": "#/$defs/category"}, "fallback_policy": {"$ref": "#/$defs/text"},
+        "representation": {"$ref": "#/$defs/representation"},
+        "entity_ids": {"$ref": "#/$defs/ids"}, "evidence_source_ids": {"$ref": "#/$defs/ids"},
+        "status": {"const": "unresolved"}, "resolved_asset": {"type": "null"}, "review_status": {"$ref": "#/$defs/pending"},
+        "production": {"$ref": "#/$defs/production"},
+        "alternatives": {"type": "array", "items": {"$ref": "#/$defs/alternative"}}
+      }
+    },
+    "scene": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "format", "segment_id", "start_seconds", "end_seconds", "narration", "claim_ids", "source_ids", "entity_ids", "event_ids", "continuity_rule_ids", "purpose", "representation", "historical_evidence", "required_elements", "shot", "asset_requirements", "on_screen_text", "risk_flags", "review_status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SC_[0-9]{3,}$"}, "format": {"enum": ["short", "long"]},
+        "segment_id": {"type": "string", "pattern": "^SEG_[A-Za-z0-9_-]+$"},
+        "start_seconds": {"type": "number", "minimum": 0}, "end_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "narration": {
+          "type": "object", "additionalProperties": false,
+          "required": ["char_start", "char_end", "text", "subtitle_cue_numbers", "start_seconds", "end_seconds", "timing_basis"],
+          "properties": {
+            "char_start": {"type": "integer", "minimum": 0}, "char_end": {"type": "integer", "minimum": 1},
+            "text": {"$ref": "#/$defs/text"},
+            "subtitle_cue_numbers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+            "start_seconds": {"type": "number", "minimum": 0}, "end_seconds": {"type": "number", "exclusiveMinimum": 0},
+            "timing_basis": {"const": "measured_segment_character_distributed_cues_not_word_alignment"}
+          }
+        },
+        "claim_ids": {"$ref": "#/$defs/ids"}, "source_ids": {"$ref": "#/$defs/ids"},
+        "entity_ids": {"$ref": "#/$defs/ids"}, "event_ids": {"$ref": "#/$defs/ids"},
+        "continuity_rule_ids": {"$ref": "#/$defs/ids"}, "purpose": {"$ref": "#/$defs/text"},
+        "representation": {"$ref": "#/$defs/representation"},
+        "historical_evidence": {"type": "array", "items": {"type": "object"}},
+        "required_elements": {"type": "array", "items": {"$ref": "#/$defs/element"}},
+        "shot": {"$ref": "#/$defs/shot"},
+        "asset_requirements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/asset"}},
+        "on_screen_text": {"type": "array", "items": {"$ref": "#/$defs/overlay"}},
+        "risk_flags": {"$ref": "#/$defs/ids"}, "review_status": {"$ref": "#/$defs/pending"},
+        "presentation": {"$ref": "#/$defs/presentation"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "package_id": {"$ref": "#/$defs/text"}, "package_version": {"$ref": "#/$defs/text"},
+    "language": {"$ref": "#/$defs/text"},
+    "format": {"enum": ["short", "long"]}, "aspect_ratio": {"enum": ["9:16", "16:9"]},
+    "total_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "inputs": {
+      "type": "object", "additionalProperties": false,
+      "required": ["package_content_sha256", "timed_manifest_content_sha256", "brief_content_sha256", "narration_track", "subtitles"],
+      "properties": {
+        "package_content_sha256": {"$ref": "#/$defs/hash"}, "timed_manifest_content_sha256": {"$ref": "#/$defs/hash"},
+        "brief_content_sha256": {"$ref": "#/$defs/hash"},
+        "narration_track": {"type": "object"}, "subtitles": {"type": "object"}
+      }
+    },
+    "timing": {
+      "const": {"internal_cuts": "character_distributed_subtitle_estimates", "word_alignment_verified": false,
+                "lead_in": "hold_first_scene", "inter_segment_gaps": "hold_preceding_scene", "tail": "hold_last_scene"}
+    },
+    "source_priority": {"type": "array", "items": {"$ref": "#/$defs/category"}},
+    "canon": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claims", "sources", "entities", "events", "continuity_rules"],
+      "properties": {
+        "claims": {"type": "array"}, "sources": {"type": "array"}, "entities": {"type": "array"},
+        "events": {"type": "array"}, "continuity_rules": {"type": "array"}
+      }
+    },
+    "scenes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scene"}},
+    "approvals": {
+      "type": "object", "additionalProperties": false,
+      "required": ["factual", "publication", "listening", "visual_plan"],
+      "properties": {"factual": {"$ref": "#/$defs/pending"}, "publication": {"$ref": "#/$defs/pending"},
+                     "listening": {"$ref": "#/$defs/pending"}, "visual_plan": {"$ref": "#/$defs/pending"}}
+    },
+    "continuity_review": {"type": "object", "additionalProperties": {"$ref": "#/$defs/pending"}}
+  }
+}

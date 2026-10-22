@@ -1,5 +1,63 @@
 # Decisions — Story-to-Action pilot (2026-10-21)
 
+## M2.3 editorial baseline finalization (2026-10-22)
+
+- User approved the storyboard for progression to M2.4 subject to four corrections:
+  SC_001 explicitly identifies the 1892 painting candidate (not photography/1966);
+  SC_002 maps Boletim/Laudo/Diário individually to SRC_001/002/004; SC_005 maps
+  SRC_001/004/009 individually and keeps SRC_009 `unreachable`; SC_010's editorial
+  pause label is production metadata only, with no on-screen overlay.
+- Extend media type with `context_art`. A `visual_pause` is a constrained local
+  flat-field specification without overlays/canonical elements/external media;
+  evidence-label requirements remain for depictions and reconstructions.
+- Preserve the eleven shots, all timings/canon/audio and CR_006/007/008/010 pending.
+  Editorial progression approval is recorded here; compiler output approval fields
+  remain pending under the existing schema, never self-approved by validation.
+  Factual, licensing and publication approvals stay pending; no asset is resolved.
+- User authorizes a normal scoped commit/push of twelve M2.3/M2.3.1 source/tests/
+  docs files to origin/coding. Exclude sixteen WIP files and all generated projects,
+  media, models/environments/caches. M2.4 is not executed by this finalization.
+
+## M2.3.1 editorial refinement (2026-10-22)
+
+- Preserve all eleven scene IDs/windows and the five approved scene objects
+  (SC_001/003/006/007/011). Keep total 49.496375 s, narration/canon/audio unchanged.
+- SC_002/004/005 default to explicitly labelled local transcription/conceptual
+  illustration while historical images remain conditional external alternatives.
+  Never imitate an original archival surface or wear masks as proven discovery placement.
+- SC_008 uses isolated typography, SC_009 one progressive question at a time
+  with reserved subtitle space, SC_010 an empty graphic visual beat. No audio pause added.
+- Extend existing M2.3 optional metadata rather than introduce a resolver:
+  1 current external request + 3 external alternatives; 10 local specs including
+  3 conditional fallbacks; 0 reconstructions and 0 supported local recipes.
+  All unresolved. Historical-image substitution needs separate review.
+- Static geometry/font metrics can verify planned fit, not human mobile reading
+  or final rendered quality. Pending continuity/factual/publication/license reviews
+  stay pending. No renderer/TTS/WIP edits, media creation, M2.4, commit or push.
+
+## M2.3 canonical visual contract (2026-10-22)
+
+- Standalone `schemas/story/visual_scene_plan.schema.json` +
+  `lib/visual_scene_plan.py`; compile authored JSON shot directions, not historical
+  heuristics or a rewrite of the Story Planner. A future resolver consumes
+  canonical refs/requirements before any renderer handoff.
+- Reuse M2.1 package/format checks and M2.2 PCM/SRT/gates. Exact manifest
+  49.496375 s is preserved; internal cuts are labelled character-distributed
+  estimates, never word alignment. Hold first/previous/last shots through the
+  existing lead-in/gaps/tail. No extra audio padding or frame quantization.
+- Eleven meaningful shots for SEG_01/02/19/45. Image intentions are distinguished
+  from acquired evidence: all eleven asset requests unresolved, no source/license
+  metadata invented. Transcriptions/diagrams are labelled illustrations; geographic
+  images context only. No performed capsule ingestion or proven cause of death.
+- Exact canon and input hashes bind the plan; reviews stay pending, including
+  CR_006/007/008/010. Source IDs are claim evidence, not an image license.
+- Evidence Canon/source-visual WIP remains read-only. Share ID/status concepts
+  only; no imports/merges of WIP schemas/checkpoint/render paths. No Korva,
+  narration, Short selection, Remotion or existing planner changes.
+- Long is reserved in the data contract but explicitly unsupported by this
+  compiler. No M2.4 asset resolution, media acquisition/generation, render,
+  paid dependency, commit or push before review.
+
 ## M2.1 + M2.2 technical baseline finalization (2026-10-22)
 
 - User approved: Short = SEG_01, SEG_02, SEG_19, SEG_45 (49.496 s, duration gate PASS); no

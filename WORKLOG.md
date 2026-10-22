@@ -604,3 +604,140 @@ Short (11 claims / 11 sources). Full suite 2094 passed, 12 skipped, 3 xfailed. C
 only M2 source, schemas, tests, docs and the canonical example JSON; WIP, `projects/`
 outputs, evaluation helpers, models, venvs and caches excluded. CR_006/007/008/010 and
 listening/factual/publication approvals remain pending. M2.3 not started.
+
+## M2.3 Canonical Visual Scene Planning — 2026-10-22
+
+Verified `coding` / `c103533d`; read canonical M2.1/M2.2 source, contracts, current
+planner/renderer/media/quality interfaces and project docs. Updated root SOURCE_MAP
+before code changes. Snapshot protects 16 preexisting WIP files, 51 source files
+and all 53 existing Short artifacts; WIP inspected read-only, not imported/merged.
+
+Added standalone visual schema with shared brief definitions, deterministic
+`lib/visual_scene_plan.py`, a read-only-input CLI and an authored STORY 053 visual
+brief. Directions reference cue groups, canonical claims/entities/events and shot
+intent, not story-specific Python logic. Exact narration character spans and
+six-state claim/status/qualifier/source records are preserved. Pending approvals
+and CR_006/007/008/010 cannot be promoted by the contract. All asset requirements
+remain unresolved with no invented media path, URL or license metadata.
+
+Pilot `projects/m23-visual-plan/pilot/`: 11 scenes / 11 unresolved requests,
+0–49.496375 s, 4 canonical segments, 11 claims, 11 sources. Three intended
+authentic-evidence shots, one contextual shot, seven labelled illustrations;
+no media acquired/generated. Masks are not worn as an established placement,
+wardrobe is not identical, source name spelling is preserved, local imagery
+is context, and the capsule instruction is not depicted as a performed action.
+No cause of death is asserted. Source transcripts do not imply possession of
+original document images. Existing local-media rights labels were inspected
+as metadata only, not adopted as new clearance.
+
+SRT interior cuts remain character-distributed estimates. The first shot covers
+lead-in; previous shots hold through gaps; the final shot covers existing tail.
+No narration rewrite, pause extension, resynthesis, Short selection change or
+word-alignment claim. Five outputs: plan JSON, complete storyboard table, asset
+requirements, continuity review and validation report. CLI verifies six existing
+file hashes/five measured WAVs and all seven M2.2 gates before writing outputs.
+
+New tests: 62 passed (generic English story, deterministic/no input mutation,
+refs, timing/gaps/overlaps, canon/narration/SRT drift, unresolved assets, pending
+reviews, no Long execution). Focused M2/TTS/Korva/StoryVideo regressions: 187 passed.
+Feature spec: `docs/features/m2.3-canonical-visual-scene-planning.md`.
+Clean-candidate checks/preservation evidence follow under the same project.
+No Story Planner, Remotion, Korva or old WIP changes. No asset resolution,
+image/video generation/render, paid dependency, commit/push or M2.4.
+
+Final M2.3 checks: WIP-free baseline archive plus only the ten M2.3 files ran
+`pytest tests -q`: 2059 passed, 11 skipped, 3 xfailed, 1 subtest passed; two old
+all-frame TS evaluator tests failed because the archive lacked node_modules/
+typescript. Reused the existing local TypeScript package in the candidate and
+reran those two: 2 passed in .70 s. Aggregate 2061 passed across full run/recheck,
+not a second full run. No renderer/source fix or dependency installation. Full
+failure log and successful recheck retained under verification. Existing SDK
+deprecation warning only. Both actual pilot runs (worktree and clean candidate)
+have five byte-identical exports. All 16 WIP hashes/status, 51 protected sources,
+53 Short artifacts and HEAD preserved; index empty. Schema/whitespace checks pass.
+Human storyboard/factual/listening/publication approval remains pending.
+
+## M2.3.1 Editorial Storyboard Refinement — 2026-10-22
+
+Verified `coding` / `c103533d`; inspected actual M2.3 source and all five exports,
+tests, M2.1/M2.2 contracts and control documents. Backed up all 26 initial changed
+files plus original M2.3 exports before editing. No resets/merges/staging.
+
+Revised SC_002/004/005 to select explicitly labelled local digest/conceptual-mask/
+note-transcription treatments; original historical image requests remain conditional
+external alternatives requiring separate provenance/license/editorial decisions.
+No fabricated archive, precise mask geometry/placement or false possession of a
+note image. SC_008 now isolated unknown typography, SC_009 four questions replacing
+one another in a single two-line slot, SC_010 a graphic empty-field visual breath.
+SC_001/003/006/007/011 unchanged as full scene objects; SC_006 still visibly labels
+18:30 as transcribed instruction, not confirmed ingestion. Same 11 shot IDs,
+49.496375 s and exact narration/claim/entity/event/source mapping.
+
+Optional existing-contract metadata separates 1 current external context request,
+3 conditional historical alternatives and 10 local specs (3 are conditional
+fallbacks, not extra assets). No reconstruction requests, supported local recipes
+or resolved assets. Vertical geometry checks reserve subtitle space, prevent
+simultaneous questions/text collisions and check planned contrast. Actual Arial
+font metrics pass for all 17 specified text blocks without generating an image;
+mobile human reading/rendered quality and font/asset rights are not auto-approved.
+
+M2.1–M2.3 canonical suites: 127 passed (82 visual incl. 20 added editorial cases).
+Old M2.3 plan still validates; real narration/SRT hashes and seven M2.2 gates pass.
+Outputs: `projects/m231-editorial/pilot/`; before/after, production breakdown,
+preservation/font metrics and test logs under the same project. Feature:
+`docs/features/m2.3.1-editorial-storyboard-refinement.md`.
+All CR_006/007/008/010 and factual/publication/license approvals pending.
+No Korva/audio/Story Planner/renderer/WIP changes, media generation/render,
+M2.4, commit or push.
+
+Final M2.3.1 checks: relevant regressions 209 passed in 18.81 s (includes the 127
+M2.1–M2.3 cases, TTS/Story-to-Video and two all-frame TypeScript continuity
+evaluators). Contract suite 1217 passed, 7 skipped in 172.82 s; one existing
+Google SDK Python deprecation warning. Worktree runs, not a full-suite rerun or
+macOS runtime render. Logs preserved under `verification/`. Final preservation
+and schema/whitespace checks recorded there; factual/publication/license and
+mobile human-review gates remain pending.
+
+## M2.3 + M2.3.1 editorial baseline finalization — 2026-10-22
+
+User approved editorial progression to M2.4 subject to four attribution/presentation
+corrections and explicitly authorized normal commit/push. Verified branch coding,
+local and origin/coding at c103533d0993623ff7a9d971bd3b8e9ae2cc4739 before edits.
+Backed up all twelve intended source/test/doc files under projects/m23-finalization/.
+
+SC_001 now identifies the proposed 1892 Niterói painting as context_art, distinct
+from photography and story date 1966; no file possession or license clearance.
+SC_002 separately maps Boletim 535 [SRC_001], Laudo 29.375 [SRC_002], Diário de
+Notícias [SRC_004]. SC_005 separately identifies SRC_001/004/009 and visibly
+retains SRC_009's unavailable verification, leaving the canonical unreachable
+record untouched. SC_010's Nhịp dừng biên tập is internal production metadata;
+no on_screen_text or text_blocks. Constrained visual_pause allows that local
+flat field without weakening evidence labels on depicted historical content.
+
+Only those four directions differ from the M2.3.1 checkpoint; seven complete
+scene objects unchanged. All 11 scene IDs, 49.496375 s, exact narration/canon/
+claims/sources/statuses and Short selection preserved. Prior approved SC_001
+hashes retained in fixture beside the authorized correction reason/current lock.
+SC_006 still explicitly identifies 18:30 as a written instruction, not ingestion.
+
+Final regressions: 215 passed in 19.47 s, including 133 M2.1–M2.3 cases plus
+TTS/Korva/Story-to-Video and the two all-frame TS continuity evaluator tests.
+WIP-free c103533d archive overlaid with only the twelve intended files: 133
+canonical cases passed in 8.22 s. All five exports are byte-identical across two
+worktree runs and the clean candidate's real-input run. Asset export matches
+plan; six actual input hashes, five WAV measurements and seven M2.2 gates pass.
+Sixteen final text blocks fit installed Arial metrics; no image generated.
+Schema/scoped whitespace and preservation checks pass. Logs/evidence live in
+projects/m23-finalization/verification/; no new full-suite/contract-suite rerun.
+
+Precise M2.4 input contract added to the M2.3.1 feature report, including audio
+bundle transfer/absolute-path caveat, bound content hashes and separate future
+resolved-asset output. Inventory stays 11 unresolved primary requests plus 3
+conditional external alternatives; 10 local specs include 3 fallbacks, with 0
+implemented recipes. CR_006/007/008/010, factual/licensing/publication and rendered
+mobile review pending. Editorial progression approval is not license clearance.
+
+Commit scope: exactly twelve M2.3/M2.3.1 files. All sixteen unrelated WIP files,
+51 protected sources and 53 existing Short artifacts retain original hashes;
+generated outputs/models/media/environments/caches excluded. No M2.4 work,
+media acquisition/generation or renderer/Story Planner/TTS change.

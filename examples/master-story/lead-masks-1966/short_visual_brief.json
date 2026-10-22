@@ -1,0 +1,1102 @@
+{
+  "schema_version": "1.0",
+  "package_id": "STORY_053",
+  "package_version": "v1",
+  "format": "short",
+  "directions": [
+    {
+      "id": "SC_001",
+      "segment_id": "SEG_01",
+      "cue_start": 1,
+      "cue_end": 1,
+      "claim_ids": [
+        "CLM_037"
+      ],
+      "event_ids": [],
+      "purpose": "Đặt mốc câu chuyện Brazil/1966 trong bối cảnh địa lý Niterói; phân biệt tranh panorama năm 1892 với ảnh chụp và hiện trường năm 1966.",
+      "representation": "contextual_material",
+      "required_elements": [
+        {
+          "entity_id": "LOC_NITEROI",
+          "visual_constraint": "Chỉ bối cảnh địa lý; tranh Panorama de Niterói, 1892 [SRC_014] không phải ảnh chụp, không phải hiện trường năm 1966; không tự thêm tọa độ."
+        }
+      ],
+      "shot": {
+        "type": "establishing",
+        "subject": "Tranh Panorama de Niterói, 1892 [SRC_014] như một ứng viên bối cảnh, chưa có asset dùng được",
+        "setting": "Tranh năm 1892, không phải ảnh đương thời hay ảnh vụ việc năm 1966; không suy ra thời tiết hoặc giờ phát hiện",
+        "framing": "Khung dọc rộng, đường địa hình ở giữa; giữ vùng chữ riêng, không giả crop thành Morro do Vintém",
+        "camera_motion": "slow_push",
+        "visual_action": "Dịch chuyển khung nhìn nhẹ trên tranh nếu sau này có asset được duyệt; không giả chiều sâu ảnh chụp hoặc sự kiện lịch sử",
+        "transition_in": "fade_from_black",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Ứng viên tranh Panorama de Niterói, 1892 [SRC_014], chỉ bối cảnh; SRC_015 hỗ trợ địa lý. Chưa thu nhận file, chưa xác minh provenance/giấy phép của asset; không coi ghi chú public-domain trong canon là clearance.",
+          "media_type": "context_art",
+          "preferred_category": "public_domain_institutional",
+          "fallback_policy": "Giữ unresolved cho tới khi có file dùng được và kiểm tra provenance/quyền dùng riêng. Nếu tìm ảnh chụp thay thế phải ghi rõ loại hình, thời điểm và duyệt thay đổi; không gán tranh 1892 hoặc ảnh hiện đại cho hiện trường năm 1966."
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Mốc câu chuyện: Brazil · 1966",
+          "role": "caption",
+          "placement": "top"
+        },
+        {
+          "text": "Tranh Niterói, 1892 [SRC_014]\nBối cảnh, không phải ảnh năm 1966",
+          "role": "context_label",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "CR_010_contextual_location",
+        "artwork_date_not_story_date",
+        "painting_not_photography",
+        "asset_not_acquired_or_license_cleared"
+      ]
+    },
+    {
+      "id": "SC_002",
+      "segment_id": "SEG_01",
+      "cue_start": 2,
+      "cue_end": 2,
+      "claim_ids": [
+        "CLM_001",
+        "CLM_002",
+        "CLM_010"
+      ],
+      "event_ids": [
+        "EVT_003"
+      ],
+      "purpose": "Khi chưa có ảnh hồ sơ dùng được, trình bày thông tin canonical được chép/tóm lược và ghi nguồn rõ; không giả tài liệu lưu trữ.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "CHR_MANOEL",
+          "visual_constraint": "Chỉ định danh theo canon Manoel Pereira da Cruz; nguồn ghi Manuel là biến thể cùng người, không thêm nhân vật; không bịa khuôn mặt."
+        },
+        {
+          "entity_id": "CHR_MIGUEL",
+          "visual_constraint": "Không bịa chân dung hoặc động tác; tham chiếu người được ghi trong hồ sơ."
+        },
+        {
+          "entity_id": "LOC_MORRO_DO_VINTEM",
+          "visual_constraint": "Chỉ tên địa điểm/đoạn ghi trong tư liệu xác thực; không dựng đường lên đồi, tư thế thi thể hay giờ phát hiện."
+        }
+      ],
+      "shot": {
+        "type": "document_insert",
+        "subject": "Thẻ thông tin chép lại, có nguồn, không facsimile hồ sơ",
+        "setting": "Nền phẳng biên tập hiện đại, không giấy cũ, dấu mộc, chữ ký hay chữ viết tay giả",
+        "framing": "Cột chữ dọc 108–900 px; 3 dòng chính, nhãn nguồn ở vùng riêng; không ảnh thi thể hay chân dung giả",
+        "camera_motion": "static",
+        "visual_action": "Hiện thông tin phát hiện và dòng quy chiếu nguồn; không mô phỏng máy quay lướt tài liệu gốc",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Thẻ thông tin local từ CLM_001/002/010, không phải ảnh hồ sơ: Boletim 535 [SRC_001]; Laudo 29.375 [SRC_002]; Diário de Notícias [SRC_004]. Mỗi nguồn được ghi riêng.",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "conditional_fallback",
+            "recipe_status": "not_implemented",
+            "fallback_for": "ALT_SC_002_AUTHENTIC"
+          },
+          "alternatives": [
+            {
+              "id": "ALT_SC_002_AUTHENTIC",
+              "kind": "external_media",
+              "representation": "authentic_evidence",
+              "description": "Ảnh scan/tái bản được xác thực của hồ sơ phát hiện/nhận dạng; phải phân biệt bản sao được gán xuất xứ với tài liệu lưu trữ gốc",
+              "media_type": "document_image",
+              "preferred_category": "authentic_historical_evidence",
+              "activation_condition": "Chỉ thay phương án minh họa khi ảnh thật, nguồn gốc và quyền dùng đã được kiểm tra ở bước sau và cách thể hiện được duyệt riêng; không coi unresolved là đã có ảnh.",
+              "status": "unresolved",
+              "review_status": "pending_human_review",
+              "separate_approval_required": true
+            }
+          ]
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Thông tin chép lại\nkhông phải ảnh hồ sơ gốc",
+          "role": "evidence_label",
+          "placement": "top"
+        },
+        {
+          "text": "Hai người làm nghề điện tử\nđược tìm thấy đã chết\ntrên đồi ở Niterói.",
+          "role": "caption",
+          "placement": "middle"
+        },
+        {
+          "text": "Boletim 535 [SRC_001]\nLaudo 29.375 [SRC_002]\nDiário de Notícias [SRC_004]",
+          "role": "caption",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "CR_007_name_spelling",
+        "document_image_not_located",
+        "no_body_pose_or_cause_of_death_reconstruction",
+        "local_transcription_fallback_selected",
+        "no_fabricated_archival_surface"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "attributed_source_digest",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": [
+          {
+            "overlay_index": 0,
+            "box": {
+              "x": 108,
+              "y": 160,
+              "width": 792,
+              "height": 96
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 6.113
+          },
+          {
+            "overlay_index": 1,
+            "box": {
+              "x": 108,
+              "y": 520,
+              "width": 792,
+              "height": 300
+            },
+            "font_size_px": 58,
+            "line_height_px": 72,
+            "max_lines": 3,
+            "start_offset": 0,
+            "end_offset": 6.113
+          },
+          {
+            "overlay_index": 2,
+            "box": {
+              "x": 108,
+              "y": 1100,
+              "width": 792,
+              "height": 120
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 3,
+            "start_offset": 0,
+            "end_offset": 6.113
+          }
+        ]
+      }
+    },
+    {
+      "id": "SC_003",
+      "segment_id": "SEG_01",
+      "cue_start": 3,
+      "cue_end": 4,
+      "claim_ids": [
+        "CLM_011"
+      ],
+      "event_ids": [],
+      "purpose": "Giải thích hai lớp vest/áo mưa mà không mặc định hai người có trang phục giống hệt hoặc chốt màu sắc còn khác nhau giữa các nguồn.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_CLOTHING",
+          "visual_constraint": "Chỉ sơ đồ thành phần vest và áo mưa; không hai bộ giống hệt, không gán màu/kiểu cụ thể cho mỗi người."
+        }
+      ],
+      "shot": {
+        "type": "object_detail",
+        "subject": "Sơ đồ tách lớp trang phục, không người mẫu/thi thể",
+        "setting": "Nền đồ họa trung tính, không giả vật chứng thật",
+        "framing": "Cận hai lớp vật thể theo chiều dọc; bố cục khác shot hồ sơ trước",
+        "camera_motion": "static",
+        "visual_action": "Lần lượt nhấn lớp vest rồi lớp áo mưa theo hai cue ước lượng; cần nghe lại trước khi khóa nhịp",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Sơ đồ trung tính có quyền dùng về vest/áo mưa, không ảnh đóng thế được trình bày như hai nạn nhân",
+          "media_type": "diagram",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Nếu chưa có đồ họa thích hợp thì unresolved; thiết kế minh họa riêng chỉ ở bước asset sau, giữ nhãn minh họa và CR_008."
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Sơ đồ minh họa — mô tả trang phục giữa các nguồn không hoàn toàn thống nhất",
+          "role": "evidence_label",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "CR_008_wardrobe_differences",
+        "not_identical_outfits",
+        "clothing_colors_not_fixed"
+      ]
+    },
+    {
+      "id": "SC_004",
+      "segment_id": "SEG_02",
+      "cue_start": 1,
+      "cue_end": 1,
+      "claim_ids": [
+        "CLM_012"
+      ],
+      "event_ids": [],
+      "purpose": "Có phương án kể về hai tấm chì dù chưa có ảnh xác thực: ký hiệu phẳng trung tính kèm chữ, không mô phỏng hình học vật chứng hoặc vị trí trên người.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_LEAD_MASKS",
+          "visual_constraint": "Ký hiệu khái niệm, không bản sao hình học: không lỗ mắt/kích thước/nếp gấp/vị trí trên mắt hay cơ thể; ảnh thật chỉ là lựa chọn có điều kiện."
+        }
+      ],
+      "shot": {
+        "type": "object_detail",
+        "subject": "Hai ký hiệu mảng phẳng trung tính và nhãn hai tấm chì",
+        "setting": "Không gian đồ họa rõ là minh họa, không bàn vật chứng hoặc hiện trường",
+        "framing": "Hai mảng không chi tiết ở vùng giữa; không lỗ mắt, độ dày, kích thước, nếp gấp hoặc gắn lên mặt",
+        "camera_motion": "static",
+        "visual_action": "Nhấn số lượng hai và cụm dạng nửa mặt nạ bằng chữ; không hoạt cảnh đeo hoặc suy ra vị trí tìm thấy",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Minh họa khái niệm bằng hai mảng trung tính và nhãn chữ, không replica tấm chì và không cảnh đeo",
+          "media_type": "diagram",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "conditional_fallback",
+            "recipe_status": "not_implemented",
+            "fallback_for": "ALT_SC_004_AUTHENTIC"
+          },
+          "alternatives": [
+            {
+              "id": "ALT_SC_004_AUTHENTIC",
+              "kind": "external_media",
+              "representation": "authentic_evidence",
+              "description": "Ảnh xác thực của các tấm chì liên quan vụ việc, provenance và quyền sử dụng cần xác minh",
+              "media_type": "historical_photo",
+              "preferred_category": "authentic_historical_evidence",
+              "activation_condition": "Chỉ thay phương án minh họa khi ảnh thật, nguồn gốc và quyền dùng đã được kiểm tra ở bước sau và cách thể hiện được duyệt riêng; không coi unresolved là đã có ảnh.",
+              "status": "unresolved",
+              "review_status": "pending_human_review",
+              "separate_approval_required": true
+            }
+          ]
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Minh họa khái niệm\nkhông mô phỏng vật chứng",
+          "role": "evidence_label",
+          "placement": "top"
+        },
+        {
+          "text": "Hai tấm chì\ndạng nửa mặt nạ",
+          "role": "caption",
+          "placement": "middle"
+        },
+        {
+          "text": "Vị trí khi phát hiện: chưa chốt",
+          "role": "qualification",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "CR_006_mask_placement_unverified",
+        "historical_photo_not_located",
+        "neutral_symbol_not_replica",
+        "local_illustration_fallback_selected"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "neutral_object_tokens",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": [
+          {
+            "overlay_index": 0,
+            "box": {
+              "x": 108,
+              "y": 160,
+              "width": 792,
+              "height": 96
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 4.6640000000000015
+          },
+          {
+            "overlay_index": 1,
+            "box": {
+              "x": 108,
+              "y": 560,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 64,
+            "line_height_px": 80,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 4.6640000000000015
+          },
+          {
+            "overlay_index": 2,
+            "box": {
+              "x": 108,
+              "y": 1100,
+              "width": 792,
+              "height": 120
+            },
+            "font_size_px": 36,
+            "line_height_px": 45,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 4.6640000000000015
+          }
+        ]
+      }
+    },
+    {
+      "id": "SC_005",
+      "segment_id": "SEG_02",
+      "cue_start": 2,
+      "cue_end": 2,
+      "claim_ids": [
+        "CLM_013"
+      ],
+      "event_ids": [
+        "EVT_001"
+      ],
+      "purpose": "Giới thiệu sự tồn tại và nội dung loại chỉ dẫn bằng bản chép có nguồn; không phụ thuộc giả định đang có ảnh tờ giấy gốc.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_NOTE",
+          "visual_constraint": "Chỉ ảnh tài liệu xác thực nếu được tìm thấy; hiện có bản chép không có nghĩa đang giữ ảnh tờ giấy gốc."
+        }
+      ],
+      "shot": {
+        "type": "document_insert",
+        "subject": "Typography chép/tóm lược nội dung ghi chú theo các nguồn canonical",
+        "setting": "Nền chữ hiện đại, không giả màu giấy, chữ viết tay, vết rách hoặc con dấu lịch sử",
+        "framing": "Hai dòng nội dung lớn; nhãn bản chép phía trên, nguồn phía dưới, vùng phụ đề tách biệt",
+        "camera_motion": "static",
+        "visual_action": "Chuyển từ sự tồn tại của mẩu giấy sang các giờ được ghi bằng chữ; không dựng cảnh viết hoặc đưa giấy",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Thẻ typography local về mẩu giấy, không phải ảnh gốc: Boletim 535 [SRC_001]; Diário de Notícias [SRC_004]; Rede Globo [SRC_009] ghi riêng. SRC_009 giữ verification.status=unreachable, không coi là đã xác minh lại; ảnh gốc vẫn unresolved.",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "conditional_fallback",
+            "recipe_status": "not_implemented",
+            "fallback_for": "ALT_SC_005_AUTHENTIC"
+          },
+          "alternatives": [
+            {
+              "id": "ALT_SC_005_AUTHENTIC",
+              "kind": "external_media",
+              "representation": "authentic_evidence",
+              "description": "Ảnh gốc hoặc tái bản đã xác thực của mẩu giấy; kiểm tra chính ảnh và quyền, không chỉ trang web chép nội dung",
+              "media_type": "document_image",
+              "preferred_category": "authentic_historical_evidence",
+              "activation_condition": "Chỉ thay phương án minh họa khi ảnh thật, nguồn gốc và quyền dùng đã được kiểm tra ở bước sau và cách thể hiện được duyệt riêng; không coi unresolved là đã có ảnh.",
+              "status": "unresolved",
+              "review_status": "pending_human_review",
+              "separate_approval_required": true
+            }
+          ]
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Bản chép theo nguồn\nkhông phải ảnh giấy gốc",
+          "role": "evidence_label",
+          "placement": "top"
+        },
+        {
+          "text": "Mẩu giấy ghi chỉ dẫn\nvào những giờ cụ thể",
+          "role": "caption",
+          "placement": "middle"
+        },
+        {
+          "text": "Boletim 535 [SRC_001]\nDiário de Notícias [SRC_004]\nRede Globo [SRC_009] — chưa truy cập được",
+          "role": "caption",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "original_note_image_not_held",
+        "transcription_not_document_image",
+        "instruction_not_confirmed_action",
+        "local_transcription_fallback_selected",
+        "no_handwriting_or_paper_imitation",
+        "SRC_009_verification_unreachable_preserved"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "note_transcription_without_facsimile",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": [
+          {
+            "overlay_index": 0,
+            "box": {
+              "x": 108,
+              "y": 160,
+              "width": 792,
+              "height": 96
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 5.706624999999999
+          },
+          {
+            "overlay_index": 1,
+            "box": {
+              "x": 108,
+              "y": 560,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 58,
+            "line_height_px": 72,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 5.706624999999999
+          },
+          {
+            "overlay_index": 2,
+            "box": {
+              "x": 108,
+              "y": 1100,
+              "width": 792,
+              "height": 120
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 3,
+            "start_offset": 0,
+            "end_offset": 5.706624999999999
+          }
+        ]
+      }
+    },
+    {
+      "id": "SC_006",
+      "segment_id": "SEG_19",
+      "cue_start": 1,
+      "cue_end": 2,
+      "claim_ids": [
+        "CLM_013",
+        "CLM_032"
+      ],
+      "event_ids": [
+        "EVT_001"
+      ],
+      "purpose": "Làm rõ mốc 18:30 là chữ trong chỉ dẫn; không biến câu uống viên nang thành cảnh hai người thực sự uống.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_NOTE",
+          "visual_constraint": "Chữ chép lại có nhãn, không giả facsimile tờ giấy gốc."
+        },
+        {
+          "entity_id": "OBJ_CAPSULE",
+          "visual_constraint": "Chỉ nhắc bằng chữ; không dựng viên thuốc thật, màu sắc, liều lượng hay động tác nuốt."
+        }
+      ],
+      "shot": {
+        "type": "document_insert",
+        "subject": "Typography trích nội dung chỉ dẫn",
+        "setting": "Bảng chữ biên tập hiện đại, không bề mặt giấy cổ giả",
+        "framing": "Cận 18:30 và dòng chỉ dẫn theo trục dọc, vùng nhãn độc lập",
+        "camera_motion": "static",
+        "visual_action": "Nhấn mốc giờ rồi dòng chữ; không cắt sang miệng/tay/cốc nước",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Bố cục chữ trích chỉ dẫn từ narration canonical; không phải ảnh bản gốc",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Tạo bố cục chữ trung tính ở bước asset sau nếu được duyệt; không cần clone chữ viết tay hoặc tạo ảnh bằng AI."
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "18:30 — uống viên nang",
+          "role": "caption",
+          "placement": "middle"
+        },
+        {
+          "text": "Bản chép chỉ dẫn — không phải ảnh giấy gốc",
+          "role": "evidence_label",
+          "placement": "bottom"
+        },
+        {
+          "text": "Chưa xác nhận đã uống",
+          "role": "qualification",
+          "placement": "top"
+        }
+      ],
+      "risk_flags": [
+        "instruction_not_confirmed_action",
+        "no_swallowing_depiction",
+        "note_time_not_time_of_death"
+      ]
+    },
+    {
+      "id": "SC_007",
+      "segment_id": "SEG_19",
+      "cue_start": 3,
+      "cue_end": 3,
+      "claim_ids": [
+        "CLM_013",
+        "CLM_032"
+      ],
+      "event_ids": [
+        "EVT_001"
+      ],
+      "purpose": "Cho người xem hiểu rõ khoảng cách logic giữa điều được viết và hành động chưa xác nhận, thay vì dùng cảnh tái dựng khiến việc uống trông có thật.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_NOTE",
+          "visual_constraint": "Chỉ dẫn nằm trong ô ghi nhận văn bản, không thành chứng cứ ingest."
+        },
+        {
+          "entity_id": "OBJ_CAPSULE",
+          "visual_constraint": "Khái niệm được ghi bằng chữ, không có bàn tay, người hoặc cảnh uống."
+        }
+      ],
+      "shot": {
+        "type": "comparison",
+        "subject": "Hai ô: lời chỉ dẫn / hành động chưa xác nhận",
+        "setting": "Sơ đồ biên tập, không mô phỏng hiện trường",
+        "framing": "Hai ô trên-dưới phù hợp 9:16, dấu khác nhau ở khoảng giữa; không mũi tên khẳng định nhân quả",
+        "camera_motion": "static",
+        "visual_action": "Giữ ô văn bản ổn định và đưa ô chưa xác nhận vào đối chiếu",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Sơ đồ typography phân biệt lời chỉ dẫn với hành động chưa được chứng minh",
+          "media_type": "diagram",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Đồ họa biên tập có nhãn ở bước asset tương lai; chưa tìm được file thì unresolved, không dùng stock người nuốt thuốc."
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Có chỉ dẫn ≠ xác nhận đã thực hiện",
+          "role": "qualification",
+          "placement": "middle"
+        },
+        {
+          "text": "Sơ đồ minh họa giới hạn bằng chứng",
+          "role": "evidence_label",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "instruction_not_confirmed_action",
+        "no_causal_arrow",
+        "no_swallowing_depiction"
+      ]
+    },
+    {
+      "id": "SC_008",
+      "segment_id": "SEG_19",
+      "cue_start": 4,
+      "cue_end": 4,
+      "claim_ids": [
+        "CLM_032"
+      ],
+      "event_ids": [],
+      "purpose": "Để sự thiếu thông tin về thành phần hiện thành một từ đơn độc trong khoảng trống, thay bảng/sơ đồ giải thích lặp lại; không gợi chất cụ thể.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_CAPSULE",
+          "visual_constraint": "Trường thông tin chưa xác lập, không ảnh viên nang/nhãn thuốc/công thức hóa học giả."
+        }
+      ],
+      "shot": {
+        "type": "object_detail",
+        "subject": "Typography CHƯA BIẾT đơn độc giữa khoảng âm rộng",
+        "setting": "Trường màu phẳng phi hiện thực; không mẫu vật, phòng lab hoặc giấy pháp y",
+        "framing": "Một cụm chữ lớn, lệch thấp nhẹ trong vùng an toàn; không ô, nhánh, bảng hay icon viên nang",
+        "camera_motion": "slow_push",
+        "visual_action": "Chỉ tăng nhấn chữ và khoảng trống rất nhẹ; không lộ hình dạng hay chất bên trong một vật thể",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Nhịp kinetic typography tối giản cho nội dung chưa biết, không sơ đồ thành phần hoặc hình viên nang",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "primary",
+            "recipe_status": "not_implemented"
+          }
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Minh họa — không xác định chất",
+          "role": "evidence_label",
+          "placement": "top"
+        },
+        {
+          "text": "CHƯA BIẾT",
+          "role": "qualification",
+          "placement": "middle"
+        }
+      ],
+      "risk_flags": [
+        "capsule_contents_unknown",
+        "no_poison_or_drug_identification",
+        "no_repeated_explanatory_diagram"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "isolated_typography_negative_space",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": [
+          {
+            "overlay_index": 0,
+            "box": {
+              "x": 108,
+              "y": 160,
+              "width": 792,
+              "height": 96
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 4.059417000000003
+          },
+          {
+            "overlay_index": 1,
+            "box": {
+              "x": 108,
+              "y": 760,
+              "width": 792,
+              "height": 220
+            },
+            "font_size_px": 80,
+            "line_height_px": 100,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 4.059417000000003
+          }
+        ]
+      }
+    },
+    {
+      "id": "SC_009",
+      "segment_id": "SEG_45",
+      "cue_start": 1,
+      "cue_end": 1,
+      "claim_ids": [
+        "CLM_032",
+        "CLM_033",
+        "CLM_034",
+        "CLM_035"
+      ],
+      "event_ids": [],
+      "purpose": "Bốn câu hỏi được đọc lần lượt trong khung dọc, mỗi lần chỉ một câu ngắn; không bắt người xem đọc lưới bốn câu và phụ đề cùng lúc.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_CAPSULE",
+          "visual_constraint": "Chỉ nhãn câu hỏi, không vật chứng viên nang đã thu giữ."
+        }
+      ],
+      "shot": {
+        "type": "comparison",
+        "subject": "Bốn câu hỏi nối tiếp trong cùng một cửa sổ chữ lớn",
+        "setting": "Typography biên tập, không bảng điều tra thật hoặc hồ sơ nghi phạm",
+        "framing": "Một cột x108–900, vùng chữ y540–840; một câu tối đa hai dòng; vùng y1440–1680 dành riêng cho phụ đề",
+        "camera_motion": "static",
+        "visual_action": "Thay từng câu theo thứ tự thành phần, hành động, người khác, nguyên nhân; không giữ cả bốn câu đồng thời. Nhịp chỉ là ước lượng editorial",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Chuỗi bốn thẻ chữ thay thế tuần tự, tối đa một câu hỏi hai dòng trong mỗi khoảng, không lưới 2×2",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "primary",
+            "recipe_status": "not_implemented"
+          }
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Câu hỏi chưa được xác lập",
+          "role": "evidence_label",
+          "placement": "top"
+        },
+        {
+          "text": "Viên nang\nchứa gì?",
+          "role": "question",
+          "placement": "middle"
+        },
+        {
+          "text": "Họ đã\nlàm gì?",
+          "role": "question",
+          "placement": "middle"
+        },
+        {
+          "text": "Có ai\nkhác?",
+          "role": "question",
+          "placement": "middle"
+        },
+        {
+          "text": "Vì sao\nhọ chết?",
+          "role": "question",
+          "placement": "middle"
+        }
+      ],
+      "risk_flags": [
+        "unknown_cause_of_death",
+        "third_party_presence_unknown",
+        "no_suspect_or_hypothesis_as_fact",
+        "progressive_text_requires_mobile_review",
+        "overlay_timing_not_word_aligned"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "single_question_progressive_replace",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": [
+          {
+            "overlay_index": 0,
+            "box": {
+              "x": 108,
+              "y": 160,
+              "width": 792,
+              "height": 96
+            },
+            "font_size_px": 32,
+            "line_height_px": 40,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 6.360582999999998
+          },
+          {
+            "overlay_index": 1,
+            "box": {
+              "x": 108,
+              "y": 540,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 64,
+            "line_height_px": 80,
+            "max_lines": 2,
+            "start_offset": 0,
+            "end_offset": 1.4
+          },
+          {
+            "overlay_index": 2,
+            "box": {
+              "x": 108,
+              "y": 540,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 64,
+            "line_height_px": 80,
+            "max_lines": 2,
+            "start_offset": 1.4,
+            "end_offset": 3.18
+          },
+          {
+            "overlay_index": 3,
+            "box": {
+              "x": 108,
+              "y": 540,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 64,
+            "line_height_px": 80,
+            "max_lines": 2,
+            "start_offset": 3.18,
+            "end_offset": 4.7
+          },
+          {
+            "overlay_index": 4,
+            "box": {
+              "x": 108,
+              "y": 540,
+              "width": 792,
+              "height": 240
+            },
+            "font_size_px": 64,
+            "line_height_px": 80,
+            "max_lines": 2,
+            "start_offset": 4.7,
+            "end_offset": 6.360582999999998
+          }
+        ]
+      }
+    },
+    {
+      "id": "SC_010",
+      "segment_id": "SEG_45",
+      "cue_start": 2,
+      "cue_end": 2,
+      "claim_ids": [
+        "CLM_032",
+        "CLM_033",
+        "CLM_034",
+        "CLM_035"
+      ],
+      "event_ids": [],
+      "purpose": "Cho lời chưa có câu trả lời tự có trọng lượng bằng một nhịp hình trống, không thêm bảng chữ hay lặp hình chỉ dẫn của shot kết.",
+      "representation": "illustration",
+      "required_elements": [],
+      "shot": {
+        "type": "visual_pause",
+        "subject": "Trường màu tối trống, không có chữ hoặc nhãn phủ hình",
+        "setting": "Nhịp dừng biên tập — metadata sản xuất nội bộ, không phải overlay. Không gian màu đồ họa thuần túy, không ám chỉ trời đêm hoặc hiện trường.",
+        "framing": "Toàn khung trống; không lưới câu hỏi, sơ đồ, thẻ chỉ dẫn, dấu hỏi hoặc chữ kết luận lớn",
+        "camera_motion": "static",
+        "visual_action": "Các câu hỏi biến mất hoàn toàn; giữ nhịp hình tĩnh trong 2.332 s khi narration vẫn tiếp tục, không chèn im lặng",
+        "transition_in": "cut",
+        "transition_out": "cut"
+      },
+      "asset_requests": [
+        {
+          "description": "Nền màu phẳng không chữ; Nhịp dừng biên tập chỉ là metadata nội bộ. Không overlay, không thẻ thông tin lặp SC_009/011; vùng phụ đề vẫn được dành riêng.",
+          "media_type": "typography",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Chỉ là đặc tả biên tập; giữ unresolved tới khi có asset dùng được hoặc recipe local được hỗ trợ. Không tự tạo media trong M2.3.1.",
+          "production": {
+            "kind": "local_graphic",
+            "role": "primary",
+            "recipe_status": "not_implemented"
+          }
+        }
+      ],
+      "on_screen_text": [],
+      "risk_flags": [
+        "unknown_not_a_solution",
+        "no_proven_cause_of_death",
+        "visual_pause_not_audio_padding",
+        "no_historical_scene_implied"
+      ],
+      "presentation": {
+        "canvas": {
+          "width": 1080,
+          "height": 1920
+        },
+        "safe_area": {
+          "x": 108,
+          "y": 144,
+          "width": 792,
+          "height": 1152
+        },
+        "subtitle_reserved": {
+          "x": 108,
+          "y": 1440,
+          "width": 792,
+          "height": 240
+        },
+        "composition_key": "empty_field_visual_breath",
+        "timing_basis": "editorial_estimate_not_word_alignment",
+        "text_color": "#F5F3ED",
+        "background_color": "#101216",
+        "text_blocks": []
+      }
+    },
+    {
+      "id": "SC_011",
+      "segment_id": "SEG_45",
+      "cue_start": 3,
+      "cue_end": 4,
+      "claim_ids": [
+        "CLM_013",
+        "CLM_032",
+        "CLM_033",
+        "CLM_034",
+        "CLM_035"
+      ],
+      "event_ids": [
+        "EVT_001"
+      ],
+      "purpose": "Khép lại bằng đúng khoảng trống từ chỉ dẫn tới cái chết: có một văn bản, chưa có mối nối đã được chứng minh; không biến sự bí ẩn thành lời giải.",
+      "representation": "illustration",
+      "required_elements": [
+        {
+          "entity_id": "OBJ_NOTE",
+          "visual_constraint": "Thẻ chữ đại diện nội dung chỉ dẫn, có nhãn bản chép; không dùng facsimile giả."
+        },
+        {
+          "entity_id": "OBJ_CAPSULE",
+          "visual_constraint": "Chỉ tên khái niệm trong chỉ dẫn; không nhân quả thuốc dẫn tới chết."
+        }
+      ],
+      "shot": {
+        "type": "closing",
+        "subject": "Một thẻ chỉ dẫn và vùng kết luận để trống liên hệ",
+        "setting": "Đồ họa biên tập, không ảnh hiện trường hoặc hồ sơ nguyên bản",
+        "framing": "Bố cục dọc có khoảng trống giữa thông tin được viết và điều chưa biết; không mũi tên nhân quả",
+        "camera_motion": "slow_pull",
+        "visual_action": "Giữ khoảng trống logic tới hết câu; fade nằm trong đuôi 0,5 s sẵn có, không kéo dài track",
+        "transition_in": "cut",
+        "transition_out": "fade_to_black"
+      },
+      "asset_requests": [
+        {
+          "description": "Đồ họa kết câu liên kết có chỉ dẫn / chưa xác lập quan hệ với cái chết; không sử dụng hình một viên thuốc như vật chứng",
+          "media_type": "diagram",
+          "preferred_category": "local_media_library",
+          "fallback_policy": "Duyệt bố cục và nhãn trước khi tạo asset; không nối bằng mũi tên khẳng định nguyên nhân hoặc tái dựng hành động."
+        }
+      ],
+      "on_screen_text": [
+        {
+          "text": "Có chỉ dẫn. Chưa xác lập mối nối với cái chết.",
+          "role": "qualification",
+          "placement": "middle"
+        },
+        {
+          "text": "Sơ đồ minh họa — không phải tài liệu gốc",
+          "role": "evidence_label",
+          "placement": "bottom"
+        }
+      ],
+      "risk_flags": [
+        "no_causal_arrow",
+        "instruction_not_confirmed_action",
+        "unknown_cause_of_death",
+        "publication_review_pending"
+      ]
+    }
+  ]
+}

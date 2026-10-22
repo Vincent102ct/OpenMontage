@@ -1,5 +1,43 @@
 # Source map — story-to-action pilot
 
+M2.3 editorial finalization (2026-10-22): authorized corrections in the visual
+brief distinguish the 1892 contextual painting, individual source attributions
+and an overlay-free SC_010 production pause. The existing visual schema/compiler
+supports `context_art` and a constrained `visual_pause`; no renderer or resolver
+is added. M2.4 handoff contract is documented in the M2.3.1 feature report.
+Only the twelve M2.3/M2.3.1 source/test/doc files are included in this baseline.
+The sixteen unrelated WIP files and all canonical/audio inputs remain protected.
+
+M2.3.1 editorial refinement boundary (2026-10-22): retain eleven scene IDs,
+all measured timing/canon and the five approved directions. Extend the existing
+visual contract only with optional production/conditional-alternative metadata
+and vertical text layout specifications; no rendering recipes are implemented.
+`lib/visual_scene_plan.py` validates those specifications and exports a production
+breakdown, while `scripts/visual_scene_plan.py` retains the same input path.
+Before-state source and exports are saved under `projects/m231-editorial/before/`.
+No legacy WIP, narration, Korva, Story Planner, renderer or asset resolver changes.
+
+M2.3 Canonical Visual Scene Planning boundary (2026-10-22, recorded before code
+changes; `coding` / `c103533d`): add `lib/visual_scene_plan.py` and
+`schemas/story/visual_scene_plan.schema.json` for a standalone canonical visual
+contract, deterministic compilation of authored shot directions, and validation
+against M2.1/M2.2. `scripts/visual_scene_plan.py` will read the existing timed
+manifest/SRT/WAVs without resynthesizing and export JSON, storyboard, unresolved
+asset requirements and review/validation reports. Pilot editorial directions:
+`examples/master-story/lead-masks-1966/short_visual_brief.json`. Tests:
+`tests/lib/test_visual_scene_plan.py`. Spec:
+`docs/features/m2.3-canonical-visual-scene-planning.md`.
+This does not modify the existing Story Planner/Remotion, TTS, Master Story,
+Short selection, or shared artifact schemas. Evidence Canon/source-visual WIP
+is read-only: reuse ID/status vocabulary and provenance separation as concepts,
+not imports, schemas or unreviewed render paths. Existing renderer needs resolved
+asset paths and edit decisions; the new plan is a future resolver input, not a
+render-ready asset manifest. M2.4 asset acquisition is outside this boundary.
+Implemented: `build_plan`, `validate_plan`, `verify_timed_files` and
+`storyboard_markdown`; 62 new tests. The real pilot exports 11 scenes / 11
+unresolved requirements over 49.496375 s. Details and clean-candidate regression
+results: `docs/features/m2.3-canonical-visual-scene-planning.md`.
+
 M2.2 Canonical Short narration (2026-10-22): `scripts/master_story_short.py` drives
 `lib/master_story_short.py` (beats, measured timeline, SRT, gates) and reuses
 `local_narration.select_local_voice`, `story_to_video.narrate()` and `subtitle_gen`.

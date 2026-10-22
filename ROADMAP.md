@@ -27,7 +27,8 @@
 - [ ] Vietnamese pronunciation: **pending human review**.
 - [ ] macOS runtime regression: **pending real-machine render**; mocked regressions pass.
 - Windows VI image/technical review was accepted for compatibility only. Broader
-  M1.1 creative approval is not inferred, and M2 remains unstarted. See
+  M1.1 creative approval is not inferred; M2 was unstarted at that checkpoint
+  (current M2 status below). See
   `docs/WINDOWS_M11_HANDOFF_2026-10-22.md`.
 - [x] M1.2 TTS evaluation (2026-10-22): user preferred Korva `hoang_nam`.
 - [x] M1.2 Korva integration (2026-10-22): local offline provider `korva_tts` in the
@@ -55,7 +56,24 @@
   - [x] M2.1 + M2.2 committed and pushed as technical baseline to `origin/coding` (2026-10-22).
   - [ ] **Pending human review:** audio listening, factual wording, publication; continuity
         rules CR_006, CR_007, CR_008, CR_010. None is marked PASS.
-  - [ ] M2.3: not started.
+  - [x] M2.3 Canonical Visual Scene Planning (2026-10-22): standalone schema,
+        deterministic brief compiler and validator; STORY 053 Short has 11 shots
+        covering 49.496375 s, 11 unresolved asset requests, no media generated.
+        See `docs/features/m2.3-canonical-visual-scene-planning.md`.
+  - [x] M2.3 editorial storyboard approved by the user for progression to M2.4,
+        with four final attribution/presentation corrections applied. This does
+        not approve historical facts, media rights or publication.
+  - [x] M2.3.1 editorial refinement: six revised shots, five approved scene objects
+        unchanged at that checkpoint; final SC_001 attribution correction is
+        separately authorized. Same 11 IDs / 49.496375 s. Local graphics versus
+        conditional historical media separated; final 16 text blocks checked.
+        See `docs/features/m2.3.1-editorial-storyboard-refinement.md`.
+  - [ ] Rendered mobile reading/pacing review; CR_006/007/008/010, factual,
+        listening, licensing and publication approvals remain pending. All asset
+        requests unresolved; local rendering recipes not implemented.
+  - [ ] M2.4 Asset Resolution: editorial prerequisite approved, not started in
+        this finalization task. Input contract: M2.3.1 feature report. No automatic
+        fallback generation or rendering.
   - [ ] Later: Long assembly, visuals/rights layer, convergence with the Evidence Canon WIP.
 - [ ] Candidates after review (not started): richer rig poses (lie down, crouch-walk,
       two-handed carry), more location kinds/variants, crowd/extra characters, per-character
