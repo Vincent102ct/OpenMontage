@@ -1,5 +1,15 @@
 # Source map — story-to-action pilot
 
+Windows compatibility extension (2026-10-22, baseline `coding` / `877a12b`):
+`scripts/story_to_video.py` selects installed offline speech through
+`tools/audio/local_narration.py`; `local_wav.py` defines measured mono 24 kHz PCM16.
+Native adapters remain `macos_say_tts.py` and `windows_sapi_tts.py` (Windows
+PowerShell/PowerShell 7 inventories are distinct); `piper_tts.py` accepts only
+local, language-declared models. Tests: `tests/tools/test_local_narration.py` and
+the existing native-provider/story suites. Setup/evidence:
+`docs/WINDOWS_STORY_TO_VIDEO.md`, `docs/WINDOWS_M11_HANDOFF_2026-10-22.md`.
+Story Planner, Remotion templates and pre-existing evidence/FFmpeg WIP are untouched.
+
 Verified 2026-10-21 on branch `coding`, HEAD `fe4157f`. Existing dirty cinematic,
 surveillance and footage-led work is outside this change and must be preserved.
 

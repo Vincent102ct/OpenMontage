@@ -52,6 +52,12 @@ class MacOSSayTTS(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         return 0.0
 
+    def list_voices(self) -> list[dict]:
+        voices = subprocess.run(["say", "-v", "?"], capture_output=True, text=True,
+                                check=True, timeout=15).stdout
+        installed = [line.split("#", 1)[0].strip().rsplit(None, 1) for line in voices.splitlines()]
+        return [{"name": row[0], "language_code": row[1]} for row in installed if len(row) == 2]
+
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         if self.get_status() != ToolStatus.AVAILABLE:
             return ToolResult(success=False, error=self.install_instructions)
@@ -63,11 +69,8 @@ class MacOSSayTTS(BaseTool):
             rate = int(inputs.get("rate", 145))
             if not text or not 80 <= rate <= 300:
                 raise ValueError("Nonempty text and rate between 80 and 300 are required")
-            voices = subprocess.run(["say", "-v", "?"], capture_output=True, text=True,
-                                    check=True, timeout=15).stdout
-            installed = [line.split("#", 1)[0].strip().rsplit(None, 1) for line in voices.splitlines()]
-            matches = sorted({row[0] for row in installed if len(row) == 2 and row[1] == locale
-                              and (row[0] == voice or row[0].startswith(voice + " ("))})
+            matches = sorted({row["name"] for row in self.list_voices() if row["language_code"] == locale
+                              and (row["name"] == voice or row["name"].startswith(voice + " ("))})
             if len(matches) != 1:
                 raise ValueError(f"Installed voice {voice!r} for {locale!r} was not found; no voice fallback")
             resolved_voice = matches[0]

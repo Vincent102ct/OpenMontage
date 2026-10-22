@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import shutil
+import json
 import subprocess
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
+
+from tools.audio.local_wav import normalize_wav
 
 from tools.base_tool import (
     BaseTool,
@@ -33,13 +37,13 @@ class PiperTTS(BaseTool):
     determinism = Determinism.DETERMINISTIC
     runtime = ToolRuntime.LOCAL
 
-    dependencies = ["cmd:piper"]
+    dependencies = ["cmd:piper", "cmd:ffmpeg"]
     install_instructions = (
         "Install Piper TTS:\n"
         "  pip install piper-tts\n"
         "Or download from https://github.com/rhasspy/piper/releases\n"
-        "Then download a voice model:\n"
-        "  piper --download-dir ~/.piper/models --model en_US-lessac-medium"
+        "Separately obtain a licensed .onnx voice and adjacent .onnx.json config. "
+        "Pass its local path as model; synthesis never downloads a model."
     )
     agent_skills = ["text-to-speech"]
 
@@ -49,7 +53,7 @@ class PiperTTS(BaseTool):
     ]
     supports = {
         "voice_cloning": False,
-        "multilingual": False,
+        "multilingual": "installed_model_only",
         "offline": True,
         "native_audio": True,
     }
@@ -84,6 +88,7 @@ class PiperTTS(BaseTool):
                 "default": 0.3,
             },
             "output_path": {"type": "string"},
+            "language_code": {"type": "string"},
         },
     }
 
@@ -96,12 +101,23 @@ class PiperTTS(BaseTool):
     user_visible_verification = ["Listen to generated audio for intelligibility"]
 
     def get_status(self) -> ToolStatus:
-        if shutil.which("piper"):
+        if shutil.which("piper") and shutil.which("ffmpeg"):
             return ToolStatus.AVAILABLE
         return ToolStatus.UNAVAILABLE
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         return 0.0
+
+    @staticmethod
+    def model_language(model: str) -> str:
+        path = Path(model).resolve()
+        if not path.is_file() or path.suffix.lower() != ".onnx":
+            raise ValueError("Piper requires an existing local .onnx model (no automatic download)")
+        config = json.loads(Path(str(path) + ".json").read_text(encoding="utf-8"))
+        locale = config.get("language", {}).get("code")
+        if not isinstance(locale, str) or not locale:
+            raise ValueError("Piper .onnx.json must declare language.code; no voice fallback")
+        return locale
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         if self.get_status() != ToolStatus.AVAILABLE:
@@ -117,28 +133,35 @@ class PiperTTS(BaseTool):
         return result
 
     def _generate(self, inputs: dict[str, Any]) -> ToolResult:
-        output_path = Path(inputs.get("output_path", "tts_output.wav"))
+        output_path = Path(inputs.get("output_path", "tts_output.wav")).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
-
-        proc = subprocess.run(
-            [
-                "piper",
-                "--model", inputs.get("model", "en_US-lessac-medium"),
-                "--speaker", str(inputs.get("speaker_id", 0)),
-                "--length-scale", str(inputs.get("length_scale", 1.0)),
-                "--sentence-silence", str(inputs.get("sentence_silence", 0.3)),
-                "--output_file", str(output_path),
-            ],
-            input=inputs["text"],
-            capture_output=True,
-            text=True,
-            timeout=300,
-        )
-
-        if proc.returncode != 0:
-            return ToolResult(success=False, error=f"Piper failed (exit {proc.returncode}): {proc.stderr}")
-        if not output_path.exists():
-            return ToolResult(success=False, error=f"Piper output file missing: {output_path}")
+        model = str(Path(inputs.get("model", "en_US-lessac-medium")).resolve())
+        locale = self.model_language(model)
+        requested = inputs.get("language_code", locale).replace("_", "-").lower()
+        actual = locale.replace("_", "-").lower()
+        if actual != requested and not actual.startswith(requested + "-"):
+            raise ValueError(f"Piper model language {locale} does not match {requested}; no voice fallback")
+        scale = float(inputs.get("length_scale", 1.0))
+        if not 0.25 <= scale <= 4 or not inputs["text"].strip():
+            raise ValueError("Piper needs nonempty text and length_scale between 0.25 and 4")
+        if output_path.suffix.lower() != ".wav":
+            raise ValueError("output_path must end in .wav")
+        with tempfile.TemporaryDirectory(prefix="openmontage-piper-") as temp_dir:
+            raw = Path(temp_dir) / "raw.wav"
+            proc = subprocess.run(
+                [
+                    "piper",
+                    "--model", model,
+                    "--speaker", str(inputs.get("speaker_id", 0)),
+                    "--length-scale", str(scale),
+                    "--sentence-silence", str(inputs.get("sentence_silence", 0.3)),
+                    "--output_file", str(raw),
+                ],
+                input=inputs["text"], capture_output=True, text=True, encoding="utf-8", timeout=300,
+            )
+            if proc.returncode != 0:
+                return ToolResult(success=False, error=f"Piper failed (exit {proc.returncode}): {proc.stderr}")
+            audio_duration = normalize_wav(raw, output_path)
 
         return ToolResult(
             success=True,
@@ -149,6 +172,9 @@ class PiperTTS(BaseTool):
                 "text_length": len(inputs["text"]),
                 "output": str(output_path),
                 "format": "wav",
+                "language_code": locale,
+                "local_only": True,
+                "audio_duration_seconds": audio_duration,
             },
             artifacts=[str(output_path)],
             model=inputs.get("model", "en_US-lessac-medium"),

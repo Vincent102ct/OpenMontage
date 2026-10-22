@@ -699,8 +699,10 @@ class TestCapabilityMetadata:
             "fal.ai",
             "google_tts",
             "kling_official",
+            "macos_say",
             "openai",
             "piper",
+            "windows_sapi",
         }
 
 

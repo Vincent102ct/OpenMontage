@@ -8,13 +8,17 @@ service.
 from __future__ import annotations
 
 import os
+import json
 import platform
 import shutil
 import subprocess
 import tempfile
 import time
+import wave
 from pathlib import Path
 from typing import Any
+
+from tools.audio.local_wav import normalize_wav
 
 from tools.base_tool import (
     BaseTool,
@@ -42,10 +46,10 @@ class WindowsSapiTTS(BaseTool):
     determinism = Determinism.DETERMINISTIC
     runtime = ToolRuntime.LOCAL
 
-    dependencies = ["cmd:powershell", "os:windows"]
+    dependencies = ["cmd:powershell", "cmd:ffmpeg", "os:windows"]
     install_instructions = (
-        "Use a Windows machine with System.Speech and an installed SAPI voice. "
-        "No package installation or network provider is required."
+        "Requires Windows System.Speech, an installed voice, PowerShell and FFmpeg on PATH. "
+        "PowerShell 7 (pwsh) can expose additional installed voices. No network provider is used."
     )
     agent_skills = ["text-to-speech"]
     capabilities = ["text_to_speech", "offline_generation", "wav_output"]
@@ -64,6 +68,8 @@ class WindowsSapiTTS(BaseTool):
         "properties": {
             "text": {"type": "string", "minLength": 1},
             "voice": {"type": "string", "default": "Microsoft Zira Desktop"},
+            "language_code": {"type": "string", "description": "Must match the installed voice culture when supplied"},
+            "speech_host": {"type": "string", "enum": ["powershell", "pwsh"]},
             "rate": {"type": "integer", "minimum": -10, "maximum": 10, "default": -1},
             "output_path": {"type": "string"},
         },
@@ -76,14 +82,52 @@ class WindowsSapiTTS(BaseTool):
     user_visible_verification = ["Listen to narration for intelligibility and pronunciation"]
 
     def get_status(self) -> ToolStatus:
-        if platform.system() == "Windows" and shutil.which("powershell"):
+        if platform.system() == "Windows" and shutil.which("powershell") and shutil.which("ffmpeg"):
             return ToolStatus.AVAILABLE
         return ToolStatus.UNAVAILABLE
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         return 0.0
 
+    def list_voices(self) -> list[dict]:
+        """Query the same System.Speech engine used for synthesis, not the registry."""
+        script = """
+$ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+Add-Type -AssemblyName System.Speech
+$synth = New-Object System.Speech.Synthesis.SpeechSynthesizer
+try {
+  $voices = @($synth.GetInstalledVoices() | Where-Object { $_.Enabled } | ForEach-Object {
+    @{name=$_.VoiceInfo.Name; language_code=$_.VoiceInfo.Culture.Name}
+  })
+  ConvertTo-Json -InputObject $voices -Compress
+} finally { $synth.Dispose() }
+"""
+        voices, errors = [], []
+        for host in ("powershell", "pwsh"):
+            executable = shutil.which(host)
+            if not executable:
+                continue
+            try:
+                result = subprocess.run([executable, "-NoProfile", "-NonInteractive", "-Command", script],
+                                        capture_output=True, text=True, encoding="utf-8", errors="strict",
+                                        check=True, timeout=30)
+                voices.extend({**v, "speech_host": host} for v in json.loads(result.stdout.lstrip("\ufeff")))
+            except (ValueError, OSError, subprocess.SubprocessError) as exc:
+                errors.append(f"{host}: {exc}")
+        if not voices and errors:
+            raise ValueError("System.Speech voice enumeration failed: " + "; ".join(errors))
+        return voices
+
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
+        if not inputs.get("text", "").strip():
+            return ToolResult(success=False, error="Text is required for Windows SAPI TTS.")
+        try:
+            return self._synthesize(inputs)
+        except (ValueError, OSError, EOFError, wave.Error, subprocess.SubprocessError) as exc:
+            return ToolResult(success=False, error=f"Windows SAPI failed: {exc}")
+
+    def _synthesize(self, inputs: dict[str, Any]) -> ToolResult:
         if self.get_status() != ToolStatus.AVAILABLE:
             return ToolResult(success=False, error="Windows SAPI TTS is unavailable. " + self.install_instructions)
 
@@ -95,6 +139,19 @@ class WindowsSapiTTS(BaseTool):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         voice = inputs.get("voice", "Microsoft Zira Desktop")
         rate = int(inputs.get("rate", -1))
+        if rate != float(inputs.get("rate", -1)) or not -10 <= rate <= 10:
+            raise ValueError("SAPI rate must be an integer between -10 and 10 (not macOS words/minute)")
+        if output_path.suffix.lower() != ".wav":
+            raise ValueError("output_path must end in .wav")
+        matches = [v for v in self.list_voices() if v["name"] == voice and
+                   (not inputs.get("speech_host") or v["speech_host"] == inputs["speech_host"])]
+        # The same Desktop voice can be visible in both runtimes. Use the first
+        # enumerated host, and keep that host for synthesis as well.
+        matches = matches[:1]
+        locale = inputs.get("language_code", "").replace("_", "-").lower()
+        if len(matches) != 1 or (locale and not (matches[0]["language_code"].lower() == locale
+                                               or matches[0]["language_code"].lower().startswith(locale + "-"))):
+            raise ValueError(f"Installed voice {voice!r} for {locale!r} was not found; no voice fallback")
 
         script = """
 $ErrorActionPreference = 'Stop'
@@ -118,15 +175,17 @@ try {
             environment = os.environ.copy()
             environment.update({
                 "OPENMONTAGE_SAPI_INPUT": str(input_path),
-                "OPENMONTAGE_SAPI_OUTPUT": str(output_path),
+                "OPENMONTAGE_SAPI_OUTPUT": str(Path(temp_dir) / "raw.wav"),
                 "OPENMONTAGE_SAPI_VOICE": voice,
                 "OPENMONTAGE_SAPI_RATE": str(rate),
             })
             completed = subprocess.run(
-                ["powershell", "-NoProfile", "-NonInteractive", "-Command", script],
+                [shutil.which(matches[0]["speech_host"]), "-NoProfile", "-NonInteractive", "-Command", script],
                 timeout=300,
                 env=environment,
+                capture_output=True, text=True, encoding="utf-8", errors="replace", check=True,
             )
+            audio_duration = normalize_wav(Path(temp_dir) / "raw.wav", output_path)
 
         if completed.returncode != 0:
             return ToolResult(
@@ -146,6 +205,9 @@ try {
                 "output": str(output_path),
                 "format": "wav",
                 "local_only": True,
+                "language_code": matches[0]["language_code"],
+                "speech_host": matches[0]["speech_host"],
+                "audio_duration_seconds": audio_duration,
             },
             artifacts=[str(output_path)],
             model=f"windows-sapi:{voice}",

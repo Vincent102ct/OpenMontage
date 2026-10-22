@@ -358,3 +358,52 @@ Still not right / limits:
 - Staging is per action (no global blocking solver); three or more people in a small room
   can still crowd.
 - No listening pass, pronunciation or human visual acceptance claimed.
+
+# Windows story-to-video M1.1 compatibility — 2026-10-22
+
+Baseline `coding` / `877a12b` verified; existing evidence/source-visual/FFmpeg WIP
+preserved. Local dependencies installed in workspace venv; npm ci succeeded with
+workspace cache. Native voice discovery distinguished Windows PowerShell Desktop
+voices from PowerShell 7's additional Microsoft An vi-VN voice. Added offline
+OS/language routing, provider-specific rates, PCM normalization, sample-measured
+duration, provider/model/host/content-aware narration caching, analysis-only
+`--dry-run` and accurate real-audio `--no-render` behavior. Renderer, Story Planner,
+rig and both original fixture stories untouched. No paid calls, commits or M2.
+
+EN Zira Desktop via Windows PowerShell: full 102.122667 s MP4, QA pass, 0 warnings.
+VI Microsoft An via PowerShell 7: full 125.653333 s MP4, QA pass, 0 warnings.
+All 37 sentence WAVs measured; subtitles exact; full decode clean; per-beat decoded
+waveform sync residuals <=57.017 ms (two-frame technical tolerance; not zero).
+User left pronunciation/listening review pending; no VI language-quality approval.
+
+Clean baseline M1.1 suites 88 passed; extended focused suite 104 passed; final
+native/local TTS regressions 21 passed. Contracts 1216 passed / 7 skipped after
+correcting the stale exact-provider expectation. Strict template tsc and diff
+check pass. Final combined unit/lib/contract run: 1967 passed, 8 skipped,
+3 xfailed, 1 subtest passed (326.84 s); one SDK deprecation warning, no failures.
+Full verification, output hashes, final combined test result and
+remaining limits: `docs/WINDOWS_M11_HANDOFF_2026-10-22.md`.
+Reusable PowerShell setup: `docs/WINDOWS_STORY_TO_VIDEO.md`.
+
+## Windows Compatibility technical baseline finalization — 2026-10-22
+
+The user reviewed the Windows VI image/technical result, accepted the Windows
+Compatibility technical baseline, and authorized a scoped commit plus normal
+push to `origin/coding`. Windows EN/VI rendering: **technical PASS**.
+Vietnamese pronunciation: **pending human review**. macOS runtime regression:
+**pending real-machine render**. M2 and broader creative approval are not implied.
+
+Finalization starts at local/remote `877a12b`. Sixteen unrelated dirty/untracked
+WIP files are excluded and protected by before/after checksums. The sixteen
+Windows code/docs/tests files are the sole commit allowlist. No dependency,
+cache, secret or generated MP4 is included. Final checks run against a clean
+archive of the baseline overlaid with only those Windows files and reused local
+dependencies; see the Windows handoff for final results and continuation steps.
+
+Final clean-candidate `tests/tools tests/lib tests/contracts`: **1872 passed,
+7 skipped, 3 xfailed, 1 subtest passed** in 317.01 s, with one SDK deprecation
+warning and no failures. Both actual EN/VI `--no-render` checks and strict template
+TypeScript passed on that candidate. The previous 1967-test result included WIP;
+this release verification excludes it. Both original MP4 hashes, full decode,
+measured narration/subtitle and waveform-sync checks passed again. All 16 WIP
+checksums remain unchanged; the commit allowlist is only Python and Markdown.

@@ -1,5 +1,45 @@
 # Decisions — Story-to-Action pilot (2026-10-21)
 
+## Windows compatibility extension (2026-10-22)
+
+- User explicitly authorized local M1.1 fixture narration/render/test runs; human
+  visual and pronunciation acceptance remain separate. Initial scope excluded
+  commit/push; the finalization decision below supersedes that restriction.
+- Build on `coding` baseline `877a12b`; preserve pre-existing evidence/footage/FFmpeg WIP.
+  Keep existing Story Planner, source stories, rig and Remotion renderer unchanged.
+- Use the installed native OS voice when its actual engine inventory matches the
+  language. Windows PowerShell 5.1 exposes fewer voices than PowerShell 7 here;
+  enumerate both and synthesize with the host that exposed the selected voice.
+  No registry edits, admin changes or paid/network TTS fallback.
+- macOS keeps Linh 145 WPM / Samantha 165 WPM. Windows SAPI uses its own -10..10
+  scale (default -1); never forward macOS WPM. Piper uses explicit local model
+  metadata and length_scale; no model auto-download or English substitution.
+- Normalize SAPI/Piper to the existing mono 24 kHz PCM16 narration contract.
+  Remeasure actual samples, including cache hits; provider, model/config hashes,
+  host, settings and WAV content protect against stale cached timing.
+- Keep `--no-render` as the real-audio packaging check. Add separate analysis-only
+  `--dry-run`, with no timing claim or generated action timeline. This resolves
+  the misleading historical suggestion that no-render works without macOS TTS.
+- Update the stale exact-provider contract expectation to include both existing
+  local native providers. Do not loosen it to a subset or change paid-provider routing.
+- Browser: reuse installed Chrome via the existing environment override; keep
+  Remotion 4.0.484/concurrency 2. SFX remain local procedural FFmpeg; no music added.
+
+### Technical baseline acceptance and publication (2026-10-22)
+
+- The user reviewed the Windows Vietnamese video's image/technical result and
+  explicitly accepted Windows Compatibility as a technical baseline, authorizing
+  a scoped commit and normal push to `origin/coding`, with remote/local HEAD check.
+- Windows EN/VI rendering: **technical PASS**. Vietnamese pronunciation:
+  **pending human review**. macOS runtime regression: **pending real-machine render**.
+  Passing mocks does not replace a Mac render. No M2 or additional renderer/planner work.
+- Commit only the Windows code, tests and documentation. Keep unrelated WIP,
+  secrets, dependencies, caches, generated projects and large MP4s outside the commit.
+- Final checks use a clean source candidate (baseline plus only the Windows file
+  allowlist), so preservation of WIP does not make it an implicit dependency.
+
+## Pilot decisions (historical)
+
 - Scope: one authored scene through local render/validation, as explicitly
   requested. No full-story generation, MoneyPrinter, upload or publish work.
 - Preserve existing dirty cinematic/footage-led/surveillance changes on `coding`.

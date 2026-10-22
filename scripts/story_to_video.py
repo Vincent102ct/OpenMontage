@@ -1,23 +1,24 @@
 """One command: story text file -> analysed, planned, narrated, animated MP4.
 
-    .venv/bin/python scripts/story_to_video.py path/to/story.md [--analyzer auto|rules|ollama]
+    python scripts/story_to_video.py path/to/story.md [--analyzer auto|rules|ollama]
 
 The repository is agent-driven; this script is the single-command entry point the
 user asked for. It only calls registered tools in stage order and writes their
 canonical artifacts under projects/<id>/ (analysis, plan, timeline, edit
 decisions, render report, QA). No paid API, no network except an optional local
-Ollama endpoint. Narration uses an installed macOS voice; output is local.
+Ollama endpoint. Narration uses an installed, language-matched offline voice.
 """
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
+import os
 import re
 import shutil
 import sys
 import time
 import unicodedata
+import wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,8 +28,8 @@ from schemas.artifacts import validate_artifact  # noqa: E402
 from tools.story.story_analyzer import DEFAULT_MODEL, DEFAULT_OLLAMA  # noqa: E402
 from tools.story.story_qa import run_qa  # noqa: E402
 from tools.tool_registry import registry  # noqa: E402
-
-VOICES = {"vi": ("Linh", "vi_VN", 145), "en": ("Samantha", "en_US", 165)}
+from tools.audio.local_narration import select_local_voice, narration_key, file_hash  # noqa: E402
+from tools.audio.local_wav import wav_duration  # noqa: E402
 
 
 def slug(text: str) -> str:
@@ -55,25 +56,36 @@ def write(path: Path, data) -> Path:
     return path
 
 
-def narrate(analysis: dict, audio_dir: Path, voice: str, locale: str, rate: int) -> dict:
-    """One WAV per beat; reuse an existing file only if text, voice and rate match."""
+def narrate(analysis: dict, audio_dir: Path, selection: dict) -> dict:
+    """Cache by provider/model/settings/text and verify the actual WAV on every run."""
     manifest_path = audio_dir / "narration_manifest.json"
-    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-    tts = tool("macos_say_tts")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
+    tts = tool(selection["tool"])
     out = {}
     for beat in analysis["beats"]:
-        key = hashlib.sha256(f"{voice}|{locale}|{rate}|{beat['text']}".encode()).hexdigest()
+        key = narration_key(selection, beat["text"])
         wav = audio_dir / f"{beat['id']}.wav"
         entry = manifest.get(beat["id"])
-        if not (entry and entry["key"] == key and wav.exists()):
-            res = tts.execute({"text": beat["text"], "voice": voice, "language_code": locale, "rate": rate,
-                               "output_path": str(wav)})
+        cached = False
+        if entry and entry.get("key") == key and wav.exists():
+            try:
+                cached = file_hash(wav) == entry.get("sha256")
+                if cached:
+                    wav_duration(wav)
+            except (OSError, ValueError, EOFError, wave.Error):
+                cached = False
+        if not cached:
+            res = tts.execute({**selection["settings"], "text": beat["text"], "output_path": str(wav)})
             if not res.success:
                 raise SystemExit(f"Narration failed for {beat['id']}: {res.error}")
-            entry = {"key": key, "duration_seconds": res.data["audio_duration_seconds"], "voice": res.data["voice"]}
-            manifest[beat["id"]] = entry
-        out[beat["id"]] = {"path": str(wav), "duration_seconds": entry["duration_seconds"]}
-    write(manifest_path, manifest)
+        try:
+            duration = wav_duration(wav)
+        except (OSError, ValueError, EOFError, wave.Error) as exc:
+            raise SystemExit(f"Invalid narration WAV for {beat['id']}: {exc}") from exc
+        entry = {"key": key, "duration_seconds": duration, "sha256": file_hash(wav), **selection}
+        manifest[beat["id"]] = entry
+        write(manifest_path, manifest)
+        out[beat["id"]] = {"path": str(wav), "duration_seconds": duration}
     return out
 
 
@@ -101,20 +113,26 @@ def subtitles(video: dict, path: Path) -> None:
     res = tool("subtitle_gen").execute({"segments": segs, "format": "srt", "output_path": str(path),
                                         "max_words_per_cue": 1, "max_chars_per_line": 1})
     if not res.success:
-        log("subtitles skipped", res.error or "")
+        raise SystemExit(f"Subtitles failed: {res.error}")
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Story text file -> local animated MP4")
     parser.add_argument("story", type=Path, help="UTF-8 text/markdown; optional '# Title' first line")
     parser.add_argument("--project-id")
     parser.add_argument("--analyzer", choices=["auto", "rules", "ollama"], default="auto")
     parser.add_argument("--ollama-endpoint", default=DEFAULT_OLLAMA)
     parser.add_argument("--ollama-model", default=DEFAULT_MODEL)
-    parser.add_argument("--voice", help="installed macOS voice (default by language)")
-    parser.add_argument("--rate", type=int)
+    parser.add_argument("--tts-provider", choices=["auto", "windows_sapi", "macos_say", "piper"], default="auto")
+    parser.add_argument("--voice", help="exact installed native voice; must match story language")
+    parser.add_argument("--rate", type=float, help="provider units: SAPI -10..10; macOS 80..300 WPM; Piper length_scale 0.25..4")
+    parser.add_argument("--piper-model", default=os.environ.get("OPENMONTAGE_PIPER_MODEL"), help="local .onnx + adjacent .onnx.json")
     parser.add_argument("--draft", action="store_true", help="render at half resolution for a quick look")
-    parser.add_argument("--no-render", action="store_true", help="stop after the validated Remotion package")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--no-render", action="store_true", help="synthesize real narration and validate package; skip browser/MP4")
+    mode.add_argument("--dry-run", action="store_true", help="analyze only; no TTS, SFX, timeline, package or render")
     parser.add_argument("--concurrency", type=int, default=2)
     args = parser.parse_args()
     started = time.monotonic()
@@ -122,6 +140,10 @@ def main() -> None:
     if not story_path.is_file():
         raise SystemExit(f"Story file not found: {story_path}")
     project_id = args.project_id or f"{slug(story_path.stem)}-auto"
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", project_id):
+        parser.error("--project-id must contain only letters, digits, underscores or hyphens")
+    if args.dry_run:
+        project_id += "-dry-run"
     project = ROOT / "projects" / project_id
     artifacts, audio, renders = project / "artifacts", project / "assets/audio", project / "renders"
     for d in (artifacts, audio / "sfx", renders):
@@ -146,10 +168,19 @@ def main() -> None:
                     f"locations={[x['id'] for x in analysis['locations']]}, backend={analysis['analyzer']['backend']}")
     t = lap("analyze", t)
 
-    voice, locale, rate = VOICES[analysis["language"]]
-    voice, rate = args.voice or voice, args.rate or rate
-    log("narrate", f"{voice} {locale} rate {rate}")
-    narration = narrate(analysis, audio, voice, locale, rate)
+    if args.dry_run:
+        write(artifacts / "dry_run_report.json", {"mode": "analysis-only", "language": analysis["language"],
+              "beats": len(analysis["beats"]), "timing": "not computed; measured narration required"})
+        log("done (dry run)", f"{project}; no timeline or narration generated")
+        return
+    try:
+        selection = select_local_voice(tool, analysis["language"], provider=args.tts_provider,
+                                       voice=args.voice, rate=args.rate, piper_model=args.piper_model)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    write(artifacts / "tts_selection.json", selection)
+    log("narrate", json.dumps(selection, ensure_ascii=False))
+    narration = narrate(analysis, audio, selection)
     t = lap("narrate", t)
 
     log("plan")
@@ -177,6 +208,7 @@ def main() -> None:
     validate_artifact("edit_decisions", edit)
     validate_artifact("asset_manifest", assets)
     log("validated", json.dumps(res.data["validation"]))
+    validation = res.data["validation"]
     subtitles(video, project / "assets/subtitles.srt")
     t = lap("package", t)
     if args.no_render:
@@ -198,6 +230,10 @@ def main() -> None:
     write(artifacts / "qa_report.json", qa)
     t = lap("qa", t)
     facts = qa["checks"]["probe"]
+    tts_settings = selection["settings"]
+    voice_label = (f"{tts_settings.get('voice', tts_settings.get('model'))} "
+                   f"{tts_settings['language_code']} rate "
+                   f"{tts_settings.get('rate', tts_settings.get('length_scale'))}")
     report = {"version": "1.0",
               "outputs": [{"path": str(output), "format": "mp4", "codec": facts["video_codec"],
                            "audio_codec": facts["audio_codec"], "resolution": f"{facts['width']}x{facts['height']}",
@@ -205,16 +241,18 @@ def main() -> None:
                            "file_size_bytes": facts["size_bytes"]}],
               "render_time_seconds": timings["render"], "render_grammar": "animation-first",
               "warnings": qa["warnings"] + qa["issues"] + video["planner_notes"],
-              "verification_notes": [f"pre-render validator: {res.data.get('final_review_status')} final review; "
-                                     f"QA status {qa['status']}"],
+              "verification_notes": [f"pre-render validator: {validation}; QA status {qa['status']}",
+                                     "Technical QA only; pronunciation and listening review pending."],
               "metadata": {"pipeline": "story-to-video M1", "analyzer": analysis["analyzer"],
-                           "voice": f"{voice} {locale} rate {rate}", "stage_seconds": timings,
+                           "voice": voice_label, "tts": selection, "stage_seconds": timings,
                            "total_seconds": round(time.monotonic() - started, 1), "API_cost_usd": 0,
-                           "human_visual_approved": False}}
+                           "human_visual_approved": False, "human_listening_approved": False}}
     validate_artifact("render_report", report)
     write(artifacts / "render_report.json", report)
     log("done", f"{output} ({facts['duration_seconds']:.1f}s, QA {qa['status']}, "
                 f"{len(qa['warnings'])} warnings) in {report['metadata']['total_seconds']}s")
+    if qa["status"] != "pass":
+        raise SystemExit(f"QA failed; see {artifacts / 'qa_report.json'}")
 
 
 if __name__ == "__main__":

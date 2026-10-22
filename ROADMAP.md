@@ -21,6 +21,14 @@
       sitting, prop-face occlusion, size-aware close-ups, written-item inserts, depth lane,
       surface slots; validator rules + 13 regression tests; both stories re-rendered.
 - [ ] **User review of M1.1 results (blocking).** Do not start the next milestone before it.
+- [x] Windows M1.1 compatibility: offline native/Piper routing, measured WAVs,
+      analysis-only dry-run, PowerShell setup and Windows EN/VI rendering:
+      **technical PASS; technical baseline accepted by the user on 2026-10-22**.
+- [ ] Vietnamese pronunciation: **pending human review**.
+- [ ] macOS runtime regression: **pending real-machine render**; mocked regressions pass.
+- Windows VI image/technical review was accepted for compatibility only. Broader
+  M1.1 creative approval is not inferred, and M2 remains unstarted. See
+  `docs/WINDOWS_M11_HANDOFF_2026-10-22.md`.
 - [ ] Candidates after review (not started): richer rig poses (lie down, crouch-walk,
       two-handed carry), more location kinds/variants, crowd/extra characters, per-character
       voices, better LLM prompting or a larger local model, word-level alignment, music,

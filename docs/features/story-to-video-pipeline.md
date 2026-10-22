@@ -5,7 +5,7 @@
 One command turns a new story text file into a narrated 2D cartoon MP4, fully local:
 
 ```sh
-.venv/bin/python scripts/story_to_video.py path/to/story.md [--analyzer auto|rules|ollama] [--draft] [--no-render]
+python scripts/story_to_video.py path/to/story.md [--analyzer auto|rules|ollama] [--draft] [--no-render | --dry-run]
 ```
 
 Input: UTF-8 text/markdown, optional `# Title` first line, paragraphs separated by blank
@@ -17,7 +17,7 @@ artifacts listed below. No paid API, no cloud, no UI, no Shorts (out of M1 scope
 | Stage | Tool / code | Output artifact |
 | --- | --- | --- |
 | Analyze | `story_analyzer` (`tools/story/story_analyzer.py`, `lexicon.py`) | `artifacts/story_analysis.json`, `llm_labels_raw.json` |
-| Narrate | `macos_say_tts` (Linh vi_VN 145 / Samantha en_US 165), cached by text hash | `assets/audio/bNN.wav`, `narration_manifest.json` |
+| Narrate | Installed offline provider selected by OS + actual voice language (`windows_sapi_tts`, `macos_say_tts`, explicitly configured `piper_tts`); measured PCM WAV, provider/settings/content-aware cache | `assets/audio/bNN.wav`, `narration_manifest.json`, `artifacts/tts_selection.json` |
 | Plan | `story_planner` (`tools/story/story_planner.py`, `locations.py`) | `artifacts/story_video.json`, `action_timeline.json` |
 | Sound | `procedural_sfx` (8 new generic recipes, existing ones unchanged) | `assets/audio/sfx/*.wav` |
 | Validate + package | `character_rig_renderer` `story_video` route → `tools/character/story_video.py` | `composition/`, `edit_decisions.json`, `asset_manifest.json` |
@@ -26,6 +26,13 @@ artifacts listed below. No paid API, no cloud, no UI, no Shorts (out of M1 scope
 | Report | script | `artifacts/render_report.json`, `assets/subtitles.srt` |
 
 ## Analysis
+
+Windows setup and speed units: [Windows guide](../WINDOWS_STORY_TO_VIDEO.md).
+`--dry-run` is analysis-only and emits no timeline or assumed narration durations.
+`--no-render` generates real narration/SFX and a validated package, skipping only
+browser rendering. Missing matching offline speech blocks package/render, never
+falls back across languages or to a paid service. macOS Linh/Samantha defaults
+and native normalization are preserved.
 
 - **Narration text is never generated.** Deterministic segmentation (quote-aware sentence
   split, long sentences split at the comma nearest the middle) must reproduce the source
