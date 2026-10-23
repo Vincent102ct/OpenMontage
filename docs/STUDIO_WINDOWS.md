@@ -73,6 +73,46 @@ Same action from PowerShell:
 
 Details: [P2.1 feature document](features/p2.1-story-intake-bridge.md).
 
+## Review the story
+
+After **Prepare Story Draft**, open **My Productions → Story Review**.
+
+1. If no Story Bible exists yet, click **Import Story Bible draft (.json)** and pick
+   the draft, for example
+   `projects\_private_story_drafts\my-story\story_bible.draft.json`.
+   Studio checks every quote against your original story. If anything does not
+   match, it lists the problems and saves nothing.
+2. Review each section:
+   - **Proposed edits:** Accept, Reject or Defer.
+   - **Interpretation questions:** type your answer and click **Record answer**, or **Defer**. An empty
+     answer is never saved; the question stays open.
+   - **Story Bible:** characters, places, objects, facts and claims, events, dialogue,
+     sounds, motifs and continuity, each with the exact story lines it comes from.
+   - **Short and Long drafts:** every line is marked **Verbatim source text** or
+     **Authored proposal**; durations are estimates until narration is measured.
+3. To change a decision, click a different button; Studio keeps the earlier
+   decision as history. If the page is out of date, Studio asks you to reload
+   instead of overwriting a newer decision.
+
+The **Missing or incomplete** box lists what is still unknown or undecided.
+Recording decisions never starts narration, rendering or publishing.
+
+Same actions from PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m studio fiction <project-id> --draft projects\_private_story_drafts\my-story\story_bible.draft.json
+.\.venv\Scripts\python.exe -m studio review <project-id>
+```
+
+Keep private stories and Story Bibles under the gitignored `projects/` directory.
+The CLI only reads `.json` files under `_private_story_drafts` in the configured
+projects directory; traversal and symlink/junction paths are refused. The browser
+imports the selected file contents and sends no server-side file path. Do not
+commit a private draft, narrative or screenshot. The imported draft is hash-checked
+and source-linked; it remains unapproved after review decisions are recorded.
+
+Details: [P2.2 feature document](features/p2.2-fiction-story-package.md).
+
 ## Notes
 
 - Studio refuses to reuse an existing project ID; nothing is overwritten.

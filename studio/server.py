@@ -17,6 +17,8 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from backlot.server import create_app as create_backlot_app
 from lib.paths import PROJECTS_DIR, REPO_ROOT
 from studio.catalog import ApprovedPackages
+from studio.fiction import FictionPackageError, build_fiction_package, read_fiction_package
+from studio.review import ReviewError, record_decision, review_view
 from studio.intake import FILES as INTAKE_FILES, OUTPUT_DIR as INTAKE_DIR
 from studio.intake import IntakeError, prepare_story_intake, read_story_intake
 from studio.models import NewProduction
@@ -26,6 +28,9 @@ UI_DIR = Path(__file__).parent / "ui"
 MAX_BODY_BYTES = 2_000_000
 INTAKE_STATUS = {"invalid_project_id": 422, "not_found": 404, "not_prepared": 404, "invalid_request": 422,
                  "source_mismatch": 409, "unsupported_input_mode": 422, "existing_output_invalid": 409}
+FICTION_STATUS = {"intake_missing": 409, "package_missing": 404, "invalid_draft": 422, "package_exists": 409,
+                  "existing_output_invalid": 409, "invalid_request": 422}
+REVIEW_STATUS = {"unknown_target": 404, "invalid_decision": 422, "stale_decision": 409, "log_invalid": 409}
 
 
 def workspace_key(root: Path) -> str:
@@ -126,6 +131,66 @@ def create_app(store: ProductionStore | None = None):
             return {"status": "prepared", **await run_in_threadpool(read_story_intake, service, project_id)}
         except IntakeError as exc:
             raise HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
+
+    def story_error(exc):
+        if isinstance(exc, IntakeError):
+            return HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
+        if isinstance(exc, FictionPackageError):
+            return HTTPException(FICTION_STATUS.get(exc.code, 422),
+                                 {"code": exc.code, "message": str(exc), "problems": exc.problems})
+        return HTTPException(REVIEW_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
+
+    async def json_body(request: Request):
+        require_local_json_post(request)
+        chunks, length = [], 0
+        async for chunk in request.stream():
+            length += len(chunk)
+            if length > MAX_BODY_BYTES:
+                raise HTTPException(413, "Request exceeds the 2 MB limit.")
+            chunks.append(chunk)
+        try:
+            return json.loads(b"".join(chunks))
+        except ValueError:
+            raise HTTPException(422, {"code": "invalid_json", "message": "Send valid JSON."})
+
+    @app.post("/studio/api/productions/{project_id}/fiction-package")
+    async def build_package(project_id: str, request: Request):
+        # Explicit import of an authored Story Bible draft; never triggered by intake or review.
+        draft = await json_body(request)
+        try:
+            result = await run_in_threadpool(build_fiction_package, service, project_id, draft)
+        except (IntakeError, FictionPackageError) as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, {"code": "write_failed", "message": "Could not write the fiction package; "
+                                      "the original story is unchanged."})
+        return JSONResponse(status_code=201 if result["status"] == "created" else 200, content=result)
+
+    @app.get("/studio/api/productions/{project_id}/fiction-package")
+    async def fiction_package(project_id: str):
+        try:
+            return await run_in_threadpool(read_fiction_package, service, project_id)
+        except (IntakeError, FictionPackageError) as exc:
+            raise story_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/review")
+    async def review(project_id: str):
+        try:
+            return await run_in_threadpool(review_view, service, project_id)
+        except (IntakeError, FictionPackageError, ReviewError) as exc:
+            raise story_error(exc)
+
+    @app.post("/studio/api/productions/{project_id}/review/decisions", status_code=201)
+    async def decide(project_id: str, request: Request):
+        payload = await json_body(request)
+        if not isinstance(payload, dict):
+            raise HTTPException(422, {"code": "invalid_decision", "message": "Send a decision object."})
+        try:
+            return await run_in_threadpool(record_decision, service, project_id, payload)
+        except (IntakeError, FictionPackageError, ReviewError) as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, {"code": "write_failed", "message": "Could not record the decision."})
 
     app.mount("/studio/static", StaticFiles(directory=UI_DIR), name="studio-static")
     return app

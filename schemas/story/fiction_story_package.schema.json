@@ -1,0 +1,379 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/story/fiction_story_package.schema.json",
+  "title": "Fiction Story Package (author-provided story, Short and Long drafts)",
+  "description": "Separate from the historical Master Story Package. Provenance is the author's original text and its SHA-256; there are no external sources, citations or calendar dates. Every semantic item cites exact source spans. Facts distinguish narrated events, character claims, later revelations and ambiguity. Everything is a draft pending human review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "package_kind", "package_id", "package_version", "title", "language", "style",
+               "status", "review_status", "approved", "provenance", "authorship", "segments", "characters",
+               "locations", "objects", "facts", "events", "dialogue", "sound_cues", "motifs", "ambiguities",
+               "continuity_rules", "stickman_production", "coverage", "formats"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "package_kind": {"const": "fiction"},
+    "package_id": {"type": "string", "pattern": "^FIC_[A-Z0-9_]{3,64}$"},
+    "package_version": {"type": "string", "pattern": "^v[1-9][0-9]*$"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 120},
+    "language": {"type": "string", "pattern": "^[a-z]{2}$"},
+    "style": {"const": "stickman_horror_2d"},
+    "status": {"const": "draft"},
+    "review_status": {"const": "pending_human_review"},
+    "approved": {"const": false},
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["project_id", "source", "production_request", "intake", "draft"],
+      "properties": {
+        "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+        "source": {"$ref": "#/$defs/file_ref"},
+        "production_request": {"$ref": "#/$defs/file_ref"},
+        "intake": {"$ref": "#/$defs/file_ref"},
+        "draft": {
+          "type": "object", "additionalProperties": false, "required": ["sha256", "authored_by", "basis"],
+          "properties": {
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "authored_by": {"type": "string", "minLength": 1, "maxLength": 120},
+            "basis": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "authorship": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "author", "statement"],
+      "properties": {
+        "kind": {"const": "user_authored_fiction"},
+        "author": {"const": "production_requester"},
+        "statement": {"type": "string", "minLength": 1}
+      }
+    },
+    "segments": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "char_start", "char_end", "sha256", "text"],
+        "properties": {
+          "id": {"$ref": "#/$defs/segment_id"},
+          "kind": {"enum": ["heading", "paragraph", "dialogue_line", "emphasized_line"]},
+          "char_start": {"type": "integer", "minimum": 0},
+          "char_end": {"type": "integer", "minimum": 0},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "text": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "characters": {"type": "array", "items": {"$ref": "#/$defs/character"}},
+    "locations": {"type": "array", "items": {"$ref": "#/$defs/location"}},
+    "objects": {"type": "array", "items": {"$ref": "#/$defs/object"}},
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/fact"}},
+    "events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/event"}},
+    "dialogue": {"type": "array", "items": {"$ref": "#/$defs/dialogue"}},
+    "sound_cues": {"type": "array", "items": {"$ref": "#/$defs/sound_cue"}},
+    "motifs": {"type": "array", "items": {"$ref": "#/$defs/motif"}},
+    "ambiguities": {"type": "array", "items": {"$ref": "#/$defs/ambiguity"}},
+    "continuity_rules": {"type": "array", "items": {"$ref": "#/$defs/continuity_rule"}},
+    "stickman_production": {"$ref": "#/$defs/stickman_production"},
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["semantic_basis", "complete", "missing"],
+      "properties": {
+        "semantic_basis": {"type": "string", "minLength": 1},
+        "complete": {"const": false},
+        "missing": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "formats": {
+      "type": "object", "additionalProperties": false, "required": ["short", "long"],
+      "properties": {"short": {"$ref": "#/$defs/format_plan"}, "long": {"$ref": "#/$defs/format_plan"}}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "segment_id": {"type": "string", "pattern": "^SEG_[0-9]{4}$"},
+    "ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z]+_[A-Z0-9_]+$"}},
+    "text": {"type": "string", "minLength": 1},
+    "file_ref": {
+      "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "evidence": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["segment_id", "char_start", "char_end", "quote"],
+        "properties": {
+          "segment_id": {"$ref": "#/$defs/segment_id"},
+          "char_start": {"type": "integer", "minimum": 0},
+          "char_end": {"type": "integer", "minimum": 1},
+          "quote": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "review_note": {"type": "string"},
+    "character": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "aliases", "description", "identity_status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CHR_[A-Z0-9_]+$"},
+        "name": {"$ref": "#/$defs/text"},
+        "aliases": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "description": {"$ref": "#/$defs/text"},
+        "identity_status": {"enum": ["narrated", "reported", "ambiguous"]},
+        "on_screen_policy": {"enum": ["shown", "partial", "not_shown_pending_review"]},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "review_note": {"$ref": "#/$defs/review_note"}
+      }
+    },
+    "location": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "description", "environment", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^LOC_[A-Z0-9_]+$"},
+        "name": {"$ref": "#/$defs/text"},
+        "parent_id": {"type": "string", "pattern": "^LOC_[A-Z0-9_]+$"},
+        "description": {"$ref": "#/$defs/text"},
+        "environment": {
+          "type": "object", "additionalProperties": false, "required": ["source_details", "proposed_staging"],
+          "properties": {
+            "source_details": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+            "proposed_staging": {"$ref": "#/$defs/text"}
+          }
+        },
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "review_note": {"$ref": "#/$defs/review_note"}
+      }
+    },
+    "object": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "description", "persistent", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^OBJ_[A-Z0-9_]+$"},
+        "name": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "persistent": {"type": "boolean"},
+        "owner_id": {"type": "string", "pattern": "^CHR_[A-Z0-9_]+$"},
+        "location_id": {"type": "string", "pattern": "^LOC_[A-Z0-9_]+$"},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "review_note": {"$ref": "#/$defs/review_note"}
+      }
+    },
+    "fact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "statement", "kind", "reported_by", "revealed_at", "conflicts_with", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^FACT_[A-Z0-9_]+$"},
+        "statement": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["narrated_event", "character_claim", "later_revelation", "ambiguous"]},
+        "reported_by": {"type": ["string", "null"], "pattern": "^CHR_[A-Z0-9_]+$"},
+        "revealed_at": {"$ref": "#/$defs/segment_id"},
+        "conflicts_with": {"$ref": "#/$defs/ids"},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "review_note": {"$ref": "#/$defs/review_note"}
+      }
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "narrative_order", "label", "story_phase", "certainty", "participant_ids", "location_id",
+                   "object_ids", "fact_ids", "time_markers", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^EVT_[A-Z0-9_]+$"},
+        "narrative_order": {"type": "integer", "minimum": 1},
+        "label": {"$ref": "#/$defs/text"},
+        "story_phase": {"enum": ["backstory", "present", "aftermath"]},
+        "certainty": {"enum": ["depicted", "reported", "ambiguous"]},
+        "participant_ids": {"$ref": "#/$defs/ids"},
+        "location_id": {"type": "string", "pattern": "^LOC_[A-Z0-9_]+$"},
+        "object_ids": {"$ref": "#/$defs/ids"},
+        "fact_ids": {"$ref": "#/$defs/ids"},
+        "time_markers": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "review_note": {"$ref": "#/$defs/review_note"}
+      }
+    },
+    "dialogue": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "channel", "text", "speaker_id", "speaker_label", "attribution_status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DLG_[A-Z0-9_]+$"},
+        "channel": {"enum": ["speech", "voice_unseen", "text_message", "writing", "sound_effect"]},
+        "text": {"$ref": "#/$defs/text"},
+        "speaker_id": {"type": ["string", "null"], "pattern": "^CHR_[A-Z0-9_]+$"},
+        "speaker_label": {"$ref": "#/$defs/text"},
+        "attribution_status": {"enum": ["proposed", "unresolved", "not_applicable"]},
+        "attribution_basis": {"type": "string"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "sound_cue": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "kind", "event_ids", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SND_[A-Z0-9_]+$"},
+        "label": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["diegetic", "voice", "electronic", "ambience", "silence"]},
+        "event_ids": {"$ref": "#/$defs/ids"},
+        "proposed_treatment": {"type": "string"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "motif": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "kind", "related_ids", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^MOT_[A-Z0-9_]+$"},
+        "label": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["time", "sound", "object", "message", "place", "action"]},
+        "related_ids": {"$ref": "#/$defs/ids"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "ambiguity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "question", "status", "related_ids", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AMB_[A-Z0-9_]+$"},
+        "question": {"$ref": "#/$defs/text"},
+        "status": {"const": "unresolved"},
+        "related_ids": {"$ref": "#/$defs/ids"},
+        "production_guidance": {"type": "string"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "continuity_rule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "rule", "related_ids", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CONT_[A-Z0-9_]+$"},
+        "rule": {"$ref": "#/$defs/text"},
+        "related_ids": {"$ref": "#/$defs/ids"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "stickman_production": {
+      "type": "object", "additionalProperties": false,
+      "required": ["style", "primary_output", "forbidden_primary_treatments", "characters", "uncertainty_policy",
+                   "status"],
+      "properties": {
+        "style": {"const": "stickman_horror_2d"},
+        "primary_output": {"const": "character_animation_in_horror_environments"},
+        "forbidden_primary_treatments": {
+          "type": "array", "uniqueItems": true,
+          "items": {"enum": ["documentary_motion_graphics", "text_slideshow", "stock_footage_montage",
+                             "static_image_zoom", "infographic_replacement"]}
+        },
+        "characters": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["character_id", "silhouette", "persistent_props", "consistency_rules", "basis"],
+            "properties": {
+              "character_id": {"type": "string", "pattern": "^CHR_[A-Z0-9_]+$"},
+              "silhouette": {"$ref": "#/$defs/text"},
+              "persistent_props": {"$ref": "#/$defs/ids"},
+              "consistency_rules": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+              "basis": {"enum": ["source_detail", "production_proposal", "mixed"]}
+            }
+          }
+        },
+        "uncertainty_policy": {"$ref": "#/$defs/text"},
+        "status": {"const": "preliminary_not_rendered"}
+      }
+    },
+    "span": {
+      "type": "object", "additionalProperties": false, "required": ["segment_id", "char_start", "char_end"],
+      "properties": {
+        "segment_id": {"$ref": "#/$defs/segment_id"},
+        "char_start": {"type": "integer", "minimum": 0},
+        "char_end": {"type": "integer", "minimum": 1}
+      }
+    },
+    "beat": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "narration", "event_ids", "character_ids", "location_id", "object_ids", "sound_cue_ids",
+                   "silence_after_seconds", "staging"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^BEAT_[A-Z0-9_]+$"},
+        "narration": {
+          "type": "object", "additionalProperties": false, "required": ["mode", "text", "sources"],
+          "properties": {
+            "mode": {"enum": ["verbatim", "authored_proposal"]},
+            "text": {"$ref": "#/$defs/text"},
+            "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/span"}},
+            "note": {"type": "string"}
+          }
+        },
+        "event_ids": {"$ref": "#/$defs/ids"},
+        "character_ids": {"$ref": "#/$defs/ids"},
+        "location_id": {"type": "string", "pattern": "^LOC_[A-Z0-9_]+$"},
+        "object_ids": {"$ref": "#/$defs/ids"},
+        "sound_cue_ids": {"$ref": "#/$defs/ids"},
+        "silence_after_seconds": {"type": "number", "minimum": 0, "maximum": 6},
+        "staging": {
+          "type": "object", "additionalProperties": false,
+          "required": ["action", "environment", "camera", "uncertainty", "reveal"],
+          "properties": {
+            "action": {"$ref": "#/$defs/text"},
+            "environment": {"$ref": "#/$defs/text"},
+            "camera": {"$ref": "#/$defs/text"},
+            "uncertainty": {"type": "string"},
+            "reveal": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "format_plan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "format", "aspect_ratio", "target_seconds", "duration", "status", "approved",
+                   "depends_on_changes", "excluded_segments", "chapters"],
+      "properties": {
+        "id": {"enum": ["FMT_SHORT", "FMT_LONG"]},
+        "format": {"enum": ["short", "long"]},
+        "aspect_ratio": {"enum": ["9:16", "16:9"]},
+        "intent": {"type": "string"},
+        "target_seconds": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "object", "additionalProperties": false, "required": ["min", "max"],
+             "properties": {"min": {"type": "number", "exclusiveMinimum": 0},
+                            "max": {"type": "number", "exclusiveMinimum": 0}}}
+          ]
+        },
+        "duration": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "basis", "syllables", "planned_silence_seconds", "estimated_seconds"],
+          "properties": {
+            "status": {"const": "estimate_pending_tts_measurement"},
+            "basis": {"type": "string", "minLength": 1},
+            "syllables": {"type": "integer", "minimum": 0},
+            "planned_silence_seconds": {"type": "number", "minimum": 0},
+            "estimated_seconds": {"type": "number", "minimum": 0}
+          }
+        },
+        "status": {"const": "draft"},
+        "approved": {"const": false},
+        "depends_on_changes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^CHG_[0-9]{4}$"}},
+        "excluded_segments": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["segment_id", "reason"],
+            "properties": {
+              "segment_id": {"$ref": "#/$defs/segment_id"},
+              "reason": {"$ref": "#/$defs/text"},
+              "change_id": {"type": "string", "pattern": "^CHG_[0-9]{4}$"}
+            }
+          }
+        },
+        "chapters": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["id", "title", "beats"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^CH_[A-Z0-9_]+$"},
+              "title": {"$ref": "#/$defs/text"},
+              "beats": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/beat"}}
+            }
+          }
+        }
+      }
+    }
+  }
+}

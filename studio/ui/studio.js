@@ -201,6 +201,7 @@ $("refresh-list").addEventListener("click", () => loadProductions());
 
 async function showDetail(id) {
   $("intake-panel").replaceChildren();
+  $("review-panel").replaceChildren();
   try {
     const { request } = await api(`productions/${encodeURIComponent(id)}`);
     $("detail-content").textContent = request.content ?? JSON.stringify(request.canonical_package, null, 2);
@@ -214,6 +215,7 @@ async function showDetail(id) {
         ? "Story draft not prepared yet. Prepare Story Draft runs intake only: no research, narration or rendering."
         : error.message, error.code !== "not_prepared");
     }
+    await loadReview(id);
   } catch (error) {
     $("production-detail").hidden = false;
     $("detail-content").textContent = error.message;
@@ -305,12 +307,17 @@ function draftStatus(row) {
   return "Story draft: not prepared";
 }
 
+let listRequest = 0;
+
 async function loadProductions() {
+  const request = ++listRequest;  // Overlapping loads (page load + tab click) must not render twice.
   $("list-status").hidden = false;
   $("list-status").textContent = "Loading productions…";
   $("production-list").replaceChildren();
   try {
     const rows = await api("productions");
+    if (request !== listRequest) return;
+    $("production-list").replaceChildren();
     $("production-count").textContent = rows.length;
     $("list-status").textContent = "No productions yet. Choose New Production to save your first idea.";
     $("list-status").hidden = rows.length > 0;
@@ -335,7 +342,15 @@ async function loadProductions() {
           prepare.title = "Story Intake supports Full story requests only at this stage.";
         }
         prepare.addEventListener("click", () => prepareDraft(row.project_id, prepare));
-        actions.append(button, prepare);
+        const reviewButton = element("button", "Story Review", "secondary-button open-review");
+        reviewButton.type = "button";
+        reviewButton.dataset.projectId = row.project_id;
+        reviewButton.disabled = row.input_mode !== "story";
+        reviewButton.addEventListener("click", async () => {
+          await showDetail(row.project_id);
+          $("review-panel").scrollIntoView({ block: "start" });
+        });
+        actions.append(button, prepare, reviewButton);
         body.append(element("p", draftStatus(row), "intake-status"));
       }
       const board = element("a", "Open Backlot ↗");
@@ -354,3 +369,292 @@ async function loadProductions() {
 switchMode();
 loadPackages();
 loadProductions();
+
+// ---------------------------------------------------------------------------
+// P2.2 editorial review: decisions are recorded only; they never start production.
+// ---------------------------------------------------------------------------
+
+const STATUS_LABEL = {
+  accepted: "Accepted", rejected: "Rejected", deferred: "Deferred", answered: "Answered",
+  open: "Open (unresolved)", undecided: "Undecided", stale: "Stale (inputs changed)",
+};
+const COLLECTION_LABEL = {
+  characters: "Characters", locations: "Locations", objects: "Objects", facts: "Facts and claims",
+  events: "Events (relative order)", dialogue: "Dialogue and messages", sound_cues: "Sound cues",
+  motifs: "Motifs", continuity_rules: "Continuity rules",
+};
+const META_FIELDS = ["kind", "identity_status", "on_screen_policy", "story_phase", "certainty", "channel",
+  "speaker_label", "attribution_status", "reported_by", "revealed_at", "conflicts_with", "narrative_order"];
+
+function section(title, open = false) {
+  const box = element("details", undefined, "review-section");
+  box.open = open;
+  box.append(element("summary", title));
+  return box;
+}
+
+function statusChip(review) {
+  return element("span", STATUS_LABEL[review.status] || review.status, `decision-chip decision-${review.status}`);
+}
+
+function reviewMessage(text, isError = false) {
+  const note = element("p", text, isError ? "error-panel" : "field-help");
+  if (isError) note.setAttribute("role", "alert");
+  $("review-panel").prepend(note);
+  note.scrollIntoView({ block: "center" });
+}
+
+async function decide(id, targetId, review, decision, answer) {
+  try {
+    await api(`productions/${encodeURIComponent(id)}/review/decisions`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ target_id: targetId, decision, answer: answer ?? null, supersedes: review.decision_id }),
+    });
+  } catch (error) {
+    await loadReview(id, targetId);
+    reviewMessage(error.message, true);
+    return;
+  }
+  await loadReview(id, targetId);
+}
+
+function decisionButton(id, targetId, review, choice, label, read) {
+  const button = element("button", label, "secondary-button decision-button");
+  button.type = "button";
+  button.dataset.target = targetId;
+  button.dataset.decision = choice;
+  button.addEventListener("click", () => {
+    const answer = read ? read() : undefined;
+    if (read && !answer) return reviewMessage("An empty answer is not recorded; the question stays open.", true);
+    return decide(id, targetId, review, choice, answer);
+  });
+  return button;
+}
+
+function decisionRow(id, targetId, review, choices) {
+  const row = element("div", undefined, "decision-row");
+  row.append(statusChip(review));
+  for (const [choice, label] of choices) row.append(decisionButton(id, targetId, review, choice, label));
+  if (review.history.length > 1) row.append(element("small", `${review.history.length} decisions recorded`));
+  return row;
+}
+
+const ACCEPT_REJECT_DEFER = [["accept", "Accept"], ["reject", "Reject"], ["defer", "Defer"]];
+
+function evidenceList(evidence) {
+  const list = element("ul", undefined, "evidence-list");
+  for (const e of evidence.slice(0, 4)) list.append(element("li", `${e.segment_id}: ${visibleBreaks(e.quote)}`));
+  if (evidence.length > 4) list.append(element("li", `+${evidence.length - 4} more source spans`));
+  return list;
+}
+
+function itemTitle(item) {
+  return item.name || item.label || item.text || item.rule || item.statement;
+}
+
+function itemCard(id, item) {
+  const card = element("article", undefined, "review-card");
+  card.dataset.target = item.id;
+  card.append(element("strong", `${item.id} · ${itemTitle(item)}`));
+  const meta = META_FIELDS.filter((k) => item[k] !== undefined && item[k] !== null && `${item[k]}` !== "")
+    .map((k) => `${k.replaceAll("_", " ")}: ${Array.isArray(item[k]) ? item[k].join(", ") || "none" : item[k]}`);
+  if (meta.length) card.append(element("small", meta.join(" · "), "item-meta"));
+  const texts = [item.description, item.proposed_treatment, item.production_guidance,
+    item.review_note ? `Review note: ${item.review_note}` : null];
+  if (item.statement && itemTitle(item) !== item.statement) texts.unshift(item.statement);
+  for (const text of texts) if (text) card.append(element("p", text, "item-text"));
+  card.append(evidenceList(item.evidence));
+  card.append(decisionRow(id, item.id, item.review, ACCEPT_REJECT_DEFER));
+  return card;
+}
+
+function questionCard(id, q) {
+  const card = element("article", undefined, "review-card question-card");
+  card.dataset.target = q.id;
+  card.append(element("strong", `${q.id} · ${q.origin === "intake" ? "Story Intake" : "Story Bible"}`));
+  card.append(element("p", q.question, "item-text"));
+  if (q.evidence) card.append(evidenceList(q.evidence));
+  if (q.review.answer) card.append(element("p", `Recorded answer: ${q.review.answer}`, "recorded-answer"));
+  const input = element("textarea", undefined, "answer-input");
+  input.rows = 2;
+  input.maxLength = 4000;
+  input.placeholder = "Your interpretation (leave empty to keep the question open)";
+  input.setAttribute("aria-label", `Answer for ${q.id}`);
+  const row = element("div", undefined, "decision-row");
+  row.append(statusChip(q.review),
+    decisionButton(id, q.id, q.review, "answer", "Record answer", () => input.value.trim() ? input.value : ""),
+    decisionButton(id, q.id, q.review, "defer", "Defer"));
+  card.append(input, row);
+  return card;
+}
+
+function durationLine(plan) {
+  const d = plan.duration;
+  const target = plan.target_seconds
+    ? ` Target ${plan.target_seconds.min}-${plan.target_seconds.max} s.` : " Duration unknown until TTS.";
+  return `Estimated ${d.estimated_seconds} s (${d.syllables} syllables + ${d.planned_silence_seconds} s planned `
+    + `silence). Estimate only, pending TTS measurement.${target}`;
+}
+
+function beatBlock(beat) {
+  const b = element("div", undefined, "beat");
+  const verbatim = beat.narration.mode === "verbatim";
+  b.append(element("span", verbatim ? "Verbatim source text" : "Authored proposal, not source text",
+    `mode-badge mode-${beat.narration.mode}`));
+  const sources = [...new Set(beat.narration.sources.map((s) => s.segment_id))].join(", ");
+  b.append(element("small", `${beat.id} · sources ${sources}`));
+  b.append(element("pre", visibleBreaks(beat.narration.text)));
+  const parts = [`Action: ${beat.staging.action}`, `Camera: ${beat.staging.camera}`,
+    `Environment: ${beat.staging.environment}`];
+  if (beat.staging.uncertainty) parts.push(`Uncertainty: ${beat.staging.uncertainty}`);
+  if (beat.sound_cue_ids.length) parts.push(`Sound: ${beat.sound_cue_ids.join(", ")}`);
+  if (beat.silence_after_seconds) parts.push(`Silence ${beat.silence_after_seconds} s`);
+  b.append(element("small", parts.join(" · "), "item-meta"));
+  return b;
+}
+
+function formatCard(id, plan) {
+  const card = element("article", undefined, "review-card format-card-review");
+  card.dataset.target = plan.id;
+  card.append(element("strong", `${plan.id} · ${plan.format === "short" ? "Short" : "Long"} ${plan.aspect_ratio}`));
+  card.append(element("small", durationLine(plan), "item-meta"));
+  if (plan.intent) card.append(element("p", plan.intent, "item-text"));
+  if (plan.depends_on_changes.length) {
+    card.append(element("p", `Depends on proposed edits: ${plan.depends_on_changes.join(", ")}`, "item-text"));
+  }
+  for (const chapter of plan.chapters) {
+    const box = element("details", undefined, "chapter");
+    box.append(element("summary", `${chapter.id} · ${chapter.title} (${chapter.beats.length} beats)`));
+    for (const beat of chapter.beats) box.append(beatBlock(beat));
+    card.append(box);
+  }
+  card.append(decisionRow(id, plan.id, plan.review, ACCEPT_REJECT_DEFER));
+  return card;
+}
+
+async function importDraft(id, file) {
+  let draft;
+  try {
+    draft = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer()));
+  } catch {
+    return reviewMessage("The file must be valid UTF-8 JSON.", true);
+  }
+  const response = await fetch(`/studio/api/productions/${encodeURIComponent(id)}/fiction-package`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(draft),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const problems = result.detail?.problems || [];
+    return reviewMessage(`${result.detail?.message || "Import failed."}${problems.length
+      ? `\n${problems.slice(0, 12).join("\n")}` : ""}`, true);
+  }
+  await loadReview(id);
+}
+
+function importDraftControl(id) {
+  const wrap = element("div", undefined, "import-draft");
+  wrap.append(element("p", "No Story Bible package yet. Import a Story Bible draft (.json). It is validated "
+    + "against the original story; importing approves nothing.", "field-help"));
+  const label = element("label", "Import Story Bible draft (.json)", "secondary-button");
+  const input = element("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+  input.id = "bible-draft-file";
+  input.className = "sr-only";
+  input.addEventListener("change", () => {
+    const file = input.files[0];
+    if (file) importDraft(id, file).finally(() => { input.value = ""; });
+  });
+  label.append(input);
+  wrap.append(label);
+  return wrap;
+}
+
+async function loadReview(id, focusTarget) {
+  let view;
+  try {
+    view = await api(`productions/${encodeURIComponent(id)}/review`);
+  } catch (error) {
+    $("review-panel").replaceChildren(element("p", error.message, "error-panel"));
+    return;
+  }
+  renderReview(view, id);
+  if (focusTarget) {
+    document.querySelector(`#review-panel [data-target="${focusTarget}"]`)?.scrollIntoView({ block: "center" });
+  }
+}
+
+function reviewHeader(view) {
+  const chips = element("div", undefined, "chip-row");
+  const status = view.review_status === "decisions_recorded" ? "Decisions recorded" : "Pending human review";
+  chips.append(element("span", `Review status: ${status}`, "status-chip review-status-chip"),
+    element("span", "Production not started", "status-chip"));
+  const c = view.counts;
+  const counts = `Accepted ${c.accepted} · Rejected ${c.rejected} · Deferred ${c.deferred} · Answered ${c.answered}`
+    + ` · Open questions ${c.open} · Undecided ${c.undecided}${c.stale ? ` · Stale ${c.stale}` : ""}`;
+  const missing = element("div", undefined, "coverage-warning missing-coverage");
+  missing.append(element("strong", "Missing or incomplete"));
+  const list = element("ul");
+  for (const m of view.missing_coverage) list.append(element("li", m));
+  missing.append(list);
+  return [chips, element("p", view.approval_scope, "field-help"), element("p", counts, "review-counts"), missing];
+}
+
+function changeCard(id, change) {
+  const card = element("article", undefined, "review-card");
+  card.dataset.target = change.id;
+  card.append(element("strong", `${change.id} · ${change.rule.replaceAll("_", " ")} · line ${change.source_span.line}`));
+  card.append(element("p", change.rationale, "item-text"));
+  card.append(element("small", "Before"), element("pre", visibleBreaks(change.before_excerpt)));
+  card.append(element("small", "After"), element("pre", visibleBreaks(change.after_excerpt)));
+  card.append(decisionRow(id, change.id, change.review, ACCEPT_REJECT_DEFER));
+  return card;
+}
+
+function renderPackage(panel, id, pkg) {
+  panel.append(element("h3", `Story Bible · ${pkg.title} · ${pkg.package_id}`));
+  panel.append(element("p", `Authored by ${pkg.provenance.draft.authored_by}. ${pkg.coverage.semantic_basis}`,
+    "field-help"));
+  for (const [key, label] of Object.entries(COLLECTION_LABEL)) {
+    const box = section(`${label} (${pkg.collections[key].length})`);
+    box.dataset.collection = key;
+    for (const item of pkg.collections[key]) box.append(itemCard(id, item));
+    panel.append(box);
+  }
+  const formats = section("Short and Long drafts", true);
+  for (const key of ["short", "long"]) formats.append(formatCard(id, pkg.formats[key]));
+  panel.append(formats);
+  const sp = pkg.stickman_production;
+  const stick = section("Stickman Horror preparation (preliminary, not rendered)");
+  stick.append(element("p", sp.uncertainty_policy, "item-text"));
+  for (const ch of sp.characters) {
+    stick.append(element("p", `${ch.character_id}: ${ch.silhouette} (${ch.basis.replaceAll("_", " ")})`, "item-text"));
+  }
+  stick.append(element("small", `Not primary output: ${sp.forbidden_primary_treatments.join(", ").replaceAll("_", " ")}`,
+    "item-meta"));
+  panel.append(stick);
+}
+
+function renderReview(view, id) {
+  const panel = $("review-panel");
+  panel.replaceChildren(element("h2", "Story Review"));
+  if (view.state === "intake_missing") {
+    panel.append(element("p", `Story review starts after Prepare Story Draft. ${view.message}`, "field-help"));
+    return;
+  }
+  panel.append(...reviewHeader(view));
+  if (!view.package) panel.append(importDraftControl(id));
+  const original = section("Original story (read-only)");
+  original.append(element("pre", view.original_story, "story-text"));
+  const working = section("Proposed working text (all proposed edits applied; preview only)");
+  working.append(element("pre", view.working_text_proposal, "story-text"));
+  panel.append(original, working);
+  const edits = section(`Proposed edits (${view.changes.length})`, true);
+  for (const change of view.changes) edits.append(changeCard(id, change));
+  panel.append(edits);
+  const unresolved = view.questions.filter((q) => q.review.status !== "answered").length;
+  const questions = section(`Interpretation questions (${unresolved} unresolved of ${view.questions.length})`, true);
+  for (const q of view.questions) questions.append(questionCard(id, q));
+  panel.append(questions);
+  if (view.package) renderPackage(panel, id, view.package);
+}
