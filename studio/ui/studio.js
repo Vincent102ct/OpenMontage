@@ -377,6 +377,7 @@ loadProductions();
 const STATUS_LABEL = {
   accepted: "Accepted", rejected: "Rejected", deferred: "Deferred", answered: "Answered",
   open: "Open (unresolved)", undecided: "Undecided", stale: "Stale (inputs changed)",
+  intentionally_unresolved: "Intentionally unresolved",
 };
 const COLLECTION_LABEL = {
   characters: "Characters", locations: "Locations", objects: "Objects", facts: "Facts and claims",
@@ -483,6 +484,7 @@ function questionCard(id, q) {
   const row = element("div", undefined, "decision-row");
   row.append(statusChip(q.review),
     decisionButton(id, q.id, q.review, "answer", "Record answer", () => input.value.trim() ? input.value : ""),
+    decisionButton(id, q.id, q.review, "preserve_ambiguity", "Preserve Ambiguity"),
     decisionButton(id, q.id, q.review, "defer", "Defer"));
   card.append(input, row);
   return card;
@@ -591,6 +593,7 @@ function reviewHeader(view) {
     element("span", "Production not started", "status-chip"));
   const c = view.counts;
   const counts = `Accepted ${c.accepted} · Rejected ${c.rejected} · Deferred ${c.deferred} · Answered ${c.answered}`
+    + ` · Intentionally unresolved ${c.intentionally_unresolved}`
     + ` · Open questions ${c.open} · Undecided ${c.undecided}${c.stale ? ` · Stale ${c.stale}` : ""}`;
   const missing = element("div", undefined, "coverage-warning missing-coverage");
   missing.append(element("strong", "Missing or incomplete"));
@@ -652,9 +655,128 @@ function renderReview(view, id) {
   const edits = section(`Proposed edits (${view.changes.length})`, true);
   for (const change of view.changes) edits.append(changeCard(id, change));
   panel.append(edits);
-  const unresolved = view.questions.filter((q) => q.review.status !== "answered").length;
+  const unresolved = view.questions.filter((q) => !["answered", "intentionally_unresolved"].includes(q.review.status)).length;
   const questions = section(`Interpretation questions (${unresolved} unresolved of ${view.questions.length})`, true);
   for (const q of view.questions) questions.append(questionCard(id, q));
   panel.append(questions);
-  if (view.package) renderPackage(panel, id, view.package);
+  if (view.package) {
+    renderPackage(panel, id, view.package);
+    const reviewed = element("section", undefined, "reviewed-story");
+    reviewed.id = "reviewed-story-panel";
+    panel.append(reviewed);
+    loadReviewed(id, reviewed);
+  }
+}
+
+async function loadReviewed(id, panel, version) {
+  panel.replaceChildren(element("p", "Checking reviewed story versions…", "field-help"));
+  try {
+    const data = await api(`productions/${encodeURIComponent(id)}/reviewed-story${version ? `/${version}` : ""}`);
+    if (panel.isConnected) renderReviewed(id, panel, data);
+  } catch (error) {
+    if (panel.isConnected) panel.replaceChildren(element("p", error.message, "error-panel"));
+  }
+}
+
+function renderReviewed(id, panel, data) {
+  panel.replaceChildren(element("h3", "Reviewed story · pre-production content only"));
+  panel.append(element("p", "Materialization saves an immutable candidate. Approve Reviewed Story is a separate "
+    + "human action for the exact displayed version and hashes. No action here starts production or permits publishing.", "field-help"));
+  const materialize = element("button", "Materialize Reviewed Story", "secondary-button");
+  materialize.type = "button";
+  materialize.id = "materialize-reviewed-story";
+  materialize.addEventListener("click", async () => {
+    materialize.disabled = true;
+    try {
+      const result = await api(`productions/${encodeURIComponent(id)}/reviewed-story`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: "{}",
+      });
+      if (panel.isConnected) renderReviewed(id, panel, result);
+    } catch (error) {
+      reviewMessage(error.message, true);
+    } finally {
+      materialize.disabled = false;
+    }
+  });
+  panel.append(materialize);
+  if (data.state === "missing") {
+    panel.append(element("p", "No reviewed version yet. Decisions alone approve nothing.", "field-help"));
+    return;
+  }
+  const selector = element("select");
+  selector.id = "reviewed-version";
+  selector.setAttribute("aria-label", "Reviewed story version");
+  for (const version of data.versions) {
+    const option = element("option", version);
+    option.value = version;
+    option.selected = version === data.version;
+    selector.append(option);
+  }
+  selector.addEventListener("change", () => loadReviewed(id, panel, selector.value));
+  panel.append(selector);
+  panel.append(element("p", `${data.version} · ${data.approval ? "Approved for pre-production story content; frozen" : "Awaiting explicit approval"}`
+    + `${data.is_current ? "" : " · Decisions changed: materialize a new version and approve again"}`, "reviewed-status"));
+  panel.append(element("pre", `Package SHA-256: ${data.package_sha256}\nManifest SHA-256: ${data.manifest_sha256}`,
+    "story-text reviewed-hashes"));
+  const pkg = data.package;
+  const blockers = element("div", undefined, "coverage-warning reviewed-blockers");
+  blockers.append(element("strong", `Remaining blockers: ${pkg.blockers.length}`));
+  const list = element("ul");
+  for (const issue of pkg.blockers) list.append(element("li", issue));
+  blockers.append(list);
+  panel.append(blockers);
+  const decisions = section("Applied editorial changes and semantic decisions", true);
+  for (const choice of ["accept", "reject", "defer", "answer", "preserve_ambiguity", "undecided", "stale"]) {
+    const rows = pkg.dispositions.filter(d => d.decision === choice);
+    if (!rows.length) continue;
+    const box = section(`${choice === "preserve_ambiguity" ? "Intentionally unresolved questions" : choice} (${rows.length})`);
+    const items = element("ul", undefined, "evidence-list");
+    for (const d of rows) items.append(element("li", `${d.target_id} · ${d.kind} · ${d.question || ""}`
+      + `${d.answer ? ` · Human interpretation: ${d.answer}` : ""} · ${d.decision_id || "No decision"}`));
+    box.append(items);
+    decisions.append(box);
+  }
+  panel.append(decisions);
+  const working = section("Reviewed working text and source mapping");
+  working.append(element("pre", pkg.working_text, "story-text"));
+  working.append(element("pre", JSON.stringify(pkg.source_mapping, null, 2), "story-text"));
+  panel.append(working);
+  const canon = section("Accepted canonical Story Bible and source evidence");
+  canon.append(element("pre", JSON.stringify(pkg.canonical_story, null, 2), "story-text"));
+  panel.append(canon);
+  const formats = section("Reviewed Short and Long contents", true);
+  for (const [name, plan] of Object.entries(pkg.canonical_story.formats)) {
+    const format = section(`${name === "short" ? "Short" : "Long"} ${plan.aspect_ratio}`, true);
+    format.append(element("p", durationLine(plan), "field-help"));
+    for (const chapter of plan.chapters) for (const beat of chapter.beats) format.append(beatBlock(beat));
+    formats.append(format);
+  }
+  panel.append(formats);
+  const approval = element("button", "Approve Reviewed Story", "primary-button");
+  approval.id = "approve-reviewed-story";
+  approval.type = "button";
+  const consent = element("input");
+  consent.type = "checkbox";
+  consent.id = "reviewed-story-consent";
+  const label = element("label", ` I reviewed ${data.version}, its changes, accepted/rejected items, intentional `
+    + "ambiguities and both plans above. I approve these exact hashes for pre-production story content only.", "field-help");
+  label.prepend(consent);
+  const unavailable = Boolean(pkg.blockers.length || !data.is_current || data.approval);
+  approval.disabled = true;
+  consent.disabled = unavailable;
+  consent.addEventListener("change", () => { approval.disabled = unavailable || !consent.checked; });
+  approval.addEventListener("click", async () => {
+    approval.disabled = true;
+    try {
+      const result = await api(`productions/${encodeURIComponent(id)}/reviewed-story/${data.version}/approve`, {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({package_sha256: data.package_sha256, manifest_sha256: data.manifest_sha256}),
+      });
+      if (panel.isConnected) renderReviewed(id, panel, result);
+    } catch (error) {
+      reviewMessage(error.message, true);
+      await loadReviewed(id, panel);
+    }
+  });
+  panel.append(label, approval);
 }

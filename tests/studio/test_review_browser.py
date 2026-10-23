@@ -18,12 +18,15 @@ from studio.intake import prepare_story_intake
 from studio.models import NewProduction
 from studio.review import DECISION_DIR
 from studio.store import ProductionStore
+from studio.reviewed import OUTPUT_DIR as REVIEWED_DIR, read_reviewed_story
 from tests.studio.fiction_fixture import STORY, draft
+from tests.studio.reviewed_fixture import complete
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_review_flow_in_real_chrome(tmp_path):
+@pytest.mark.parametrize("milestone", ["p22", "p23"])
+def test_review_flow_in_real_chrome(tmp_path, milestone):
     chrome = os.environ.get("STUDIO_TEST_CHROME") or next((str(p) for p in [
         Path("C:/Program Files/Google/Chrome/Application/chrome.exe"),
         Path("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"),
@@ -37,9 +40,13 @@ def test_review_flow_in_real_chrome(tmp_path):
     store.create(NewProduction(project_id="fixture-review", input_mode="story", content=STORY,
                                formats=["short", "long"]))
     prepare_story_intake(store, "fixture-review")
+    if milestone == "p23":
+        from studio.fiction import build_fiction_package
+        build_fiction_package(store, "fixture-review", draft())
+        complete(store, "fixture-review", skip=("AMB_WRITER",))
     draft_path = tmp_path / "story_bible.draft.json"
     draft_path.write_text(json.dumps(draft(), ensure_ascii=False), encoding="utf-8")
-    screenshots = Path(os.environ.get("STUDIO_SCREENSHOT_DIR") or tmp_path / "screenshots").resolve()
+    screenshots = (Path(os.environ.get("STUDIO_SCREENSHOT_DIR") or tmp_path / "screenshots") / milestone).resolve()
     with socket.socket() as reservation:
         reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
@@ -64,7 +71,8 @@ def test_review_flow_in_real_chrome(tmp_path):
                         break
                 except (OSError, urllib.error.URLError):
                     time.sleep(0.1)
-            result = subprocess.run([node, str(ROOT / "tests/studio/review_browser.cjs"), url, chrome,
+            script = "review_browser.cjs" if milestone == "p22" else "reviewed_browser.cjs"
+            result = subprocess.run([node, str(ROOT / "tests/studio" / script), url, chrome,
                                      str(screenshots), str(draft_path), "fixture-review"],
                                     cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=120,
                                     creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
@@ -73,10 +81,18 @@ def test_review_flow_in_real_chrome(tmp_path):
             assert len(findings["checks"]) >= 9 and not findings["externalRequests"] and not findings["pageErrors"]
             decisions = sorted((projects / "fixture-review" / DECISION_DIR).glob("*.json"))
             records = [json.loads(p.read_text(encoding="utf-8")) for p in decisions]
-            assert [(r["target_id"], r["decision"]) for r in records] == [
-                ("CHG_0001", "accept"), ("CHG_0001", "reject"), ("AMB_WRITER", "answer"), ("FMT_SHORT", "defer")]
-            assert records[1]["supersedes"] == "DEC_000001"
-            assert records[2]["answer"] == "Chưa xác định; giữ bí ẩn."
+            if milestone == "p22":
+                assert [(r["target_id"], r["decision"]) for r in records] == [
+                    ("CHG_0001", "accept"), ("CHG_0001", "reject"), ("AMB_WRITER", "answer"), ("FMT_SHORT", "defer")]
+                assert records[1]["supersedes"] == "DEC_000001"
+                assert records[2]["answer"] == "Chưa xác định; giữ bí ẩn."
+            else:
+                assert [r["decision"] for r in records if r["target_id"] == "AMB_WRITER"] == ["preserve_ambiguity", "answer"]
+                for version in ("v3", "v4"):
+                    approved = read_reviewed_story(store, "fixture-review", version)
+                    assert approved["approval"]["package_sha256"] == approved["package_sha256"]
+                assert not (projects / "fixture-review" / REVIEWED_DIR / "v2/approval.json").exists()
+                assert read_reviewed_story(store, "fixture-review")["ready_for_next_stage"]
             assert not list(projects.rglob("checkpoint_*.json"))
             assert not list(projects.rglob("*.wav")) and not list(projects.rglob("*.mp4"))
         finally:

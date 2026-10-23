@@ -19,6 +19,8 @@ from lib.paths import PROJECTS_DIR, REPO_ROOT
 from studio.catalog import ApprovedPackages
 from studio.fiction import FictionPackageError, build_fiction_package, read_fiction_package
 from studio.review import ReviewError, record_decision, review_view
+from studio.reviewed import (ReviewedPackageError, approve_reviewed_story, materialize_reviewed_story,
+                             read_reviewed_story)
 from studio.intake import FILES as INTAKE_FILES, OUTPUT_DIR as INTAKE_DIR
 from studio.intake import IntakeError, prepare_story_intake, read_story_intake
 from studio.models import NewProduction
@@ -31,6 +33,8 @@ INTAKE_STATUS = {"invalid_project_id": 422, "not_found": 404, "not_prepared": 40
 FICTION_STATUS = {"intake_missing": 409, "package_missing": 404, "invalid_draft": 422, "package_exists": 409,
                   "existing_output_invalid": 409, "invalid_request": 422}
 REVIEW_STATUS = {"unknown_target": 404, "invalid_decision": 422, "stale_decision": 409, "log_invalid": 409}
+REVIEWED_STATUS = {"reviewed_missing": 404, "invalid_version": 422, "reviewed_invalid": 409,
+                   "stale_reviewed": 409, "approval_blocked": 409}
 
 
 def workspace_key(root: Path) -> str:
@@ -133,6 +137,9 @@ def create_app(store: ProductionStore | None = None):
             raise HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
 
     def story_error(exc):
+        if isinstance(exc, ReviewedPackageError):
+            return HTTPException(REVIEWED_STATUS.get(exc.code, 422),
+                                 {"code": exc.code, "message": str(exc), "blockers": exc.blockers})
         if isinstance(exc, IntakeError):
             return HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
         if isinstance(exc, FictionPackageError):
@@ -191,6 +198,46 @@ def create_app(store: ProductionStore | None = None):
             raise story_error(exc)
         except OSError:
             raise HTTPException(500, {"code": "write_failed", "message": "Could not record the decision."})
+
+    @app.get("/studio/api/productions/{project_id}/reviewed-story")
+    async def reviewed_story(project_id: str):
+        try:
+            return await run_in_threadpool(read_reviewed_story, service, project_id)
+        except (IntakeError, FictionPackageError, ReviewError, ReviewedPackageError) as exc:
+            raise story_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/reviewed-story/{version}")
+    async def reviewed_version(project_id: str, version: str):
+        try:
+            return await run_in_threadpool(read_reviewed_story, service, project_id, version)
+        except (IntakeError, FictionPackageError, ReviewError, ReviewedPackageError) as exc:
+            raise story_error(exc)
+
+    @app.post("/studio/api/productions/{project_id}/reviewed-story")
+    async def materialize_reviewed(project_id: str, request: Request):
+        if await json_body(request) != {}:
+            raise HTTPException(422, "Send an empty JSON object; inputs come from the verified production.")
+        try:
+            result = await run_in_threadpool(materialize_reviewed_story, service, project_id)
+            return JSONResponse(status_code=201 if result["status"] == "created" else 200, content=result)
+        except (IntakeError, FictionPackageError, ReviewError, ReviewedPackageError) as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, "Could not save the reviewed version. No production was started.")
+
+    @app.post("/studio/api/productions/{project_id}/reviewed-story/{version}/approve")
+    async def approve_reviewed(project_id: str, version: str, request: Request):
+        body = await json_body(request)
+        if (not isinstance(body, dict) or set(body) != {"package_sha256", "manifest_sha256"}
+                or not all(isinstance(value, str) and len(value) == 64 for value in body.values())):
+            raise HTTPException(422, "Approval requires the exact displayed package and manifest hashes.")
+        try:
+            return await run_in_threadpool(approve_reviewed_story, service, project_id, version,
+                                           body["package_sha256"], body["manifest_sha256"])
+        except (IntakeError, FictionPackageError, ReviewError, ReviewedPackageError) as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, "Could not record approval. No production was started.")
 
     app.mount("/studio/static", StaticFiles(directory=UI_DIR), name="studio-static")
     return app

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Immutable reviewed fiction content; approval is a separate hash-bound record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact", "version", "approval_scope", "production_started", "publishing_enabled",
+    "source_sha256", "working_text", "working_text_sha256", "source_mapping", "dispositions", "canonical_story", "blockers"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "artifact": {"const": "reviewed_fiction_package"},
+    "version": {"type": "string", "pattern": "^v([2-9]|[1-9][0-9]+)$"},
+    "approval_scope": {"const": "preproduction_story_only"},
+    "production_started": {"const": false},
+    "publishing_enabled": {"const": false},
+    "source_sha256": {"$ref": "#/$defs/hash"},
+    "working_text": {"type": "string"},
+    "working_text_sha256": {"$ref": "#/$defs/hash"},
+    "source_mapping": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_start", "source_end", "working_start", "working_end", "operation", "change_id"],
+      "properties": {
+        "source_start": {"type": "integer", "minimum": 0}, "source_end": {"type": "integer", "minimum": 0},
+        "working_start": {"type": "integer", "minimum": 0}, "working_end": {"type": "integer", "minimum": 0},
+        "operation": {"enum": ["retain", "remove"]}, "change_id": {"type": ["string", "null"]}
+      }
+    }},
+    "dispositions": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_id", "kind", "decision", "decision_id", "answer", "question"],
+      "properties": {
+        "target_id": {"type": "string"}, "kind": {"enum": ["edit", "item", "question", "format"]},
+        "decision": {"enum": ["accept", "reject", "defer", "answer", "preserve_ambiguity", "undecided", "stale"]},
+        "decision_id": {"type": ["string", "null"]}, "answer": {"type": ["string", "null"]},
+        "question": {"type": ["string", "null"]}
+      }
+    }},
+    "canonical_story": {"type": "object", "description": "Validated through the existing fiction validator after a draft-state projection, plus exact reviewed narration mapping checks."},
+    "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

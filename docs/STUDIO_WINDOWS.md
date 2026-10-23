@@ -84,7 +84,8 @@ After **Prepare Story Draft**, open **My Productions → Story Review**.
    match, it lists the problems and saves nothing.
 2. Review each section:
    - **Proposed edits:** Accept, Reject or Defer.
-   - **Interpretation questions:** type your answer and click **Record answer**, or **Defer**. An empty
+   - **Interpretation questions:** type your answer and click **Record answer**, **Preserve Ambiguity**
+     to deliberately leave a mystery unexplained, or **Defer** to leave review unfinished. An empty
      answer is never saved; the question stays open.
    - **Story Bible:** characters, places, objects, facts and claims, events, dialogue,
      sounds, motifs and continuity, each with the exact story lines it comes from.
@@ -112,6 +113,36 @@ commit a private draft, narrative or screenshot. The imported draft is hash-chec
 and source-linked; it remains unapproved after review decisions are recorded.
 
 Details: [P2.2 feature document](features/p2.2-fiction-story-package.md).
+
+## Approve a reviewed story
+
+After importing the Story Bible, stay in **Story Review**:
+
+1. Decide every proposed edit, Story Bible item and both formats. Accept applies
+   an edit to a separate reviewed copy; Reject preserves the original text.
+   Rejected semantic items are excluded from the reviewed canon. Defer blocks approval.
+2. Answer each interpretation question or explicitly choose **Preserve Ambiguity**.
+   This records an intentional mystery without inventing an answer or a speaker.
+   An answer is recorded as your interpretation; it never silently rewrites a fact.
+3. Click **Materialize Reviewed Story**. Review the applied decisions, working
+   text and source mapping, accepted canon, intentional ambiguities, Short/Long
+   contents and blockers. Broken references and missing Long text must be fixed
+   through explicit decisions or a revised authored draft; Studio does not guess repairs.
+4. Check the displayed version, package SHA-256 and manifest SHA-256. If there
+   are no blockers, check the acknowledgement and click **Approve Reviewed Story**.
+
+This writes a hash-bound approval for pre-production story content only. It does
+not start narration, animation or rendering, and it does not permit publishing.
+
+Files live under `projects/<id>/artifacts/reviewed_fiction/v2/`:
+`reviewed_package.json`, `reviewed_working_text.md`, `manifest.json`, and (only
+after explicit approval) `approval.json`. Original inputs and all v1 artifacts stay
+unchanged. The same decisions return the same version without rewriting files.
+New decisions require a new version (`v3`, `v4`, …) and another approval; frozen
+versions remain available in the version selector. A stale page cannot approve
+different hashes or newer decisions. Never commit these private production files.
+
+Details and synthetic example: [P2.3 feature document](features/p2.3-reviewed-fiction-package.md).
 
 ## Notes
 
