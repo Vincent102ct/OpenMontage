@@ -37,7 +37,7 @@ def run_tool(registry: ToolRegistry, name: str, inputs: dict):
     return result
 
 
-def inspect_mp4(registry: ToolRegistry, project: Path, video: dict) -> dict:
+def inspect_mp4(registry: ToolRegistry, project: Path, video: dict, timestamps=None) -> dict:
     """Probe and decode the real MP4; sample actual frames and measure audio events."""
     from PIL import Image, ImageDraw, ImageStat
     import numpy as np
@@ -61,7 +61,7 @@ def inspect_mp4(registry: ToolRegistry, project: Path, video: dict) -> dict:
     assert len(frames) == 300 and float(deviations.min()) > 5, "Blank or missing frame"
     unique = len({hashlib.sha256(f.tobytes()).hexdigest() for f in frames})
     assert unique > 240, "Unexpectedly frozen animation"
-    times = [0, 1.2, 1.8, 3.2, 5.2, 6.6, 8.4, 9.9]
+    times = timestamps or [0, 1.2, 1.8, 3.2, 5.2, 6.6, 8.4, 9.9]
     sampled = run_tool(registry, "frame_sampler", {"input_path": str(output), "strategy": "timestamps",
                        "timestamps": times, "format": "png", "output_dir": str(project / "frames")})
     assert sampled.data["frame_count"] == len(times)
@@ -83,20 +83,23 @@ def inspect_mp4(registry: ToolRegistry, project: Path, video: dict) -> dict:
         return float(np.sqrt(np.mean(window ** 2)))
     events = [{"id": cue["id"], "at_seconds": cue["start_seconds"],
                "rms": rms(cue["start_seconds"], cue["start_seconds"] + min(.15, cue["duration_seconds"]))}
-              for cue in video["sfx"] if cue["id"] != "room"]
+              for cue in video["sfx"] if cue["id"] != "room" and cue.get("role") != "ambience"]
     baseline = rms(.3, .9)
     assert all(event["rms"] > baseline * 2 for event in events), "Missing/mistimed SFX event"
     peak = float(np.abs(samples).max())
     assert 0.01 < peak < .99, "Silent or clipped audio"
+    quiet = [{"start": a, "end": b, "rms": rms(a,b)} for a,b in video.get("audio_qa", {}).get("quiet_windows", [])]
+    assert all(w["rms"] < baseline * .15 for w in quiet), "Listening pause is not quiet"
     return {"probe": probe, "full_decode": "passed", "decoded_frames": len(frames),
             "minimum_frame_stddev": float(deviations.min()), "unique_qa_frames": unique,
             "audio_codec": audio["codec_name"], "audio_peak": peak, "room_rms": baseline,
-            "audio_events": events, "sampled_frames": sampled.data["frames"],
+            "audio_events": events, "quiet_windows": quiet, "sampled_frames": sampled.data["frames"],
             "contact_sheet": str(project / "contact-sheet.png"),
             "mp4_sha256": hashlib.sha256(output.read_bytes()).hexdigest()}
 
 
-def main() -> None:
+def main(*, project_id=PROJECT_ID, builder=build_preview,
+         frame_checker="tests/tools/stickman_frame_checks.cjs", qa_timestamps=None, extra_audio=()) -> None:
     os.chdir(ROOT)
     for executable in ("ffmpeg", "ffprobe", "node"):
         if not shutil.which(executable):
@@ -105,8 +108,8 @@ def main() -> None:
     if not chrome.is_file():
         raise RuntimeError("Set REMOTION_BROWSER_EXECUTABLE to installed Chrome; no browser download allowed")
     os.environ["REMOTION_BROWSER_EXECUTABLE"] = str(chrome)
-    project = ROOT / "projects" / PROJECT_ID
-    marker = {"project_id": PROJECT_ID, "technical_renderer_proof": True, "synthetic": True}
+    project = ROOT / "projects" / project_id
+    marker = {"project_id": project_id, "technical_renderer_proof": True, "synthetic": True}
     if project.exists() and (not (project / "preview-scope.json").is_file()
                              or json.loads((project / "preview-scope.json").read_text()) != marker):
         raise RuntimeError("Refusing to overwrite an existing project without the matching synthetic marker")
@@ -122,10 +125,17 @@ def main() -> None:
         ("music_source", "local-procedural-sfx", "User authorized locally synthesized scraping, room tone and footfalls; no narration."),
     ]:
         decisions.append({"decision_id": category, "stage": "technical-preview", "category": category,
-                          "subject": PROJECT_ID, "selected": selected, "reason": reason,
+                          "subject": project_id, "selected": selected, "reason": reason,
                           "options_considered": [{"option_id": selected, "label": selected, "score": 1, "reason": reason}],
                           "user_visible": True, "user_approved": True})
-    log = {"version": "1.0", "project_id": PROJECT_ID, "decisions": decisions}
+    decisions[0]["options_considered"] += [
+        {"option_id": "hyperframes", "label": "HyperFrames", "score": 0,
+         "reason": "HTML/SVG runtime available as an alternative.",
+         "rejected_because": "User explicitly requested reuse of the existing Remotion pipeline."},
+        {"option_id": "ffmpeg", "label": "FFmpeg", "score": 0,
+         "reason": "Used for local SFX, decode and frame QA.",
+         "rejected_because": "Not the character motion renderer."}]
+    log = {"version": "1.0", "project_id": project_id, "decisions": decisions}
     validate_artifact("decision_log", log)
     save(project / "decision_log.json", log)
     registry = ToolRegistry()
@@ -133,17 +143,17 @@ def main() -> None:
                    "tools.video.video_compose", "tools.analysis.frame_sampler"):
         registry.discover(module)
     audio = {}
-    for recipe, duration in (("room_tone", 10), ("furniture_scrape", .9), ("footstep", .17)):
+    for recipe, duration in (("room_tone", 10), ("furniture_scrape", .9), ("footstep", .17), *extra_audio):
         target = project / "audio" / f"{recipe}.wav"
         run_tool(registry, "procedural_sfx", {"recipe": recipe, "duration_seconds": duration, "output_path": str(target)})
         audio[recipe] = target
-    video, timeline = build_preview(audio)
+    video, timeline = builder(audio)
     save(project / "story_video.json", video)
     save(project / "action_timeline.json", timeline)
     package = run_tool(registry, "character_rig_renderer", {"story_video": video, "action_timeline": timeline,
                        "workspace_path": str(project / "remotion"), "concurrency": 2})
     save(project / "handoff.json", package.data)
-    skeleton = json.loads(subprocess.run(["node", "tests/tools/stickman_frame_checks.cjs",
+    skeleton = json.loads(subprocess.run(["node", frame_checker,
                                          str(project / "story_video.json")],
                                         check=True, capture_output=True, text=True).stdout)
     save(project / "skeleton-qa.json", skeleton)
@@ -155,7 +165,7 @@ def main() -> None:
               "tts_calls": 0, "paid_api_calls": 0, "cost_usd": 0, "production_checkpoints": [],
               "route": ["character_rig_renderer", "video_compose", "remotion"],
               "validation": package.data["validation"], "skeleton": skeleton,
-              "media": inspect_mp4(registry, project, video),
+              "media": inspect_mp4(registry, project, video, qa_timestamps),
               "audio_content": {"narration": False, "music": False, "sfx": True},
               "generic_review_caveat": "video_compose's generic audio presence labels do not distinguish narration/music from SFX.",
               "human_visual_review": "pending", "human_audio_review": "pending"}

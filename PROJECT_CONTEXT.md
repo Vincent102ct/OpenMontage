@@ -6,11 +6,14 @@ This is the single source of truth for project architecture and conventions. All
 
 OpenMontage is an open-source, AI-orchestrated video production platform.
 
-For this repository, **OpenMontage is an Automated Stickman Horror Video
-Production System**. [PROJECT.md](PROJECT.md) is the authoritative
+For this repository, the primary visual identity is **Cinematic 2D Cartoon
+Supernatural Horror Animation**. P3.1 v2 is accepted as the visual foundation and
+technical milestone; subjective audio acceptance remains pending. Legacy skins
+and saved request identifiers remain backward compatible without migration.
+[PROJECT.md](PROJECT.md) is the authoritative
 project-specific product contract. Read it before visual-production decisions;
-its mandatory 2D Stickman Horror direction supersedes conflicting historical
-Documentary Motion Graphics assumptions. Generic upstream capabilities and the
+its P3.1 2D cartoon character direction supersedes the previous minimalist
+stickman treatment and historical Documentary Motion Graphics assumptions. Generic upstream capabilities and the
 architecture/conventions below remain applicable within that product contract.
 
 ## Architecture: Instruction-Driven (Agent-First)

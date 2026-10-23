@@ -10,14 +10,15 @@ type Rect = {x: number; y: number; w: number; h: number; hinge?: string};
 // Tracks are world coordinates; `scale` < 1 is the same rig drawn smaller about the ground
 // line (children). `layer` 1 = inside a vehicle (between its interior and its body).
 type VActor = {id: string; look: Look; scale?: number; root: Key[]; left_hand: Key[]; right_hand: Key[];
-  left_foot: Key[]; right_foot: Key[]; facing_keys: Key[]; face: Key[]; opacity: Key[]; layer?: Key[]};
+  left_foot: Key[]; right_foot: Key[]; facing_keys: Key[]; face: Key[]; opacity: Key[]; layer?: Key[]; posture?: Key[]};
 type VItem = {id: string; kind: string; color: string | null; track: Key[]; visible: Key[]; held: Key[]; open: Key[]};
 type VVehicle = {id: string; kind: string; color: string | null; track: Key[]; door?: Key[]};
 type VInsert = {start: number; end: number; kind: string; color: string | null; text: string};
 type VShot = {id: string; start_seconds: number; end_seconds: number; view: 'title' | 'world';
   location: string | null; camera: Key[]; light: Key[]; door: Key[]; weather: string | null;
   actors: VActor[]; items: VItem[]; vehicles: VVehicle[]; inserts?: VInsert[]};
-type VLocation = {kind: string; svg: string; outdoor: boolean; door: Rect | null; window: Rect | null};
+type VLocation = {kind: string; svg: string; outdoor: boolean; door: Rect | null; window: Rect | null;
+  atmosphere?: 'tense_apartment'};
 export type StoryVideoProps = {duration_seconds: number; fps: number; title: string;
   character_skin?: ActorSkin; viewport?: {width: number; height: number};
   locations: Record<string, VLocation>; shots: VShot[];
@@ -155,12 +156,24 @@ const VehicleFront: React.FC<{v: VVehicle; t: number}> = ({v, t}) => {
   </g>;
 };
 
-const Door: React.FC<{d: Rect; open: number}> = ({d, open}) => {
+export const doorHandle = (d: Rect, open: number): [number, number] => {
+  const w = d.w * (1 - 0.82 * open), x = d.hinge === 'left' ? d.x : d.x + d.w - w;
+  return [d.hinge === 'left' ? x + w - 16 : x + 16, d.y + 120];
+};
+const Door: React.FC<{d: Rect; open: number; detailed?: boolean}> = ({d, open, detailed}) => {
   const w = d.w * (1 - 0.82 * open);
   const x = d.hinge === 'left' ? d.x : d.x + d.w - w;
+  const [hx, hy] = doorHandle(d, open);
   return <g stroke="#1d303b" strokeWidth="3">
-    <rect x={x} y={d.y} width={w} height={d.h} fill={open > 0.02 ? '#3e4f58' : '#4c5d64'} />
-    {open < 0.5 ? <circle cx={d.hinge === 'left' ? x + w - 16 : x + 16} cy={d.y + 120} r="5" fill="#c9cfc6" /> : null}
+    <rect x={x} y={d.y} width={w} height={d.h} fill={detailed ? '#263237' : open > 0.02 ? '#3e4f58' : '#4c5d64'} />
+    {detailed ? <g opacity="0.8">
+      <path d={`M ${x+8} ${d.y+8} h ${w-16} v ${d.h-18} h ${16-w} Z`} stroke="#5a625a" strokeWidth="1" fill="none" />
+      <rect x={x+24} y={d.y+18} width={Math.max(1,w-34)} height="82" rx="2" fill="#1c292e" strokeWidth="1" />
+      <rect x={x+24} y={d.y+150} width={Math.max(1,w-34)} height="145" rx="2" fill="#202b2e" strokeWidth="1" />
+      <path d={`M ${x+6} ${d.y+d.h-1} h ${w-12}`} stroke="#ca9952" strokeWidth="2" />
+      <ellipse cx={hx} cy={hy} rx="8" ry="12" fill="#162026" stroke="#766d55" strokeWidth="1" />
+    </g> : null}
+    {open < 0.5 ? <circle data-door-handle="true" cx={hx} cy={hy} r="5" fill="#c9cfc6" /> : null}
   </g>;
 };
 
@@ -227,11 +240,16 @@ const World: React.FC<{shot: VShot; loc: VLocation; t: number; skin?: ActorSkin}
         <path d={`M ${win.x + win.w / 2} ${win.y} V ${win.y + win.h} M ${win.x} ${win.y + win.h / 2} H ${win.x + win.w}`}
           stroke="#4e696d" strokeWidth="7" />
       </g> : null}
-      {loc.door ? <Door d={loc.door} open={val(shot.door, t)} /> : null}
+      {loc.door ? <Door d={loc.door} open={val(shot.door, t)} detailed={loc.atmosphere === 'tense_apartment'} /> : null}
       {shot.vehicles.map(v => <VehicleBack key={v.id} v={v} t={t} />)}
       <g stroke="#17242b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round">
         <People states={states.filter(x => x.inside)} items={[]} t={t} rain={false} skin={skin} />
       </g>
+      {loc.atmosphere === 'tense_apartment' ? <g pointerEvents="none">
+        <defs><radialGradient id="apartment-vignette"><stop offset="0.32" stopColor="#03090e" stopOpacity="0" />
+          <stop offset="1" stopColor="#03070b" stopOpacity="0.78" /></radialGradient></defs>
+        <rect width="1280" height="720" fill="url(#apartment-vignette)" stroke="none" />
+      </g> : null}
       {shot.vehicles.map(v => <VehicleFront key={v.id} v={v} t={t} />)}
       <g stroke="#17242b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round">
         {/* Items resting on furniture are behind people; held items go between body and hands. */}

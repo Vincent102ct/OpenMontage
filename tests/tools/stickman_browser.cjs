@@ -4,7 +4,7 @@ const fs = require('node:fs'), path = require('node:path'), http = require('node
 const resolve = name => require(require.resolve(name, {paths:[path.resolve('remotion-composer')]}));
 const {openBrowser, selectComposition, renderStill} = resolve('@remotion/renderer');
 const {bundle} = resolve('@remotion/bundler');
-const project = path.resolve('projects/p30-stickman-horror-preview');
+const project = path.resolve(process.argv[2] || 'projects/p30-stickman-horror-preview');
 const chrome = process.env.REMOTION_BROWSER_EXECUTABLE || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 let browser, server;
 (async () => {
@@ -45,7 +45,7 @@ let browser, server;
   const props = JSON.parse(fs.readFileSync(path.join(project,'remotion/props.json')));
   delete props.viewport; delete props.character_skin;
   props.shots[0].camera = [[0,640,360,1],[10,640,360,1]];
-  const serveUrl = await bundle({entryPoint:path.resolve('remotion-composer/projects/p30-stickman-horror-preview/index.tsx'),
+  const serveUrl = await bundle({entryPoint:path.resolve('remotion-composer/projects',path.basename(project),'index.tsx'),
     publicDir:path.join(project,'remotion/public'),outDir:path.join(project,'qa-bundle'),
     enableCaching:true,gitSource:null});
   const composition = await selectComposition({serveUrl,id:'StoryVideo',inputProps:props,

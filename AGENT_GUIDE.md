@@ -4,12 +4,16 @@ Start here. This is the complete operating guide and agent contract for OpenMont
 
 **Project-specific entry requirement:** Read [PROJECT.md](PROJECT.md) before any
 visual-production decision. This repository's selected product is an Automated
-Stickman Horror Video Production System; primary output must be 2D Stickman
-Horror Animation. That contract supersedes conflicting historical visual
+2D Cartoon Horror Video Production System; primary visual identity is Cinematic
+2D Cartoon Supernatural Horror Animation with mature low-key lighting and restrained reveals. Use cartoon characters
+with visible faces, hair, clothing, expressions and body acting. The P3.1 user
+direction supersedes the previous minimalist stickman treatment and historical visual
 directions, documentary-oriented M2.4 prompts and generic style defaults for this
 project. The documentary asset resolver is not authorized for implementation or
-continuation. The next task is to inspect/map the existing animation renderer
-against STORY 053's 11 scenes, not to start M2.4. Generic architecture, pipeline
+continuation. P3.1 v2 is accepted as the visual foundation and technical milestone;
+subjective audio acceptance remains pending. This is not approval of future
+production quality or authorization to start the real pilot. Preserve reviewed
+packages, private data and backward-compatible legacy skins. Generic architecture, pipeline
 and human-approval protocols below remain in force.
 
 For architecture, key files, and conventions see [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md).

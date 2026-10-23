@@ -7,7 +7,9 @@ export type Motion = {
   actor: {id: string; root: Key[]; left_hand: Key[]; right_hand: Key[];
     left_foot: Key[]; right_foot: Key[]; shirt: string; skin: string; hair: string;
     // Optional: -1 mirrors the rig to face left; face keys are [t, brow, gazeX, gazeY, mouth, lid, tilt].
-    facing?: number; face?: Key[]};
+    facing?: number; face?: Key[];
+    // Opt-in upper-body acting: [t, shoulder dx/dy, head dx/dy] in rig units.
+    posture?: Key[]};
   // Null grip/release means the prop is never held in this motion.
   prop: {id: string; track: Key[]; grip_seconds: number | null; release_seconds: number | null; handle_offset: Point};
   wash_window: [number, number] | null;
@@ -53,7 +55,8 @@ export function stateAt(m: ActorMotion, t: number, handles?: Handles) {
   const root = sample(m.actor.root, t) as Point;
   const facing = (m.actor.facing ?? 1) < 0 ? -1 : 1;
   const local = (p: Point): Point => facing > 0 ? p : [2 * root[0] - p[0], p[1]];
-  const shoulder: Point = [root[0] + 5, root[1] - 99];
+  const posture = m.actor.posture ? sample(m.actor.posture, t) : [5, -99, 10, -160];
+  const shoulder: Point = [root[0] + posture[0], root[1] + posture[1]];
   const hip: Point = [root[0], root[1]];
   const cup = sample(m.prop.track, t);
   const rad = cup[2] * Math.PI / 180, [ox, oy] = m.prop.handle_offset;
@@ -72,6 +75,7 @@ export function stateAt(m: ActorMotion, t: number, handles?: Handles) {
   const rf = local(sample(m.actor.right_foot, t) as Point);
   const face = m.actor.face ? sample(m.actor.face, t) : NEUTRAL_FACE;
   return {root, shoulder, hip, cup, grip, held, left, right, lf, rf, facing, face,
+    head: [root[0] + posture[2], root[1] + posture[3]] as Point,
     le: joint(shoulder, left, 65, 68, 1), re: joint(shoulder, right, 65, 68, 1),
     lk: joint(hip, lf, 57, 58, -1), rk: joint(hip, rf, 57, 58, -1),
     owner: g == null || t < g ? 'counter' : r == null || t <= r ? m.actor.id : 'rack',

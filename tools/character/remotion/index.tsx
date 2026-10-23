@@ -2,7 +2,7 @@ import React from 'react';
 import {Composition, registerRoot} from 'remotion';
 import {Scene} from './Scene';
 import {EpisodeScene} from './Episode';
-import {StoryVideo, StoryVideoProps} from './StoryVideo';
+import {DirectedStoryVideo, CinematicHorrorProps} from './CinematicHorror';
 import type {Motion} from './motion';
 import type {Episode} from './shots';
 
@@ -15,8 +15,8 @@ const Root = () => <>
     width={1280} height={720} durationInFrames={450} defaultProps={{} as Episode}
     calculateMetadata={({props}) => ({durationInFrames: Math.ceil(props.duration_seconds*props.fps),
       fps:props.fps, width:1280, height:720})} />
-  <Composition id="StoryVideo" component={StoryVideo} fps={30}
-    width={1280} height={720} durationInFrames={450} defaultProps={{} as StoryVideoProps}
+  <Composition id="StoryVideo" component={DirectedStoryVideo} fps={30}
+    width={1280} height={720} durationInFrames={450} defaultProps={{} as CinematicHorrorProps}
     calculateMetadata={({props}) => ({durationInFrames: Math.ceil(props.duration_seconds*props.fps),
       fps:props.fps, width:props.viewport?.width ?? 1280, height:props.viewport?.height ?? 720})} />
 </>;

@@ -16,6 +16,7 @@ const {ActorBody, ActorHands} = require(path.resolve('tools/character/remotion/A
 const {stateAt, sample, toWorld} = require(path.resolve('tools/character/remotion/motion.ts'));
 const video = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const shot = video.shots[0], actor = shot.actors[0];
+const cropDoor = process.argv.includes('--allow-door-crop');
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 let previous, maxDelta = 0, planted = 0, airborne = 0;
 for (let frame = 0; frame < 300; frame++) {
@@ -37,7 +38,7 @@ for (let frame = 0; frame < 300; frame++) {
   const [cx,cy,z] = sample(shot.camera,t), scale = 1280/720*z;
   // Full head/body, both hands/feet and fixed door remain inside the vertical safe area.
   for (const p of [[s.root[0]-35,s.root[1]-201],[s.root[0]+58,s.root[1]-110],
-                    s.left,s.right,s.lf,s.rf,[555,292],[665,625]]) {
+                    s.left,s.right,s.lf,s.rf,...(cropDoor ? [] : [[555,292],[665,625]])]) {
     const x = 360+(p[0]-cx)*scale, y = 640+(p[1]-cy)*scale;
     assert(x > 16 && x < 704 && y > 40 && y < 1240, `Unsafe framing at ${frame}`);
   }

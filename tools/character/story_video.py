@@ -84,7 +84,8 @@ def actor_limb_distances(actor: dict, t: float) -> dict[str, float]:
         p = body(p)
         return p if facing > 0 else [2 * root[0] - p[0], p[1]]
 
-    shoulder = [root[0] + 5, root[1] - 99]
+    posture = _sample(actor["posture"], t) if "posture" in actor else [5, -99, 10, -160]
+    shoulder = [root[0] + posture[0], root[1] + posture[1]]
     out = {}
     for hand in ("left_hand", "right_hand"):
         out[hand] = math.dist(shoulder, local(_sample(actor[hand], t)))
@@ -141,11 +142,18 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
     if (not isinstance(viewport, dict) or set(viewport) != {"width", "height"} or any(type(v) is not int or v < 2 or v > 4096 or v % 2
                                                  for v in viewport.values())):
         raise ValueError("Viewport requires even integer width/height in [2, 4096]")
-    if video.get("character_skin", "cartoon") not in {"cartoon", "stickman_horror"}:
+    if video.get("character_skin", "cartoon") not in {"cartoon", "stickman_horror", "cartoon_horror"}:
         raise ValueError("Unknown character skin")
     half_width = viewport["width"] * 720 / viewport["height"] / 2
     if not math.isfinite(duration) or duration <= 0:
         raise ValueError("Positive finite duration required")
+    if "horror" in video:
+        if video.get("character_skin") != "cartoon_horror":
+            raise ValueError("Cinematic horror requires the cartoon character skin")
+        for name, width in (("presence", 3), ("spill", 2)):
+            _check_keys(f"horror.{name}", video["horror"][name], width, duration)
+            if any(not 0 <= key[1] <= 1 for key in video["horror"][name]):
+                raise ValueError(f"horror.{name} intensity must be in [0,1]")
     shots = video["shots"]
     if not shots or shots[0]["start_seconds"] != 0 or abs(shots[-1]["end_seconds"] - duration) > 1e-6:
         raise ValueError("Shots must cover the whole video")
@@ -173,6 +181,8 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
                 _check_keys(f"{name}.{limb}", actor[limb], 3, length)
             _check_keys(f"{name}.face", actor["face"], 7, length)
             _check_keys(f"{name}.opacity", actor["opacity"], 2, length)
+            if "posture" in actor:
+                _check_keys(f"{name}.posture", actor["posture"], 5, length)
             if any(k[1] not in (1, -1) for k in actor["facing_keys"]) or actor["facing_keys"][0][0] != 0:
                 raise ValueError(f"{name}: facing keys must be ±1 from t=0")
         for item in shot["items"]:
