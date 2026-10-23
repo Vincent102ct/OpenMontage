@@ -128,6 +128,83 @@ def _reachable(name: str, d: float) -> bool:
     return abs(upper - lower) + 0.001 < d < upper + lower - 0.001
 
 
+GEOMETRY_KEYS = {"version", "preset", "revision", "negative_fill", "pools", "beams", "lamps", "seams", "haze", "presence"}
+DRIVERS = {"constant", "spill", "flicker"}
+
+
+def _check_geometry(name: str, g: dict, horror: dict) -> None:
+    """P3.2A location lighting/presence geometry (CinematicHorror.tsx HorrorOverlay); fail closed."""
+    def fail(why):
+        raise ValueError(f"{name}.cinematic: {why}")
+
+    def num(v, lo, hi, what):
+        if type(v) not in (int, float) or not math.isfinite(v) or not lo <= v <= hi:
+            fail(f"{what} must be a finite number in [{lo}, {hi}]")
+
+    def point(q, what):
+        if not isinstance(q, list) or len(q) != 2:
+            fail(f"{what} must be [x, y]")
+        num(q[0], 0, 1280, f"{what}.x")
+        num(q[1], 0, 720, f"{what}.y")
+
+    def color(v, what):
+        if not isinstance(v, str) or len(v) != 7 or v[0] != "#" or any(c not in "0123456789abcdef" for c in v[1:]):
+            fail(f"{what} must be #rrggbb")
+
+    def driver(d, what):
+        if d not in DRIVERS:
+            fail(f"{what}: unknown driver {d!r}")
+        if d == "flicker" and "flicker" not in horror:
+            fail(f"{what} uses the flicker driver without a horror.flicker track")
+
+    if not isinstance(g, dict) or set(g) - GEOMETRY_KEYS or g.get("version") != 1:
+        fail("unsupported geometry version or keys")
+    if not isinstance(g.get("preset"), str) or type(g.get("revision")) is not int:
+        fail("preset id and integer revision required")
+    color(g["negative_fill"]["color"], "negative_fill.color")
+    num(g["negative_fill"]["opacity"], 0, 1, "negative_fill.opacity")
+    for i, q in enumerate(g["pools"]):
+        point([q["cx"], q["cy"]], f"pools[{i}]")
+        num(q["rx"], 1, 1280, f"pools[{i}].rx")
+        num(q["ry"], 1, 720, f"pools[{i}].ry")
+        num(q["strength"], 0, 1, f"pools[{i}].strength")
+        driver(q["driver"], f"pools[{i}]")
+    for i, b in enumerate(g["beams"]):
+        if len(b["points"]) != 4:
+            fail(f"beams[{i}] needs four points")
+        for j, q in enumerate(b["points"]):
+            point(q, f"beams[{i}].points[{j}]")
+        color(b["color"], f"beams[{i}].color")
+        num(b["opacity"], 0, 1, f"beams[{i}].opacity")
+        driver(b["driver"], f"beams[{i}]")
+    for i, lamp in enumerate(g["lamps"]):
+        point([lamp["x"], lamp["y"]], f"lamps[{i}]")
+        num(lamp["r"], 1, 400, f"lamps[{i}].r")
+        color(lamp["color"], f"lamps[{i}].color")
+        driver(lamp["driver"], f"lamps[{i}]")
+    for i, seam in enumerate(g["seams"]):
+        point([seam["x0"], seam["y"]], f"seams[{i}]")
+        point([seam["x1"], seam["y"]], f"seams[{i}]")
+        color(seam["color"], f"seams[{i}].color")
+        driver(seam["driver"], f"seams[{i}]")
+    if "haze" in g:
+        point([g["haze"]["cx"], g["haze"]["cy"]], "haze")
+        color(g["haze"]["color"], "haze.color")
+        num(g["haze"]["opacity"], 0, 1, "haze.opacity")
+    if "presence" in g:
+        pr = g["presence"]
+        if not isinstance(pr.get("path"), str) or not pr["path"].startswith("M "):
+            fail("presence.path must be an SVG path")
+        color(pr["color"], "presence.color")
+        point([pr["x"], pr["y"]], "presence")
+        num(pr["scale"], .1, 10, "presence.scale")
+        if not pr["clip"] or any(len(polygon) < 3 for polygon in pr["clip"]):
+            fail("presence.clip needs polygons of at least three points")
+        for polygon in pr["clip"]:
+            for q in polygon:
+                point(q, "presence.clip")
+
+
 def source_paragraphs(path: str) -> list[str]:
     from tools.story.story_analyzer import load_story
     return load_story(path)["paragraphs"]
@@ -135,6 +212,17 @@ def source_paragraphs(path: str) -> list[str]:
 
 def validate_story_video(video: dict, timeline: dict) -> dict:
     """Raise ValueError on any contract break; return counters for the QA report."""
+    # Opt-in only: old packages never import or depend on the reusable registry.
+    if "asset_binding" in video:
+        from tools.character.horror_assets import resolve_binding
+
+        resolved = resolve_binding(video["asset_binding"])
+        if video.get("character_skin") != "cartoon_horror" or video["locations"] != resolved["locations"]:
+            raise ValueError("Asset binding: skin/locations differ from pinned environment and geometry")
+        for shot in video["shots"]:
+            for actor in shot["actors"]:
+                if actor["id"] not in resolved["cast"] or actor["look"] != resolved["cast"][actor["id"]]:
+                    raise ValueError(f"Asset binding: {actor['id']} appearance differs from pinned character revision")
     validate_artifact("action_timeline", timeline)
     fps = video["fps"]
     duration = video["duration_seconds"]
@@ -150,10 +238,17 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
     if "horror" in video:
         if video.get("character_skin") != "cartoon_horror":
             raise ValueError("Cinematic horror requires the cartoon character skin")
-        for name, width in (("presence", 3), ("spill", 2)):
+        for name, width in (("presence", 3), ("spill", 2), ("flicker", 2)):
+            if name == "flicker" and name not in video["horror"]:
+                continue
             _check_keys(f"horror.{name}", video["horror"][name], width, duration)
             if any(not 0 <= key[1] <= 1 for key in video["horror"][name]):
                 raise ValueError(f"horror.{name} intensity must be in [0,1]")
+    for name, location in video["locations"].items():
+        if "cinematic" in location:
+            if "horror" not in video:
+                raise ValueError(f"{name}: cinematic geometry requires horror tracks")
+            _check_geometry(name, location["cinematic"], video["horror"])
     shots = video["shots"]
     if not shots or shots[0]["start_seconds"] != 0 or abs(shots[-1]["end_seconds"] - duration) > 1e-6:
         raise ValueError("Shots must cover the whole video")

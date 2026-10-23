@@ -1,11 +1,12 @@
 import React from 'react';
 import {Motion, Point, stateAt} from './motion';
 import {CartoonHorrorBody, CartoonHorrorHands} from './CartoonHorror';
+import {CastBody, CastDesign, CastHands} from './CartoonCast';
 
 // Minh v1 drawing, shared by the single-shot pilot and multi-shot episodes.
 // With a neutral face the emitted SVG is identical to the original pilot rig.
 type State = ReturnType<typeof stateAt>;
-type Look = Pick<Motion['actor'], 'shirt' | 'skin' | 'hair'> & {treatment?: 'cinematic'};
+type Look = Pick<Motion['actor'], 'shirt' | 'skin' | 'hair'> & {treatment?: 'cinematic'; design?: CastDesign};
 export type ActorSkin = 'cartoon' | 'stickman_horror' | 'cartoon_horror';
 
 const line = (a: Point, b: Point) => `M ${a.join(' ')} L ${b.join(' ')}`;
@@ -42,7 +43,8 @@ const StickmanBody: React.FC<{s: State; t: number}> = ({s, t}) => {
 
 export const ActorBody: React.FC<{s: State; look: Look; t: number; skin?: ActorSkin}> = ({s, look, t, skin}) => {
   if (skin === 'stickman_horror') return <StickmanBody s={s} t={t} />;
-  if (skin === 'cartoon_horror') return <CartoonHorrorBody s={s} look={look} t={t} />;
+  if (skin === 'cartoon_horror') return look.design ? <CastBody s={s} d={look.design} t={t} />
+    : <CartoonHorrorBody s={s} look={look} t={t} />;
   const x = s.root[0], y = s.root[1];
   const headX = x + 10, headY = y - 161;
   const blink = (t % 4.9) > 4.72;
@@ -84,7 +86,7 @@ export const ActorBody: React.FC<{s: State; look: Look; t: number; skin?: ActorS
 };
 
 export const ActorHands: React.FC<{s: State; look: Look; skin?: ActorSkin}> = ({s, look, skin}) => skin === 'cartoon_horror'
-  ? <CartoonHorrorHands s={s} look={look} /> : skin === 'stickman_horror'
+  ? look.design ? <CastHands s={s} d={look.design} /> : <CartoonHorrorHands s={s} look={look} /> : skin === 'stickman_horror'
   ? <>{[s.left, s.right].map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="4" fill="#e3e8e3" />)}</> : <>
   {[s.left,s.right].map((p,i) => <g key={i} transform={`translate(${p[0]} ${p[1]})`}>
     <ellipse rx="8" ry="10" fill={look.skin} />

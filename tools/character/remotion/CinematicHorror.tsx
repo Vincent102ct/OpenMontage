@@ -3,9 +3,70 @@ import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {StoryVideo, StoryVideoProps} from './StoryVideo';
 import {Key, sample} from './motion';
 
+type Pt = [number, number];
+type Driver = 'constant' | 'spill' | 'flicker';
+// P3.2A location-aware geometry, resolved from the asset library's environment anchors.
+export type HorrorGeometry = {version: 1; preset: string; revision: number;
+  negative_fill: {color: string; opacity: number};
+  pools: {cx: number; cy: number; rx: number; ry: number; driver: Driver; strength: number}[];
+  beams: {points: Pt[]; color: string; opacity: number; driver: Driver}[];
+  lamps: {id: string; x: number; y: number; r: number; color: string; driver: Driver}[];
+  seams: {x0: number; x1: number; y: number; color: string; driver: Driver}[];
+  haze?: {cx: number; cy: number; rx: number; ry: number; color: string; opacity: number};
+  presence?: {silhouette: string; revision: number; path: string; color: string; x: number; y: number;
+    scale: number; clip: Pt[][]; backdrop?: {color: string; opacity: number}}};
 export type CinematicHorrorProps = StoryVideoProps & {
   // Optional seekable environmental tracks; absent for every existing package.
-  horror?: {presence: Key[]; spill: Key[]};
+  horror?: {presence: Key[]; spill: Key[]; flicker?: Key[]};
+  locations: Record<string, {cinematic?: HorrorGeometry}>;
+};
+export type HorrorLevels = {presence: number; dx: number; spill: number; flicker: number};
+
+const poly = (points: Pt[]) => `M ${points.map(q => q.join(' ')).join(' L ')} Z`;
+const level = (d: Driver, v: HorrorLevels) => d === 'spill' ? v.spill : d === 'flicker' ? v.flicker : 1;
+
+// Pure, seekable overlay in world coordinates; every shape comes from the location geometry.
+export const HorrorOverlay: React.FC<{g: HorrorGeometry; v: HorrorLevels; t: number}> = ({g, v, t}) => {
+  const pr = g.presence;
+  return <g data-preset={g.preset}>
+    <defs>
+      <radialGradient id="hz-pool"><stop stopColor="black" /><stop offset=".45" stopColor="#3a3a3a" /><stop offset=".8" stopColor="#a8a8a8" /><stop offset="1" stopColor="white" /></radialGradient>
+      {/* Blurred pools: a hard gradient edge reads as a rounded dark column (a false figure). */}
+      <filter id="hz-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="38" /></filter>
+      <mask id="hz-negative-fill"><rect width="1280" height="720" fill="white" />
+        <g filter="url(#hz-soft)">{g.pools.map((q, i) => <ellipse key={i} cx={q.cx} cy={q.cy} rx={q.rx} ry={q.ry}
+          fill="url(#hz-pool)" opacity={q.strength * level(q.driver, v)} />)}</g></mask>
+      {g.beams.map((b, i) => {
+        const [a0, a1, b1, b0] = b.points;
+        return <linearGradient key={i} id={`hz-beam-${i}`} gradientUnits="userSpaceOnUse"
+          x1={(a0[0] + a1[0]) / 2} y1={(a0[1] + a1[1]) / 2} x2={(b0[0] + b1[0]) / 2} y2={(b0[1] + b1[1]) / 2}>
+          <stop stopColor={b.color} stopOpacity={b.opacity} /><stop offset="1" stopColor={b.color} stopOpacity="0" /></linearGradient>;
+      })}
+      {g.lamps.map((l, i) => <radialGradient key={i} id={`hz-lamp-${i}`}><stop stopColor={l.color} stopOpacity=".55" />
+        <stop offset="1" stopColor={l.color} stopOpacity="0" /></radialGradient>)}
+      {pr ? <clipPath id="hz-presence-clip"><path d={pr.clip.map(poly).join(' ')} /></clipPath> : null}
+    </defs>
+    {pr ? <g clipPath="url(#hz-presence-clip)" data-presence={v.presence.toFixed(4)} data-silhouette={pr.silhouette}>
+      {pr.backdrop ? <path d={pr.clip.map(poly).join(' ')} fill={pr.backdrop.color} opacity={pr.backdrop.opacity} /> : null}
+      <path d={pr.path} fill={pr.color} opacity={v.presence}
+        transform={`translate(${pr.x + v.dx} ${pr.y}) scale(${pr.scale})`} />
+    </g> : null}
+    <rect width="1280" height="720" fill={g.negative_fill.color} opacity={g.negative_fill.opacity} mask="url(#hz-negative-fill)" />
+    {g.beams.map((b, i) => <path key={i} d={poly(b.points)} fill={`url(#hz-beam-${i})`} opacity={level(b.driver, v)} data-beam={i} />)}
+    {g.lamps.map((l, i) => <g key={i} data-lamp={l.id} opacity={level(l.driver, v)}>
+      <circle cx={l.x} cy={l.y} r={l.r} fill={`url(#hz-lamp-${i})`} />
+      <ellipse cx={l.x} cy={l.y} rx="9" ry="4" fill="#efe2b4" opacity=".85" /></g>)}
+    {g.seams.map((s, i) => <g key={i} opacity={level(s.driver, v)}>
+      <path d={`M ${s.x0} ${s.y} H ${s.x1}`} stroke={s.color} strokeWidth="2" opacity=".65" />
+      <path d={`M ${(s.x0 + s.x1) / 2 - 8} ${s.y + 1} l -40 45 h 70 l -13 -45 Z`} fill={s.color} opacity=".035" /></g>)}
+    {g.haze ? <ellipse cx={g.haze.cx + Math.sin(t * .28) * 11} cy={g.haze.cy} rx={g.haze.rx} ry={g.haze.ry}
+      fill={g.haze.color} opacity={g.haze.opacity} /> : null}
+  </g>;
+};
+
+export const horrorLevels = (h: NonNullable<CinematicHorrorProps['horror']>, t: number): HorrorLevels => {
+  const [presence, dx] = sample(h.presence, t);
+  return {presence, dx: dx ?? 0, spill: sample(h.spill, t)[0], flicker: h.flicker ? sample(h.flicker, t)[0] : 1};
 };
 
 // Add light and depth over the existing world without changing its actor/motion layers.
@@ -16,6 +77,17 @@ export const DirectedStoryVideo: React.FC<CinematicHorrorProps> = p => {
   if(!p.horror || !loc || p.character_skin!=='cartoon_horror') return <StoryVideo {...p} />;
   const local=Math.min(t,shot.end_seconds)-shot.start_seconds;
   const [cx,cy,z]=sample(shot.camera,local), scale=z*height/720;
+  const geometry=loc.cinematic;
+  if(geometry) return <><StoryVideo {...p} />
+    <AbsoluteFill style={{pointerEvents:'none',overflow:'hidden'}}>
+      <svg width="1280" height="720" viewBox="0 0 1280 720" data-treatment="cinematic-horror"
+        style={{position:'absolute',transformOrigin:'0 0',
+          transform:`translate(${width/2}px, ${height/2}px) scale(${scale}) translate(${-cx}px, ${-cy}px)`}}>
+        <HorrorOverlay g={geometry} v={horrorLevels(p.horror,t)} t={t} />
+      </svg>
+    </AbsoluteFill>
+  </>;
+  // Legacy P3.1 v2 overlay: packages without location geometry keep their exact drawing.
   const [presence,dx]=sample(p.horror.presence,t), [spill]=sample(p.horror.spill,t);
   const win=loc.window, door=loc.door;
   return <><StoryVideo {...p} />
