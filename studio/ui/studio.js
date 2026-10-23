@@ -1,3 +1,5 @@
+import {loadVisualBible} from './visual-bible.js';
+
 const $ = (id) => document.getElementById(id);
 const form = $("production-form");
 const content = $("content");
@@ -202,6 +204,8 @@ $("refresh-list").addEventListener("click", () => loadProductions());
 async function showDetail(id) {
   $("intake-panel").replaceChildren();
   $("review-panel").replaceChildren();
+  $("visual-bible-panel").replaceChildren();
+  $("visual-bible-panel").dataset.projectId = id;
   try {
     const { request } = await api(`productions/${encodeURIComponent(id)}`);
     $("detail-content").textContent = request.content ?? JSON.stringify(request.canonical_package, null, 2);
@@ -351,6 +355,15 @@ async function loadProductions() {
           $("review-panel").scrollIntoView({ block: "start" });
         });
         actions.append(button, prepare, reviewButton);
+        const visual = element("button", "Visual Bible", "secondary-button open-visual-bible");
+        visual.type = "button";
+        visual.dataset.projectId = row.project_id;
+        visual.disabled = row.input_mode !== "story";
+        visual.addEventListener("click", async () => {
+          await showDetail(row.project_id);
+          $("visual-bible-panel").scrollIntoView({block: "start"});
+        });
+        actions.append(visual);
         body.append(element("p", draftStatus(row), "intake-status"));
       }
       const board = element("a", "Open Backlot ↗");
@@ -679,6 +692,7 @@ async function loadReviewed(id, panel, version) {
 }
 
 function renderReviewed(id, panel, data) {
+  if ($("visual-bible-panel").dataset.projectId === id) loadVisualBible(id, $("visual-bible-panel"));
   panel.replaceChildren(element("h3", "Reviewed story · pre-production content only"));
   panel.append(element("p", "Materialization saves an immutable candidate. Approve Reviewed Story is a separate "
     + "human action for the exact displayed version and hashes. No action here starts production or permits publishing.", "field-help"));

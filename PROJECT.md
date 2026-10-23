@@ -1,6 +1,6 @@
 # OpenMontage — Product Contract
 
-Effective 2026-10-23, updated through the accepted P3.2A technical baseline. This is the authoritative product identity
+Effective 2026-10-23, updated through the accepted P3.3 technical milestone. This is the authoritative product identity
 for this checkout. It supersedes the earlier mandatory Stickman treatment and
 historical documentary/motion-graphics assumptions. Generic OpenMontage pipeline,
 architecture, tool and human-review contracts still apply.
@@ -93,16 +93,21 @@ pipeline. Old packages retain their renderer behavior without a registry binding
 The [P3.2A report](docs/features/p3.2a-asset-library.md) defines the version and
 binding constraints, exact scope, evidence and limitations.
 
-Next planned handoff: a separately scoped Story Visual Bible that consumes these
-pinned cast/location/lighting bindings and preserves canonical story authority.
-End-to-end story production follows only after its own scope and review are
-authorized. This milestone does not implement that handoff or authorize production.
+The accepted P3.3 Story Visual Bible technical milestone consumes these pinned
+cast/location/lighting bindings and preserves canonical story authority. It adds
+a separate Studio visual-design approval for future scene planning only; it does
+not approve a real story, authorize production or imply artistic/audio acceptance.
+See [P3.3](docs/features/p3.3-story-visual-bible.md). P3.4 scene planning and
+end-to-end story production require their own scope and authorization.
 
 ## Production boundary
 
-This task finalizes and ships only the P3.2A reusable asset-library technical
-baseline. Do not begin P3.2B, P3.3, TTS, full-story rendering, real-pilot production,
-publication or story-data migration.
+The user accepted P3.3 technically and authorized the exact 16-file commit
+`feat(studio): add reviewed story visual bible workflow` and normal push to
+`origin/coding`, after final verification. This covers Story Visual Bible + Studio
+review, using synthetic fixtures and local reference PNGs. Artistic and audio
+acceptance remain pending. Stop after this scoped commit/push. Do not begin P3.2B, P3.4, TTS,
+full-story rendering, real-pilot production, publication or story-data migration.
 Do not alter STORY 053, its reviewed packages, narration, scene timestamps,
 private pilot or Story Bible. M2.1/M2.2 and M2.3 baselines remain preserved;
 historical documentary M2.4 WIP is not the selected product direction and is not

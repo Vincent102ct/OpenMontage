@@ -1,0 +1,12 @@
+.visual-bible:not(:empty){border-bottom:1px solid var(--border);padding:20px 0;margin-bottom:24px}
+.visual-bible h2{font-size:20px}.visual-bible h3{font-size:14px}.visual-bible p{line-height:1.8;font-size:12px}
+.visual-bible .visual-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.visual-card{padding:18px;border:1px solid var(--border);border-radius:9px;margin:12px 0;background:#fafbfe}
+.visual-card label{display:block;font-size:12px;margin:12px 0}.visual-card select{display:block;width:100%;padding:10px;margin-top:6px;border:1px solid var(--border);border-radius:6px;background:white}
+.visual-card .visual-hash,.visual-bible .visual-hashes{font:11px/1.8 Consolas,monospace;overflow-wrap:anywhere;white-space:pre-wrap}
+.visual-card .swatch{display:inline-block;padding:5px;border:1px solid var(--border);margin:4px 5px 0 0;border-radius:5px;font-size:10px}
+.visual-bible .visual-blockers{padding:14px;background:#fff8ea;border:1px solid #f0d9a8;border-radius:8px;font-size:12px;line-height:1.8}
+.visual-bible .visual-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.visual-bible figure{margin:0}.visual-bible figure img{width:100%;max-height:450px;object-fit:contain;background:#0a1018;border-radius:6px}
+.visual-bible figcaption{font-size:11px;margin-top:6px;color:#5d6375}.visual-bible .visual-consent{display:block;font-size:12px;margin:16px 0;line-height:1.8}
+.visual-bible button:disabled{opacity:.5;cursor:not-allowed}@media(max-width:850px){.visual-bible .visual-preview-grid{grid-template-columns:1fr}}

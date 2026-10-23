@@ -1,0 +1,527 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/story/story_visual_bible.schema.json",
+  "title": "Immutable Story Visual Bible candidate; separate approval permits scene planning only",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact",
+    "project_id",
+    "version",
+    "canonical_input",
+    "library",
+    "style",
+    "characters",
+    "locations",
+    "props",
+    "continuity",
+    "formats",
+    "unresolved_visual_decisions",
+    "blockers",
+    "review_status",
+    "approval_scope",
+    "production_started",
+    "publishing_enabled"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "artifact": {
+      "const": "story_visual_bible"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "canonical_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "version",
+        "source_sha256",
+        "working_text_sha256",
+        "package_sha256",
+        "manifest_sha256",
+        "approval_sha256",
+        "decision_history_sha256"
+      ],
+      "properties": {
+        "kind": {
+          "const": "reviewed_fiction"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v[2-9][0-9]*$|^v[1-9][0-9]+$"
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "working_text_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "package_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "approval_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "decision_history_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "const": "openmontage.cinematic_cartoon_horror"
+        },
+        "version": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "style": {
+      "const": "cinematic_2d_cartoon_supernatural_horror"
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "canonical_id",
+          "label",
+          "representation",
+          "asset",
+          "appearance",
+          "reviewed",
+          "provenance"
+        ],
+        "properties": {
+          "canonical_id": {
+            "type": "string",
+            "pattern": "^CHR_[A-Z0-9_]+$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "representation": {
+            "enum": [
+              "character",
+              "silhouette",
+              "unseen"
+            ]
+          },
+          "asset": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/asset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "appearance": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewed": {
+            "type": "boolean"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "canonical_id",
+          "label",
+          "environment",
+          "lighting",
+          "atmosphere",
+          "geometry",
+          "anchors",
+          "presence",
+          "reviewed",
+          "provenance"
+        ],
+        "properties": {
+          "canonical_id": {
+            "type": "string",
+            "pattern": "^LOC_[A-Z0-9_]+$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/asset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lighting": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/asset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "atmosphere": {
+            "const": "tense_apartment"
+          },
+          "geometry": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "anchors": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "presence": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "character_id",
+                  "anchor"
+                ],
+                "properties": {
+                  "character_id": {
+                    "type": "string"
+                  },
+                  "anchor": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewed": {
+            "type": "boolean"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "canonical_id",
+          "label",
+          "asset",
+          "location_id",
+          "anchor",
+          "point",
+          "persistent",
+          "reviewed",
+          "provenance"
+        ],
+        "properties": {
+          "canonical_id": {
+            "type": "string",
+            "pattern": "^OBJ_[A-Z0-9_]+$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "asset": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/asset"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "anchor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "point": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "persistent": {
+            "type": "boolean"
+          },
+          "reviewed": {
+            "type": "boolean"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "continuity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_rules",
+        "canonical_ambiguities",
+        "uncertainty_policy",
+        "identity_rule",
+        "reviewed"
+      ],
+      "properties": {
+        "canonical_rules": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "canonical_ambiguities": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "uncertainty_policy": {
+          "const": "Preserve canonical uncertainty; never invent a figure or reveal an unseen identity."
+        },
+        "identity_rule": {
+          "const": "same_identity_costume_and_environment_across_all_shots_short_and_long"
+        },
+        "reviewed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "formats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "short",
+        "long"
+      ],
+      "properties": {
+        "short": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "characters",
+            "locations"
+          ],
+          "properties": {
+            "characters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "locations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "long": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "characters",
+            "locations"
+          ],
+          "properties": {
+            "characters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "locations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "unresolved_visual_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_status": {
+      "const": "pending_explicit_visual_approval"
+    },
+    "approval_scope": {
+      "const": "scene_planning_only"
+    },
+    "production_started": {
+      "const": false
+    },
+    "publishing_enabled": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "revision",
+        "sha256"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "character",
+            "silhouette",
+            "environment",
+            "lighting",
+            "prop"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_ref",
+        "description",
+        "evidence",
+        "design_basis"
+      ],
+      "properties": {
+        "canonical_ref": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "design_basis": {
+          "const": "creative_proposal_not_canonical_fact"
+        }
+      }
+    }
+  }
+}
