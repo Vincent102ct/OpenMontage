@@ -137,6 +137,13 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
     validate_artifact("action_timeline", timeline)
     fps = video["fps"]
     duration = video["duration_seconds"]
+    viewport = video.get("viewport", {"width": 1280, "height": 720})
+    if (not isinstance(viewport, dict) or set(viewport) != {"width", "height"} or any(type(v) is not int or v < 2 or v > 4096 or v % 2
+                                                 for v in viewport.values())):
+        raise ValueError("Viewport requires even integer width/height in [2, 4096]")
+    if video.get("character_skin", "cartoon") not in {"cartoon", "stickman_horror"}:
+        raise ValueError("Unknown character skin")
+    half_width = viewport["width"] * 720 / viewport["height"] / 2
     if not math.isfinite(duration) or duration <= 0:
         raise ValueError("Positive finite duration required")
     shots = video["shots"]
@@ -188,7 +195,7 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
             dark, fade = _sample(shot["light"], t)
             if zoom < 1 - 1e-9 or not (0 <= dark <= 1 and 0 <= fade <= 1):
                 raise ValueError(f"{sid}: invalid zoom or light at {t:.3f}s")
-            if (cx - 640 / zoom < -1e-6 or cx + 640 / zoom > 1280 + 1e-6
+            if (cx - half_width / zoom < -1e-6 or cx + half_width / zoom > 1280 + 1e-6
                     or cy - 360 / zoom < -1e-6 or cy + 360 / zoom > 720 + 1e-6):
                 raise ValueError(f"{sid}: camera leaves the artwork at {t:.3f}s")
             for actor in shot["actors"]:
@@ -250,7 +257,10 @@ def validate_story_video(video: dict, timeline: dict) -> dict:
         if not Path(seg["path"]).is_file():
             raise ValueError(f"Missing narration: {seg['path']}")
         previous_end = end
-    if " ".join(n["text"] for n in narration) != " ".join(source_paragraphs(video["source_path"])):
+    audio_mode = video.get("audio_mode", "narrated")
+    if audio_mode not in {"narrated", "sfx_only"} or (audio_mode == "sfx_only" and narration):
+        raise ValueError("SFX-only mode requires an empty narration list")
+    if audio_mode == "narrated" and " ".join(n["text"] for n in narration) != " ".join(source_paragraphs(video["source_path"])):
         raise ValueError("Narration does not reproduce the source text exactly")
     for cue in video["sfx"]:
         if not (0 <= cue["start_seconds"] < duration and cue["duration_seconds"] > 0 and 0 <= cue["volume"] <= 1):

@@ -18,6 +18,8 @@ from tools.base_tool import (
 
 # Each recipe is a lavfi graph producing mono audio; {d} is the duration in seconds.
 RECIPES = {
+    "furniture_scrape": ("anoisesrc=color=pink:amplitude=0.3:seed=73:d={d},highpass=f=180,lowpass=f=1800,"
+                         "tremolo=f=37:d=0.8,afade=t=in:d=0.035,afade=t=out:st=0:d={d}"),
     "room_tone": "anoisesrc=color=brown:amplitude=0.06:seed=7:d={d},lowpass=f=320,highpass=f=35",
     "fridge_hum": ("sine=f=50:d={d},volume=0.35[a];sine=f=100:d={d},volume=0.18[b];"
                    "anoisesrc=color=pink:amplitude=0.02:seed=11:d={d},lowpass=f=900[c];"

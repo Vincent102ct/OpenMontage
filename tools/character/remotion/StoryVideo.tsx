@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {ActorBody, ActorHands} from './Actor';
+import {ActorBody, ActorHands, ActorSkin} from './Actor';
 import {ActorMotion, Key, sample, stateAt} from './motion';
 
 // Generic automatically planned story: many locations, actors and props over the
@@ -19,6 +19,7 @@ type VShot = {id: string; start_seconds: number; end_seconds: number; view: 'tit
   actors: VActor[]; items: VItem[]; vehicles: VVehicle[]; inserts?: VInsert[]};
 type VLocation = {kind: string; svg: string; outdoor: boolean; door: Rect | null; window: Rect | null};
 export type StoryVideoProps = {duration_seconds: number; fps: number; title: string;
+  character_skin?: ActorSkin; viewport?: {width: number; height: number};
   locations: Record<string, VLocation>; shots: VShot[];
   narration: {id: string; path: string; text: string; start_seconds: number; end_seconds: number}[];
   sfx: {id: string; path: string; start_seconds: number; duration_seconds: number; volume: number}[]};
@@ -174,11 +175,14 @@ const RainStreaks: React.FC<{t: number; x0: number; y0: number; w: number; h: nu
 
 // Full-frame close-up of a written item showing the words the story gives for it.
 const Insert: React.FC<{ins: VInsert; t: number}> = ({ins, t}) => {
+  const {width, height} = useVideoConfig();
+  const portrait = height > width;
   const a = Math.min(1, (t - ins.start) / 0.35, (ins.end - t) / 0.25);
   if (a <= 0) return null;
   const paper = ins.color ?? '#efe9d8';
   return <AbsoluteFill style={{opacity: a, background: 'linear-gradient(#6f5a48, #4d3d31)'}}>
-    <div style={{position: 'absolute', left: 300, top: 120, width: 680, height: 420, background: paper,
+    <div style={{position: 'absolute', left: portrait ? 40 : 300, top: portrait ? height * 0.2 : 120,
+      width: portrait ? width - 80 : 680, height: portrait ? height * 0.5 : 420, background: paper,
       transform: `rotate(-2.5deg) scale(${1 + 0.03 * Math.min(1, (t - ins.start) / 3)})`,
       boxShadow: '0 18px 40px rgba(0,0,0,.45)', borderRadius: 4,
       backgroundImage: 'repeating-linear-gradient(transparent 0 58px, rgba(90,110,130,.25) 58px 60px)',
@@ -190,21 +194,21 @@ const Insert: React.FC<{ins: VInsert; t: number}> = ({ins, t}) => {
 };
 
 type Drawn = {a: VActor; s: ReturnType<typeof actorState>; o: number; inside: boolean; y: number};
-const People: React.FC<{states: Drawn[]; items: VItem[]; t: number; rain: boolean}> = ({states, items, t, rain}) => <>
+const People: React.FC<{states: Drawn[]; items: VItem[]; t: number; rain: boolean; skin?: ActorSkin}> = ({states, items, t, rain, skin}) => <>
   {states.map(({a, s, o}) => {
     const mirror = s.facing < 0 ? `matrix(-1 0 0 1 ${2 * s.root[0]} 0)` : undefined;
     return o > 0.001 ? <g key={a.id} opacity={o} transform={scaleTransform(a.scale ?? 1)}><g transform={mirror}>
-      {a.look.hair_style === 'long' ? <Hair x={s.root[0]} y={s.root[1]} color={a.look.hair} /> : null}
-      <ActorBody s={s} look={a.look} t={t + a.id.length * 0.7} />
+      {skin !== 'stickman_horror' && a.look.hair_style === 'long' ? <Hair x={s.root[0]} y={s.root[1]} color={a.look.hair} /> : null}
+      <ActorBody s={s} look={a.look} t={t + a.id.length * 0.7} skin={skin} />
     </g></g> : null;
   })}
   {items.map(it => <Item key={it.id} it={it} t={t} rain={rain} />)}
   {states.map(({a, s, o}) => o > 0.001 ? <g key={a.id} opacity={o} transform={scaleTransform(a.scale ?? 1)}>
     <g transform={s.facing < 0 ? `matrix(-1 0 0 1 ${2 * s.root[0]} 0)` : undefined}>
-      <ActorHands s={s} look={a.look} /></g></g> : null)}
+      <ActorHands s={s} look={a.look} skin={skin} /></g></g> : null)}
 </>;
 
-const World: React.FC<{shot: VShot; loc: VLocation; t: number}> = ({shot, loc, t}) => {
+const World: React.FC<{shot: VShot; loc: VLocation; t: number; skin?: ActorSkin}> = ({shot, loc, t, skin}) => {
   const dark = sample(shot.light, t)[0];
   const rain = shot.weather === 'rain';
   const win = loc.window;
@@ -226,21 +230,22 @@ const World: React.FC<{shot: VShot; loc: VLocation; t: number}> = ({shot, loc, t
       {loc.door ? <Door d={loc.door} open={val(shot.door, t)} /> : null}
       {shot.vehicles.map(v => <VehicleBack key={v.id} v={v} t={t} />)}
       <g stroke="#17242b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round">
-        <People states={states.filter(x => x.inside)} items={[]} t={t} rain={false} />
+        <People states={states.filter(x => x.inside)} items={[]} t={t} rain={false} skin={skin} />
       </g>
       {shot.vehicles.map(v => <VehicleFront key={v.id} v={v} t={t} />)}
       <g stroke="#17242b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round">
         {/* Items resting on furniture are behind people; held items go between body and hands. */}
         {shot.items.filter(it => stepAt(it.held, t) <= 0).map(it => <Item key={it.id} it={it} t={t} rain={false} />)}
         <People states={states.filter(x => !x.inside)} items={shot.items.filter(it => stepAt(it.held, t) > 0)}
-          t={t} rain={rain && loc.outdoor} />
+          t={t} rain={rain && loc.outdoor} skin={skin} />
       </g>
     </svg>
   </>;
 };
 
 export const StoryVideo: React.FC<StoryVideoProps> = (p) => {
-  const frame = useCurrentFrame(), {fps} = useVideoConfig(), t = frame / fps;
+  const frame = useCurrentFrame(), {fps, width, height} = useVideoConfig(), t = frame / fps;
+  const worldScale = height / 720;
   const shot = p.shots.find(s => t < s.end_seconds) ?? p.shots[p.shots.length - 1];
   const local = Math.min(t, shot.end_seconds) - shot.start_seconds;
   const [cx, cy, zoom] = sample(shot.camera, local);
@@ -252,16 +257,17 @@ export const StoryVideo: React.FC<StoryVideoProps> = (p) => {
     {shot.view === 'title' || !loc ? <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
       <div style={{fontFamily: 'Georgia, serif', fontSize: 68, color: '#f1ead8', letterSpacing: 1}}>{p.title}</div>
     </AbsoluteFill> : <div style={{position: 'absolute', left: 0, top: 0, width: 1280, height: 720, transformOrigin: '0 0',
-      transform: `translate(640px, 360px) scale(${zoom}) translate(${-cx}px, ${-cy}px)`}}>
-      <World shot={shot} loc={loc} t={local} />
+      transform: `translate(${width / 2}px, ${height / 2}px) scale(${zoom * worldScale}) translate(${-cx}px, ${-cy}px)`}}>
+      <World shot={shot} loc={loc} t={local} skin={p.character_skin} />
     </div>}
-    {rainOut ? <svg width="1280" height="720" style={{position: 'absolute', inset: 0}}>
-      <RainStreaks t={local} x0={0} y0={0} w={1280} h={720} n={150} seed={7} /></svg> : null}
+    {rainOut ? <svg width={width} height={height} style={{position: 'absolute', inset: 0}}>
+      <RainStreaks t={local} x0={0} y0={0} w={width} h={height} n={150} seed={7} /></svg> : null}
     {(shot.inserts ?? []).filter(i => local >= i.start && local < i.end).map((i, k) =>
       <Insert key={k} ins={i} t={local} />)}
     {dark > 0 ? <div style={{position: 'absolute', inset: 0, background: '#050c16', opacity: dark}} /> : null}
     {fade > 0 ? <div style={{position: 'absolute', inset: 0, background: '#000', opacity: fade}} /> : null}
-    {caption ? <div style={{position: 'absolute', bottom: 24, left: 90, right: 90, textAlign: 'center',
+    {caption ? <div style={{position: 'absolute', bottom: height > width ? 64 : 24,
+      left: height > width ? 40 : 90, right: height > width ? 40 : 90, textAlign: 'center',
       fontFamily: 'Arial, sans-serif', fontSize: 29, fontWeight: 500, color: '#f8f6ed', lineHeight: 1.5}}>
       <span style={{background: 'rgba(9,16,22,.88)', padding: '6px 18px', borderRadius: 5,
         boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone'}}>{caption.text}</span>

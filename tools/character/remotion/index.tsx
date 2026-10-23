@@ -18,6 +18,6 @@ const Root = () => <>
   <Composition id="StoryVideo" component={StoryVideo} fps={30}
     width={1280} height={720} durationInFrames={450} defaultProps={{} as StoryVideoProps}
     calculateMetadata={({props}) => ({durationInFrames: Math.ceil(props.duration_seconds*props.fps),
-      fps:props.fps, width:1280, height:720})} />
+      fps:props.fps, width:props.viewport?.width ?? 1280, height:props.viewport?.height ?? 720})} />
 </>;
 registerRoot(Root);

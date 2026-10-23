@@ -5,11 +5,41 @@ import {Motion, Point, stateAt} from './motion';
 // With a neutral face the emitted SVG is identical to the original pilot rig.
 type State = ReturnType<typeof stateAt>;
 type Look = Pick<Motion['actor'], 'shirt' | 'skin' | 'hair'>;
+export type ActorSkin = 'cartoon' | 'stickman_horror';
 
 const line = (a: Point, b: Point) => `M ${a.join(' ')} L ${b.join(' ')}`;
 export const chain = (a: Point, b: Point, c: Point) => `${line(a, b)} L ${c.join(' ')}`;
 
-export const ActorBody: React.FC<{s: State; look: Look; t: number}> = ({s, look, t}) => {
+const StickmanBody: React.FC<{s: State; t: number}> = ({s, t}) => {
+  const [brow, gx, gy, mouth, lid, tilt] = s.face;
+  const hx = s.root[0] + 10, hy = s.root[1] - 160;
+  const blink = t % 4.9 > 4.72 || lid > 0.8;
+  return <g data-skin="stickman_horror" fill="none" stroke="#e3e8e3" strokeLinecap="round" strokeLinejoin="round">
+    <ellipse cx={(s.lf[0] + s.rf[0]) / 2} cy={Math.max(s.lf[1], s.rf[1]) + 4}
+      rx="34" ry="5" fill="#03080d" stroke="none" opacity="0.55" />
+    <path d={chain(s.hip, s.lk, s.lf)} stroke="#91a6ae" strokeWidth="8" />
+    <path d={chain(s.shoulder, s.le, s.left)} stroke="#91a6ae" strokeWidth="7" />
+    <path d={line(s.shoulder, s.hip)} strokeWidth="10" />
+    <path d={chain(s.hip, s.rk, s.rf)} strokeWidth="8" />
+    <path d={chain(s.shoulder, s.re, s.right)} strokeWidth="7" />
+    {[s.lf, s.rf].map((p, i) => <path key={i} d={`M ${p[0] - 5} ${p[1]} h 14`} strokeWidth="6" />)}
+    {[s.lk, s.rk, s.le, s.re].map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="3" fill="#edf1e9" stroke="none" />)}
+    <path d={`M ${s.shoulder[0]} ${s.shoulder[1]} L ${hx} ${hy + 31}`} strokeWidth="7" />
+    <g transform={`rotate(${tilt} ${hx} ${hy + 31})`}>
+      <circle cx={hx} cy={hy} r="32" fill="#14212c" strokeWidth="7" />
+      {blink ? <path d={`M ${hx + 1} ${hy - 1} h 6 M ${hx + 15} ${hy - 1} h 6`} strokeWidth="2" /> : <>
+        <circle cx={hx + 4 + gx} cy={hy - 2 + gy} r="2.7" fill="#f5eed8" stroke="none" />
+        <circle cx={hx + 18 + gx} cy={hy - 2 + gy} r="2.7" fill="#f5eed8" stroke="none" />
+      </>}
+      <path d={`M ${hx} ${hy - 11} l 8 ${-brow * 2} M ${hx + 14} ${hy - 11 - brow * 2} l 9 ${brow * 2}`}
+        strokeWidth="2" />
+      <path d={`M ${hx + 7} ${hy + 13} q 5 ${mouth * 3} 10 0`} strokeWidth="2" />
+    </g>
+  </g>;
+};
+
+export const ActorBody: React.FC<{s: State; look: Look; t: number; skin?: ActorSkin}> = ({s, look, t, skin}) => {
+  if (skin === 'stickman_horror') return <StickmanBody s={s} t={t} />;
   const x = s.root[0], y = s.root[1];
   const headX = x + 10, headY = y - 161;
   const blink = (t % 4.9) > 4.72;
@@ -50,7 +80,8 @@ export const ActorBody: React.FC<{s: State; look: Look; t: number}> = ({s, look,
   </>;
 };
 
-export const ActorHands: React.FC<{s: State; look: Look}> = ({s, look}) => <>
+export const ActorHands: React.FC<{s: State; look: Look; skin?: ActorSkin}> = ({s, look, skin}) => skin === 'stickman_horror'
+  ? <>{[s.left, s.right].map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="4" fill="#e3e8e3" />)}</> : <>
   {[s.left,s.right].map((p,i) => <g key={i} transform={`translate(${p[0]} ${p[1]})`}>
     <ellipse rx="8" ry="10" fill={look.skin} />
     <path d="M 0 -4 l 4 1 M 0 0 l 4 1" stroke="#a77f65" strokeWidth="1" />
