@@ -100,7 +100,7 @@ not approve a real story, authorize production or imply artistic/audio acceptanc
 See [P3.3](docs/features/p3.3-story-visual-bible.md). P3.4 scene planning and
 end-to-end story production require their own scope and authorization.
 
-## P3.4 scene planning (implemented, pending review)
+## P3.4 scene planning (technical baseline committed)
 
 P3.4 compiles the current approved Reviewed Story and the current approved Visual
 Bible into immutable, source-traceable Short (9:16) and Long (16:9) scene plans with
@@ -110,14 +110,29 @@ Timing stays a provisional estimate with a P3.5 measured-narration retiming
 contract. It starts no TTS, rendering, production or publishing. See
 [P3.4](docs/features/p3.4-scene-planning.md).
 
+P3.4 was finalized at `d73659620128ed77a411974e769eeac006918762`.
+Artistic/audio acceptance remains pending.
+
+## P3.5 synthetic full-story integration (pending review)
+
+An independent adapter binds installed offline narration, actual PCM measurements,
+validated P3.4 retiming and pinned P3.3/P3.2A assets to the existing StoryVideo,
+ActorBuilder and Remotion renderer. Studio separates readiness, narration preparation
+and explicit local synthetic render consent. Frozen packages are never migrated.
+Only the exact registered authored English/Vietnamese synthetic source hashes are
+eligible. No paid API, model download, real-pilot production or publishing is enabled.
+See [P3.5](docs/features/p3.5-story-video.md) for contracts and proof limitations.
+
 ## Production boundary
 
 The user accepted P3.3 technically and authorized the exact 16-file commit
 `feat(studio): add reviewed story visual bible workflow` and normal push to
 `origin/coding`, after final verification. This covers Story Visual Bible + Studio
 review, using synthetic fixtures and local reference PNGs. Artistic and audio
-acceptance remain pending. Stop after this scoped commit/push. Do not begin P3.2B, P3.4, TTS,
-full-story rendering, real-pilot production, publication or story-data migration.
+acceptance remain pending. The subsequent P3.5 task authorizes offline TTS and
+complete synthetic-only proof renders in isolated output directories. P3.2B,
+real-pilot production, publication and story-data migration remain unauthorized.
+P3.5 changes must remain unstaged and uncommitted pending human review.
 Do not alter STORY 053, its reviewed packages, narration, scene timestamps,
 private pilot or Story Bible. M2.1/M2.2 and M2.3 baselines remain preserved;
 historical documentary M2.4 WIP is not the selected product direction and is not
@@ -129,7 +144,8 @@ included in this milestone. Unrelated WIP remains outside the scoped commit.
 - [P3.1 first preview](docs/features/p3.1-cartoon-horror-preview.md).
 - [P3.1 cinematic revision](docs/features/p3.1-cinematic-horror-revision.md).
 - [P3.2A reusable asset library](docs/features/p3.2a-asset-library.md) (technical baseline accepted; human visual/audio review pending).
-- [P3.4 scene planning](docs/features/p3.4-scene-planning.md) (implemented; pending user review, not committed).
+- [P3.4 scene planning](docs/features/p3.4-scene-planning.md) (technical baseline committed; artistic/audio review pending).
+- [P3.5 synthetic story-video integration](docs/features/p3.5-story-video.md) (pending review; no publishing).
 - [P3.0 historical proof](docs/features/p3.0-stickman-renderer-proof.md).
 - [M1/M1.1 character pipeline](docs/features/story-to-video-pipeline.md).
 

@@ -19,15 +19,23 @@ export type CinematicHorrorProps = StoryVideoProps & {
   // Optional seekable environmental tracks; absent for every existing package.
   horror?: {presence: Key[]; spill: Key[]; flicker?: Key[]};
   locations: Record<string, {cinematic?: HorrorGeometry}>;
+  visual_state?: {schema_version:'1.0'; review:unknown; shots:Record<string, ShotLampState>};
 };
+type ShotLampState = {lamps?:Record<string,Key[]>; bindings?:Record<string,{beam:number;pool:number}>};
 export type HorrorLevels = {presence: number; dx: number; spill: number; flicker: number};
 
 const poly = (points: Pt[]) => `M ${points.map(q => q.join(' ')).join(' L ')} Z`;
 const level = (d: Driver, v: HorrorLevels) => d === 'spill' ? v.spill : d === 'flicker' ? v.flicker : 1;
 
 // Pure, seekable overlay in world coordinates; every shape comes from the location geometry.
-export const HorrorOverlay: React.FC<{g: HorrorGeometry; v: HorrorLevels; t: number}> = ({g, v, t}) => {
+export const HorrorOverlay: React.FC<{g: HorrorGeometry; v: HorrorLevels; t: number; lampState?:ShotLampState; localTime?:number}>
+  = ({g, v, t, lampState, localTime=0}) => {
   const pr = g.presence;
+  // Opt-in reviewed per-fixture state. Frozen geometry and legacy drivers stay unchanged.
+  const owner = (kind:'beam'|'pool', index:number) => Object.keys(lampState?.bindings ?? {})
+    .find(id => lampState!.bindings![id][kind] === index);
+  const emission = (id:string|undefined, driver:Driver) => id && lampState?.lamps?.[id]
+    ? sample(lampState.lamps[id],localTime)[0] : level(driver,v);
   return <g data-preset={g.preset}>
     <defs>
       <radialGradient id="hz-pool"><stop stopColor="black" /><stop offset=".45" stopColor="#3a3a3a" /><stop offset=".8" stopColor="#a8a8a8" /><stop offset="1" stopColor="white" /></radialGradient>
@@ -35,7 +43,7 @@ export const HorrorOverlay: React.FC<{g: HorrorGeometry; v: HorrorLevels; t: num
       <filter id="hz-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="38" /></filter>
       <mask id="hz-negative-fill"><rect width="1280" height="720" fill="white" />
         <g filter="url(#hz-soft)">{g.pools.map((q, i) => <ellipse key={i} cx={q.cx} cy={q.cy} rx={q.rx} ry={q.ry}
-          fill="url(#hz-pool)" opacity={q.strength * level(q.driver, v)} />)}</g></mask>
+          data-lamp-pool={owner('pool',i)} fill="url(#hz-pool)" opacity={q.strength * emission(owner('pool',i),q.driver)} />)}</g></mask>
       {g.beams.map((b, i) => {
         const [a0, a1, b1, b0] = b.points;
         return <linearGradient key={i} id={`hz-beam-${i}`} gradientUnits="userSpaceOnUse"
@@ -52,8 +60,8 @@ export const HorrorOverlay: React.FC<{g: HorrorGeometry; v: HorrorLevels; t: num
         transform={`translate(${pr.x + v.dx} ${pr.y}) scale(${pr.scale})`} />
     </g> : null}
     <rect width="1280" height="720" fill={g.negative_fill.color} opacity={g.negative_fill.opacity} mask="url(#hz-negative-fill)" />
-    {g.beams.map((b, i) => <path key={i} d={poly(b.points)} fill={`url(#hz-beam-${i})`} opacity={level(b.driver, v)} data-beam={i} />)}
-    {g.lamps.map((l, i) => <g key={i} data-lamp={l.id} opacity={level(l.driver, v)}>
+    {g.beams.map((b, i) => <path key={i} d={poly(b.points)} fill={`url(#hz-beam-${i})`} opacity={emission(owner('beam',i),b.driver)} data-beam={i} data-lamp-beam={owner('beam',i)} />)}
+    {g.lamps.map((l, i) => <g key={i} data-lamp={l.id} opacity={emission(l.id,l.driver)}>
       <circle cx={l.x} cy={l.y} r={l.r} fill={`url(#hz-lamp-${i})`} />
       <ellipse cx={l.x} cy={l.y} rx="9" ry="4" fill="#efe2b4" opacity=".85" /></g>)}
     {g.seams.map((s, i) => <g key={i} opacity={level(s.driver, v)}>
@@ -83,7 +91,7 @@ export const DirectedStoryVideo: React.FC<CinematicHorrorProps> = p => {
       <svg width="1280" height="720" viewBox="0 0 1280 720" data-treatment="cinematic-horror"
         style={{position:'absolute',transformOrigin:'0 0',
           transform:`translate(${width/2}px, ${height/2}px) scale(${scale}) translate(${-cx}px, ${-cy}px)`}}>
-        <HorrorOverlay g={geometry} v={horrorLevels(p.horror,t)} t={t} />
+        <HorrorOverlay g={geometry} v={horrorLevels(p.horror,t)} t={t} localTime={local} lampState={p.visual_state?.shots[shot.id]} />
       </svg>
     </AbsoluteFill>
   </>;

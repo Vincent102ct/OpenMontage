@@ -1,5 +1,6 @@
 import {loadVisualBible} from './visual-bible.js';
 import {loadScenePlan} from './scene-plan.js';
+import {loadStoryVideo} from './story-video.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $("production-form");
@@ -209,6 +210,8 @@ async function showDetail(id) {
   $("visual-bible-panel").dataset.projectId = id;
   $("scene-plan-panel").replaceChildren();
   $("scene-plan-panel").dataset.projectId = id;
+  $("story-video-panel").replaceChildren();
+  $("story-video-panel").dataset.projectId = id;
   try {
     const { request } = await api(`productions/${encodeURIComponent(id)}`);
     $("detail-content").textContent = request.content ?? JSON.stringify(request.canonical_package, null, 2);
@@ -335,7 +338,9 @@ async function loadProductions() {
       body.append(element("p", row.kind === "studio"
         ? `${row.input_mode} · ${row.formats.map(formatLabel).join(" + ")} · Human review required`
         : "Existing workspace · Review status: see Backlot"));
-      body.append(element("span", row.kind === "studio" ? "Production not started" : "Existing workspace", "status-chip"));
+      const productionBadge = element("span", row.kind === "studio" ? "Production not started" : "Existing workspace", "status-chip");
+      productionBadge.dataset.productionStatus = row.project_id;
+      body.append(productionBadge);
       const actions = element("div", undefined, "card-actions");
       if (row.kind === "studio") {
         const button = element("button", "View input", "secondary-button");
@@ -706,6 +711,7 @@ async function loadReviewed(id, panel, version) {
 function renderReviewed(id, panel, data) {
   if ($("visual-bible-panel").dataset.projectId === id) loadVisualBible(id, $("visual-bible-panel"));
   if ($("scene-plan-panel").dataset.projectId === id) loadScenePlan(id, $("scene-plan-panel"));
+  if ($("story-video-panel").dataset.projectId === id) loadStoryVideo(id, $("story-video-panel"));
   panel.replaceChildren(element("h3", "Reviewed story · pre-production content only"));
   panel.append(element("p", "Materialization saves an immutable candidate. Approve Reviewed Story is a separate "
     + "human action for the exact displayed version and hashes. No action here starts production or permits publishing.", "field-help"));

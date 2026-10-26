@@ -32,6 +32,10 @@ from studio.visual_references import prepare_references, reference_file
 from lib.story_scene_plan import ScenePlanError
 from studio.scene_plan import (approve_scene_plan, prepare_scene_plan, read_scene_plan, scene_plan_handoff,
                                scene_plan_report)
+from studio import story_video as video_service
+from lib.scene_video import SceneVideoError
+from lib.scene_staging import StagingError
+from studio.scene_staging import read_staging, prepare_staging, approve_staging
 
 UI_DIR = Path(__file__).parent / "ui"
 MAX_BODY_BYTES = 2_000_000
@@ -382,6 +386,76 @@ def create_app(store: ProductionStore | None = None):
             raise story_error(exc)
         except OSError:
             raise HTTPException(500, "Could not save scene-plan approval. No production was started.")
+
+    video_errors = (SceneVideoError, StagingError, *plan_errors)
+
+    def video_error(exc):
+        return HTTPException(409, {"code": getattr(exc, "code", "production_blocked"),
+                                   "message": str(exc), "blockers": getattr(exc, "details", [])})
+
+    @app.get('/studio/api/productions/{project_id}/story-video/staging')
+    async def staging_view(project_id: str):
+        try:
+            return await run_in_threadpool(read_staging,service,project_id)
+        except video_errors as exc:raise video_error(exc)
+
+    @app.post('/studio/api/productions/{project_id}/story-video/staging')
+    async def staging_candidate(project_id: str,request: Request):
+        body=await json_body(request)
+        try:
+            return JSONResponse(status_code=201,content=await run_in_threadpool(prepare_staging,service,project_id,body))
+        except video_errors as exc:raise video_error(exc)
+
+    @app.get('/studio/api/productions/{project_id}/story-video/staging/{version}')
+    async def staging_history(project_id: str,version: str):
+        try:return await run_in_threadpool(read_staging,service,project_id,version)
+        except video_errors as exc:raise video_error(exc)
+
+    @app.post('/studio/api/productions/{project_id}/story-video/staging/{version}/approve')
+    async def staging_approval(project_id: str,version: str,request: Request):
+        body=await json_body(request)
+        try:
+            return await run_in_threadpool(approve_staging,service,project_id,version,body)
+        except video_errors as exc:raise video_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/story-video")
+    async def video_status(project_id: str):
+        try:
+            return await run_in_threadpool(video_service.status, service, project_id)
+        except video_errors as exc:
+            raise video_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/story-video/readiness")
+    async def video_readiness(project_id: str):
+        try:
+            return await run_in_threadpool(video_service.readiness, service, project_id)
+        except video_errors as exc:
+            raise video_error(exc)
+
+    @app.post("/studio/api/productions/{project_id}/story-video/jobs/{kind}")
+    async def video_start(project_id: str, kind: str, request: Request):
+        body = await json_body(request)
+        try:
+            result = await run_in_threadpool(video_service.start_job, service, project_id, kind, body)
+            return JSONResponse(status_code=202, content=result)
+        except video_errors as exc:
+            raise video_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/story-video/jobs/{ident}")
+    async def video_job(project_id: str, ident: str):
+        try:
+            return await run_in_threadpool(video_service.job, service, project_id, ident)
+        except video_errors as exc:
+            raise video_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/story-video/jobs/{ident}/{fmt}/{kind}")
+    async def video_media(project_id: str, ident: str, fmt: str, kind: str):
+        try:
+            path = await run_in_threadpool(video_service.media_file, service, project_id, ident, fmt, kind)
+            mime = {"video": "video/mp4", "qa": "application/json", "subtitles": "application/x-subrip", "contact": "image/jpeg"}
+            return FileResponse(path, media_type=mime[kind])
+        except video_errors as exc:
+            raise video_error(exc)
 
     app.mount("/studio/static", StaticFiles(directory=UI_DIR), name="studio-static")
     return app

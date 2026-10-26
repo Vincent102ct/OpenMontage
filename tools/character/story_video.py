@@ -212,6 +212,9 @@ def source_paragraphs(path: str) -> list[str]:
 
 def validate_story_video(video: dict, timeline: dict) -> dict:
     """Raise ValueError on any contract break; return counters for the QA report."""
+    if 'visual_state' in video:
+        from lib.scene_staging import validate_runtime
+        validate_runtime(video)
     # Opt-in only: old packages never import or depend on the reusable registry.
     if "asset_binding" in video:
         from tools.character.horror_assets import resolve_binding

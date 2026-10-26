@@ -171,6 +171,41 @@ class ActorBuilder:
                 "posture": self.keys["posture"], "face": self.keys["face"],
                 "facing_keys": [[0, self.facing]], "opacity": [[0, 1], [length, 1]]}
 
+    def seated_listening(self, seat: list[float], floor_y: float, t0: float, t1: float,
+                         *, sit_down: bool = False) -> "ActorBuilder":
+        """Opt-in chair support in world coordinates; original limb lengths/IK unchanged.
+
+        Seated at a cut is an explicit staging choice. A sit-down starts from a
+        planted stance immediately in front of this chair, never a teleport.
+        """
+        x, y = seat
+        if not all(math.isfinite(v) for v in (*seat, floor_y, t0, t1)) or not 70 <= floor_y-y <= 95:
+            raise ValueError("Seat height must support the existing 57/58px legs")
+        self._start("sit_down" if sit_down else "seated_listening", t0, t1, seat=list(seat))
+        target = {"root": [x, y], "left_foot": [x+self.facing*44, floor_y],
+                  "right_foot": [x+self.facing*56, floor_y],
+                  "left_hand": [x+self.facing*30, y+20], "right_hand": [x+self.facing*42, y+20]}
+        if sit_down:
+            if t1-t0 < 1.2 or abs(self.pose['root'][0]-(x+self.facing*40)) > 1:
+                raise ValueError("Sit-down needs >=1.2s and the reviewed stance in front of the chair")
+            if any(math.dist(self.pose[foot], target[foot]) > .01 for foot in ('left_foot','right_foot')):
+                raise ValueError("Sit-down feet must already be planted at the reviewed chair stance")
+            origin = {k:list(v) for k,v in self.pose.items()}
+            for u in (0, .15, .35, .6, .82, 1):
+                eased = u*u*(3-2*u)
+                self.pose = {k:[a+(b-a)*eased for a,b in zip(origin[k],target[k])] for k in TRACKS}
+                self._key(t0+(t1-t0)*u)
+        else:
+            if t0 != 0 or self.t != 0:
+                raise ValueError("Seated-at-cut must establish the pose at frame zero")
+            self.pose = target
+            self._key(0)
+            # Listening upper-body acting leaves pelvis and feet in exact chair contact.
+            self.listening_freeze(t0,t1)
+        self.pose = target
+        self._key(t1);self.t = t1
+        return self
+
 
 def rest_hand(x: float, y: float, hand: str, facing: int = 1) -> list[float]:
     u, dy = REST[hand]
