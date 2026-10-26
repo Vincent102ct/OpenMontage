@@ -100,6 +100,16 @@ not approve a real story, authorize production or imply artistic/audio acceptanc
 See [P3.3](docs/features/p3.3-story-visual-bible.md). P3.4 scene planning and
 end-to-end story production require their own scope and authorization.
 
+## P3.4 scene planning (implemented, pending review)
+
+P3.4 compiles the current approved Reviewed Story and the current approved Visual
+Bible into immutable, source-traceable Short (9:16) and Long (16:9) scene plans with
+a separate Studio approval scoped to scene planning only. Long covers the complete
+reviewed plan; unsupported actions are explicit blockers, never deleted story.
+Timing stays a provisional estimate with a P3.5 measured-narration retiming
+contract. It starts no TTS, rendering, production or publishing. See
+[P3.4](docs/features/p3.4-scene-planning.md).
+
 ## Production boundary
 
 The user accepted P3.3 technically and authorized the exact 16-file commit
@@ -119,6 +129,7 @@ included in this milestone. Unrelated WIP remains outside the scoped commit.
 - [P3.1 first preview](docs/features/p3.1-cartoon-horror-preview.md).
 - [P3.1 cinematic revision](docs/features/p3.1-cinematic-horror-revision.md).
 - [P3.2A reusable asset library](docs/features/p3.2a-asset-library.md) (technical baseline accepted; human visual/audio review pending).
+- [P3.4 scene planning](docs/features/p3.4-scene-planning.md) (implemented; pending user review, not committed).
 - [P3.0 historical proof](docs/features/p3.0-stickman-renderer-proof.md).
 - [M1/M1.1 character pipeline](docs/features/story-to-video-pipeline.md).
 

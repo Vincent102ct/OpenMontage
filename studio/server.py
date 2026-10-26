@@ -29,6 +29,9 @@ from lib.story_visual_bible import VisualBibleError, catalog as visual_asset_cat
 from studio.visual_bible import (approve_visual_bible, prepare_visual_bible, read_visual_bible,
                                  scene_planning_handoff)
 from studio.visual_references import prepare_references, reference_file
+from lib.story_scene_plan import ScenePlanError
+from studio.scene_plan import (approve_scene_plan, prepare_scene_plan, read_scene_plan, scene_plan_handoff,
+                               scene_plan_report)
 
 UI_DIR = Path(__file__).parent / "ui"
 MAX_BODY_BYTES = 2_000_000
@@ -141,6 +144,9 @@ def create_app(store: ProductionStore | None = None):
             raise HTTPException(INTAKE_STATUS.get(exc.code, 422), {"code": exc.code, "message": str(exc)})
 
     def story_error(exc):
+        if isinstance(exc, ScenePlanError):
+            status = {"plan_missing": 404, "invalid_version": 422, "invalid_choice": 422}.get(exc.code, 409)
+            return HTTPException(status, {"code": exc.code, "message": str(exc), "blockers": exc.blockers})
         if isinstance(exc, VisualBibleError):
             status = {"visual_missing": 404, "invalid_version": 422, "invalid_binding": 422,
                       "reference_unavailable": 503, "invalid_reference": 409}.get(exc.code, 409)
@@ -321,6 +327,61 @@ def create_app(store: ProductionStore | None = None):
             return await run_in_threadpool(prepare_references, service, project_id, version, **body)
         except visual_errors as exc:
             raise story_error(exc)
+
+    plan_errors = (ScenePlanError, *visual_errors)
+
+    @app.get("/studio/api/productions/{project_id}/scene-plan")
+    async def scene_plan(project_id: str):
+        try:
+            return await run_in_threadpool(read_scene_plan, service, project_id)
+        except plan_errors as exc:
+            raise story_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/scene-plan/handoff")
+    async def scene_plan_next(project_id: str):
+        try:
+            return await run_in_threadpool(scene_plan_handoff, service, project_id)
+        except plan_errors as exc:
+            raise story_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/scene-plan/{version}")
+    async def scene_plan_version(project_id: str, version: str):
+        try:
+            return await run_in_threadpool(read_scene_plan, service, project_id, version)
+        except plan_errors as exc:
+            raise story_error(exc)
+
+    @app.get("/studio/api/productions/{project_id}/scene-plan/{version}/report")
+    async def scene_plan_coverage(project_id: str, version: str):
+        try:
+            return await run_in_threadpool(scene_plan_report, service, project_id, version)
+        except plan_errors as exc:
+            raise story_error(exc)
+
+    @app.post("/studio/api/productions/{project_id}/scene-plan")
+    async def prepare_plan(project_id: str, request: Request):
+        body = await json_body(request)
+        try:
+            result = await run_in_threadpool(prepare_scene_plan, service, project_id, body)
+            return JSONResponse(status_code=201 if result["status"] == "created" else 200, content=result)
+        except plan_errors as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, "Could not save the scene-plan candidate. No production was started.")
+
+    @app.post("/studio/api/productions/{project_id}/scene-plan/{version}/approve")
+    async def approve_plan(project_id: str, version: str, request: Request):
+        body = await json_body(request)
+        if (not isinstance(body, dict) or set(body) != {"package_sha256", "manifest_sha256"}
+                or not all(isinstance(v, str) and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
+                           for v in body.values())):
+            raise HTTPException(422, "Use the exact displayed scene-plan package and manifest SHA-256 hashes.")
+        try:
+            return await run_in_threadpool(approve_scene_plan, service, project_id, version, **body)
+        except plan_errors as exc:
+            raise story_error(exc)
+        except OSError:
+            raise HTTPException(500, "Could not save scene-plan approval. No production was started.")
 
     app.mount("/studio/static", StaticFiles(directory=UI_DIR), name="studio-static")
     return app

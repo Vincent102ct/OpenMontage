@@ -191,6 +191,11 @@ def scene_planning_handoff(store, project_id):
     view = read_visual_bible(store, project_id)
     if not view["ready_for_next_stage"]:
         raise VisualBibleError("approval_blocked", "A current approved Visual Bible is required for scene planning.")
+    return handoff_from_view(view)
+
+
+def handoff_from_view(view):
+    """Handoff fields of an already verified view; readiness is the caller's responsibility."""
     p = view["package"]
     return {"artifact": "visual_scene_planning_handoff", "schema_version": "1.0", "version": view["version"],
             "package_sha256": view["package_sha256"], "manifest_sha256": view["manifest_sha256"],

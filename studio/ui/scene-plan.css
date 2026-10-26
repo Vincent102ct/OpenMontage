@@ -1,0 +1,18 @@
+.scene-plan:not(:empty){border-bottom:1px solid var(--border);padding:20px 0;margin-bottom:24px}
+.scene-plan h2{font-size:20px}.scene-plan h3{font-size:16px;margin-top:22px}.scene-plan h4{font-size:13px;margin:16px 0 6px}
+.scene-plan h5{font-size:12px;margin:0 0 6px}.scene-plan p{line-height:1.7;font-size:12px}
+.scene-plan .scene-actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.scene-plan .scene-hashes,.scene-plan .scene-report{font:11px/1.7 Consolas,monospace;overflow-wrap:anywhere;white-space:pre-wrap}
+.scene-plan .scene-report{max-height:420px;overflow:auto;padding:12px;background:#f6f7fb;border:1px solid var(--border);border-radius:8px}
+.scene-plan .scene-blockers{padding:14px;background:#fff8ea;border:1px solid #f0d9a8;border-radius:8px;font-size:12px;line-height:1.7}
+.scene-plan .scene-coverage{padding:10px 14px;background:#eef6f0;border:1px solid #cfe3d4;border-radius:8px;margin:10px 0}
+.scene-card{padding:14px;border:1px solid var(--border);border-radius:9px;margin:10px 0;background:#fafbfe}
+.scene-card label{display:block;font-size:12px;margin:8px 0}.scene-card select{display:block;width:100%;padding:8px;margin-top:4px;border:1px solid var(--border);border-radius:6px;background:white}
+.shot-row{border-top:1px solid var(--border);padding:8px 0}.shot-row summary{cursor:pointer;font-size:12px;font-weight:600}
+.shot-row blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid #8a93b8;background:white;font-size:12px;line-height:1.7}
+.shot-cast{padding:8px;border:1px dashed var(--border);border-radius:6px;margin:8px 0;font-size:12px}
+.capability{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600}
+.capability-supported_direct{background:#e3f4e8;color:#215c33}.capability-supported_parameterized{background:#e5effa;color:#1f4f80}
+.capability-editorial_review{background:#fff2d6;color:#7a5200}.capability-requires_new_capability{background:#fde4e4;color:#8a1f1f}
+.shot-blocker{color:#8a1f1f}.shot-descriptive{font-style:italic}.scene-plan .scene-consent{display:block;font-size:12px;margin:16px 0;line-height:1.7}
+.scene-plan button:disabled{opacity:.5;cursor:not-allowed}
